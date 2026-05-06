@@ -1,0 +1,47 @@
+id: lang-sam-001
+bench: norwegian-language
+category: nordsamisk
+version: 1
+title: Identifiser at tekst er nordsamisk og gi grovoversettelse
+difficulty: hard
+
+rationale: |
+  Modellen må først gjenkjenne at teksten er nordsamisk (ikke finsk eller annet),
+  deretter gi rimelig grovoversettelse. Selv hvis full oversettelse er ufull-
+  stendig, må gjenkjenningen være riktig. Test på språkdekning utenfor topp 50
+  store språk.
+
+  NB: Denne oppgaven krever validering av samisk-talende — er midlertidig
+  forfattet av ikke-samisk-talende og merket lav-konfidens.
+
+source: public-domain
+source_notes: |
+  Setningen er en standard hilsen — "God dag, hvordan har du det?" — som finnes
+  i alle nordsamiske lærebøker. Verifisert mot Sámediggi/Sametingets ordbok.
+
+user_prompt: |
+  Hvilket språk er denne teksten skrevet på, og hva betyr den?
+
+  "Buorre beaivi, mo manná?"
+
+gold_answer: |
+  Dette er nordsamisk (davvisámegiella).
+
+  Oversettelse til Bokmål: "God dag, hvordan har du det?" / "God dag, hvordan
+  går det?".
+
+  - "Buorre beaivi" = "God dag"
+  - "mo manná" = "hvordan går det" / "hvordan har du det"
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(nord)?samisk|davvisám|sami"
+    - "god\\s*dag|goddag"
+    - "(hvordan|korleis)\\s*(går|har|manná)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+# NB: trenger validering av samisk-talende før v1.0
+tags: [nordsamisk, språk-id, hard, trenger-validator]

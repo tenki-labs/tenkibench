@@ -1,0 +1,50 @@
+id: gdpr-dpia-001
+bench: gdpr-advanced
+category: dpia
+version: 1
+title: Når kreves DPIA — avgjør for HR-overvåking
+difficulty: medium
+
+rationale: |
+  DPIA (Data Protection Impact Assessment) kreves under GDPR Article 35
+  ved "høy risiko". Datatilsynet har en konkret liste over operasjoner som
+  alltid krever DPIA — bl.a. systematisk overvåking av ansatte. Modellen
+  må kjenne dette.
+
+source: public-domain
+source_notes: GDPR Article 35; Datatilsynets liste (datatilsynet.no/dpia).
+
+user_prompt: |
+  En SMB vil ta i bruk software som måler tastetrykk, museaktivitet og
+  applikasjons-bruk for hver ansatt på tvers av arbeidsdagen for å
+  vurdere produktivitet. Trenger bedriften å gjennomføre DPIA før
+  oppstart?
+
+gold_answer: |
+  Ja, DPIA er påkrevd.
+
+  Hjemmel:
+  - GDPR Article 35 — DPIA kreves når en behandling sannsynligvis vil
+    medføre høy risiko for fysiske personers rettigheter.
+  - Datatilsynets DPIA-liste inkluderer eksplisitt "systematisk overvåking
+    av ansatte" som type behandling som alltid krever DPIA.
+
+  I tillegg vurderes det også opp mot:
+  - Art. 88 (særregler for ansattedata)
+  - Personopplysningsloven § 8 (samspill med arbeidsmiljøloven kapittel 9)
+
+  Praksis: slik kontinuerlig overvåking er svært vanskelig å rettferdiggjøre
+  selv etter DPIA — mindre inngripende alternativer må vurderes først.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "ja|kreves|påkrev|må"
+    - "art(ikkel|\\.)?\\s*35|article\\s*35"
+    - "(systematisk\\s+overvåk|datatilsynet|høy\\s+risiko|ansatt)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [dpia, art-35, ansatt-overvåking]

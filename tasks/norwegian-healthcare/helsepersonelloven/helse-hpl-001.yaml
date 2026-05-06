@@ -1,0 +1,40 @@
+id: helse-hpl-001
+bench: norwegian-healthcare
+category: helsepersonelloven
+version: 1
+title: Krav til journalføring — varighet og innhold
+difficulty: medium
+
+rationale: |
+  Helsepersonelloven § 39 og 40 pålegger plikt til journalføring. Pasient-
+  journalen skal oppbevares i 10 år (eller lenger ved behov). Vanlige feil
+  hos modeller: forveksle med GDPR-frister (5 år), eller si "så lenge som
+  mulig" uten å oppgi konkret hjemmel.
+
+source: public-domain
+
+user_prompt: |
+  Hvor lenge plikter helsepersonell å oppbevare pasientjournalen, og hvilken
+  paragraf hjemler oppbevaringsplikten?
+
+gold_answer: |
+  Pasientjournal skal oppbevares forsvarlig i minst 10 år etter pasientens
+  siste kontakt med helsetjenesten. Etter 10 år kan journalen oppbevares
+  lenger hvis det er nødvendig av hensyn til pasienten, helsepersonellet
+  eller faglige eller administrative grunner.
+
+  Hjemmel: helsepersonelloven § 43 (oppbevaring og overdragelse av journal).
+  Detaljerte krav om føring følger av §§ 39 og 40 og pasientjournalforskriften.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "10\\s*år"
+    - "helsepersonelloven|hpl"
+    - "(§\\s*43|§\\s*39|§\\s*40|pasientjournalforskrift)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [journalføring, hpl-43, pasientjournalforskrift]

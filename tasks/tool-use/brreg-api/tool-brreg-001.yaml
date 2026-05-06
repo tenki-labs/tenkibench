@@ -1,0 +1,40 @@
+id: tool-brreg-001
+bench: tool-use
+category: brreg-api
+version: 1
+title: Riktig Brreg-endpoint og query for orgnr-oppslag
+difficulty: easy
+
+rationale: |
+  Brreg har offentlig API på data.brreg.no. Riktig endpoint for et enkelt
+  enhetsoppslag er /enhetsregisteret/api/enheter/{orgnr}. Modellen bør
+  produsere riktig URL uten å oppfinne endepunkter.
+
+source: public-domain
+source_notes: data.brreg.no API dokumentasjon (Brønnøysundregistrene).
+
+system_prompt: |
+  Du foreslår ett enkelt verktøys-kall som JSON: {"method": ..., "url": ...}.
+
+user_prompt: |
+  En bruker ber deg slå opp selskapsdata for org.nr 919 845 311 fra
+  Brønnøysundregistrene. Returner det HTTP-kallet du ville gjort, som JSON
+  med feltene method (GET/POST) og url.
+
+gold_answer: |
+  {
+    "method": "GET",
+    "url": "https://data.brreg.no/enhetsregisteret/api/enheter/919845311"
+  }
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "\"method\"\\s*:\\s*\"GET\""
+    - "data\\.brreg\\.no/enhetsregisteret/api/enheter/919\\s*845\\s*311|data\\.brreg\\.no/enhetsregisteret/api/enheter/919845311"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [tool-use, brreg, api]

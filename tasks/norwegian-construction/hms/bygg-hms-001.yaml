@@ -1,0 +1,43 @@
+id: bygg-hms-001
+bench: norwegian-construction
+category: hms
+version: 1
+title: Byggherreforskriften — koordinator for utførelse
+difficulty: medium
+
+rationale: |
+  Byggherreforskriften pålegger byggherre å utpeke koordinator for prosjektering
+  (KP) og koordinator for utførelse (KU) på prosjekter med flere virksomheter.
+  Vanlig misforståelse: én rolle dekker begge fasene.
+
+source: public-domain
+source_notes: Byggherreforskriften (FOR-2009-08-03 nr 1028).
+
+user_prompt: |
+  Et byggherreprosjekt har 4 ulike entreprenører. Hvilke koordinatorer plikter
+  byggherren å utpeke etter byggherreforskriften, og når i prosjektet?
+
+gold_answer: |
+  Byggherren plikter å utpeke:
+  - Koordinator for prosjekteringsfasen (KP) — fra prosjektets oppstart
+  - Koordinator for utførelsesfasen (KU) — før byggearbeidene starter
+
+  Hjemmel: Byggherreforskriften §§ 13 og 14. Begge rollene kan i prinsippet
+  ivaretas av samme person så lenge vedkommende har tilstrekkelig kompetanse,
+  men de er to separate funksjoner.
+
+  KP og KU har ulike oppgaver: KP integrerer HMS i prosjekteringen,
+  KU samordner verne- og sikkerhets-arbeid på byggeplassen under utførelse.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(koordinator\\s*(for)?\\s*prosjekter|kp\\b)"
+    - "(koordinator\\s*(for)?\\s*utfør|ku\\b)"
+    - "byggherreforskrift|byggherre[ \\-]*forskrift"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [byggherreforskriften, hms, koordinator]

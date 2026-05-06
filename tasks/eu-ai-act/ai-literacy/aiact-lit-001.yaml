@@ -1,0 +1,44 @@
+id: aiact-lit-001
+bench: eu-ai-act
+category: ai-literacy
+version: 1
+title: Article 4 — krav til AI-kompetanse hos ansatte
+difficulty: easy
+
+rationale: |
+  Article 4 (gjelder fra 2. februar 2025) pålegger leverandører og deployere
+  av KI-systemer å sikre at relevante ansatte har tilstrekkelig "AI literacy".
+  Vagt formulert med vilje, men det er en aktiv plikt — modellen må kjenne
+  den, ikke avvise den som ukjent.
+
+source: public-domain
+source_notes: EU AI Act Article 4.
+
+user_prompt: |
+  Hvilken artikkel i EU AI Act stiller krav om AI-kompetanse hos ansatte,
+  og hva må en bedrift som tar i bruk et KI-system gjøre for å oppfylle plikten?
+
+gold_answer: |
+  Article 4 i EU AI Act pålegger både leverandører ("providers") og
+  deployere ("deployers") av KI-systemer å sikre at ansatte og andre
+  som opererer eller bruker systemene har tilstrekkelig "AI literacy".
+
+  Plikten gjelder fra 2. februar 2025. For å oppfylle:
+  - Kartlegg hvilke ansatte som bruker eller blir berørt av KI-systemer
+  - Vurder kompetanse-nivå avhengig av systemets risikograd og rolle
+  - Sørg for opplæring i hva systemet gjør, hva det ikke skal brukes til,
+    og hvordan tolke utdata
+  - Dokumenter hva som er gjort
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "art(ikkel|\\.)?\\s*4|article\\s*4"
+    - "ai\\s*literacy|ki[- ]?kompetanse|kompetanse"
+    - "ansatte|operatør|brukere"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [article-4, ai-literacy, kompetanse]

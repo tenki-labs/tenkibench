@@ -1,0 +1,47 @@
+id: fin-aml-001
+bench: norwegian-finance
+category: hvitvasking
+version: 1
+title: Identifiser PEP — politisk eksponert person
+difficulty: medium
+
+rationale: |
+  PEP (Politically Exposed Person) defineres i hvitvaskingsforskriften §§ 4-2 til
+  4-4 (jf. hvitvaskingsloven § 2 nr. 11). PEP-status utløser forsterkede
+  kundetiltak. En PEP er typisk: statsoverhoder, regjeringsmedlemmer,
+  høyesterettsdommere, ambassadører, ledere av sentralbanken/statseide selskaper,
+  pluss nære familiemedlemmer og kjente medarbeidere.
+
+source: public-domain
+source_notes: Hvitvaskingsloven § 2 nr 11, hvitvaskingsforskriften kap 4.
+
+user_prompt: |
+  En bank skal opprette konto for en ny kunde som er gift med en sittende
+  norsk statsråd. Hvilken klassifisering utløser dette etter hvitvaskingsloven,
+  og hvilke konsekvenser har det?
+
+gold_answer: |
+  Kunden er en politisk eksponert person (PEP) — nærmere bestemt
+  "familiemedlem av PEP" — etter hvitvaskingsloven § 2 nr 11 og
+  hvitvaskingsforskriften kapittel 4 (særlig § 4-2 og § 4-4).
+
+  Konsekvenser:
+  - Banken må gjennomføre forsterkede kundetiltak (hvitvaskingsloven § 17 jf
+    § 18).
+  - Beslutning om å etablere kundeforhold må treffes av medlem av høyere ledelse.
+  - Innhente opplysninger om opprinnelse til formue og midler.
+  - Løpende oppfølging og forsterket transaksjonskontroll.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "pep|politisk\\s+eksponert"
+    - "(forsterk|enhanced)"
+    - "hvitvask|aml"
+    - "(familiemedlem|familie|nær\\s+slektning)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [pep, hvitvasking, forsterkede-tiltak]

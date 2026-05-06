@@ -1,0 +1,57 @@
+id: extr-pdf-001
+bench: extraction
+category: pdf-til-json
+version: 1
+title: Trekk ut faktura-felt som JSON
+difficulty: medium
+
+rationale: |
+  Standard regnskaps-pipeline trenger strukturert utdrag fra fritekst-faktura.
+  JSON-feltnavn må følge en stabil konvensjon for at downstream-systemer skal
+  kunne behandle output uten parsing-magi.
+
+source: synthetic
+
+system_prompt: |
+  Du er en data-ekstraherings-assistent. Når du blir bedt om JSON, returner
+  kun gyldig JSON uten kommentarer eller markdown.
+
+user_prompt: |
+  Trekk ut feltene fra fakturaen under som JSON. Bruk eksakt disse feltnavnene:
+  fakturanr, dato, forfall, total_inkl_mva, total_eks_mva, mva_belop,
+  utsteder_orgnr, kid.
+
+  Datoer i ISO-format (YYYY-MM-DD).
+
+  ---
+  FAKTURA — Hansen Bygg AS — Org.nr 919 234 567
+
+  Fakturanr: 24-4231
+  Dato: 15.04.2026
+  Forfall: 29.04.2026
+
+  Sum eks. MVA   31 250,00
+  MVA 25%         7 812,50
+  Total          39 062,50
+
+  KID: 0042310000048
+
+gold_answer: |
+  {
+    "fakturanr": "24-4231",
+    "dato": "2026-04-15",
+    "forfall": "2026-04-29",
+    "total_inkl_mva": 39062.50,
+    "total_eks_mva": 31250.00,
+    "mva_belop": 7812.50,
+    "utsteder_orgnr": "919234567",
+    "kid": "0042310000048"
+  }
+
+eval:
+  method: json_schema
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [json, faktura, ekstraksjon]

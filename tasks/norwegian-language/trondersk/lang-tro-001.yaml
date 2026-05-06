@@ -1,0 +1,47 @@
+id: lang-tro-001
+bench: norwegian-language
+category: trondersk
+version: 1
+title: Oversett trøndersk setning til Bokmål
+difficulty: medium
+
+rationale: |
+  Trøndersk er en av Norges mest utbredte dialektgrupper. KI-modeller
+  trent på Bokmål-overvekt feiler ofte på spørreord ("ka" → "hva"),
+  apokope ("kjørt" → "kjørt", men "skola" → "skolen"), og pronomen
+  ("hu" → "hun", "døm" → "de").
+
+source: synthetic
+
+user_prompt: |
+  Oversett denne setningen til standard Bokmål:
+
+  "E hadd' tenkt å gå på butikken, men ho mor sa ho trængte itj nå."
+
+gold_answer: |
+  Jeg hadde tenkt å gå på butikken, men hun (mor) sa hun ikke trengte noe.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-jeg
+      weight: 0.2
+      description: '"E" → "jeg" — riktig identifisert som førsteperson.'
+    - criterion: korrekt-hun
+      weight: 0.2
+      description: '"ho" → "hun" — pronomen riktig oversatt.'
+    - criterion: korrekt-ikke
+      weight: 0.2
+      description: '"itj" → "ikke" — det negerende adverbet.'
+    - criterion: korrekt-noe
+      weight: 0.15
+      description: '"nå" (i denne kontekst) → "noe" (NB: ikke "nå" som tidsuttrykk).'
+    - criterion: bevarer-mening
+      weight: 0.25
+      description: |
+        Den helhetlige meningen er bevart — ingen meningsforskyvning.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [trøndersk, dialekt, llm-judge]

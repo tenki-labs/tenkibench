@@ -1,0 +1,46 @@
+id: bygg-ns-001
+bench: norwegian-construction
+category: ns-8405
+version: 1
+title: Endringsordre — varslingsplikt under NS 8405
+difficulty: hard
+
+rationale: |
+  NS 8405 § 25 om endringsordrer: entreprenøren skal varsle uten ugrunnet
+  opphold om hen mener bestillinger er endringer som gir rett til vederlags-
+  justering. Glemmer entreprenøren å varsle, kan retten falle bort. Det er
+  en av de hyppigste tvistepunktene i norsk byggebransje.
+
+source: public-domain
+source_notes: NS 8405:2008 punkt 25.
+
+user_prompt: |
+  Under en byggekontrakt etter NS 8405 har byggherren bestilt utvidet arbeid
+  som entreprenøren mener faller utenfor opprinnelig kontrakt. Hva må
+  entreprenøren gjøre for å bevare retten til vederlagsjustering, og hvilken
+  bestemmelse i NS 8405 hjemler dette?
+
+gold_answer: |
+  Entreprenøren må varsle byggherren skriftlig om at bestillingen anses som
+  en endring og at det gir rett til vederlagsjustering. Varslet skal sendes
+  "uten ugrunnet opphold" etter at entreprenøren ble eller burde blitt
+  oppmerksom på endringen.
+
+  Hjemmel: NS 8405:2008 punkt 25 (endringsordre / endringer av kontraktsarbeidet).
+
+  Hvis varslet ikke gis, kan retten til vederlagsjustering gå tapt — dette er
+  en preklusjons-frist.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "varsle|skriftlig|varslingsplikt"
+    - "ugrunnet\\s+opphold|uten\\s+ugrunnet"
+    - "ns\\s*8405"
+    - "punkt\\s*25|§?\\s*25"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [ns-8405, endringsordre, varsling, hard]

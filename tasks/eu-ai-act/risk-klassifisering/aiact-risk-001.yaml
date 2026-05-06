@@ -1,0 +1,51 @@
+id: aiact-risk-001
+bench: eu-ai-act
+category: risk-klassifisering
+version: 1
+title: Klassifiser KI-system for CV-screening
+difficulty: medium
+
+rationale: |
+  CV-screening er eksplisitt nevnt i Annex III punkt 4 som høy-risiko KI-bruk
+  innenfor employment/HR. Modellen må klassifisere riktig — feil klassifisering
+  betyr selskapet undervurderer compliance-arbeidet (DPIA, post-market
+  monitoring, transparens, registrering hos Datatilsynet).
+
+source: public-domain
+source_notes: |
+  EU AI Act (forordning 2024/1689), Annex III pkt. 4 om sysselsetting.
+
+system_prompt: |
+  Du er en EU AI Act-rådgiver.
+
+user_prompt: |
+  Et HR-system bruker KI til automatisk å rangere innkomne CV-er
+  fra 1 til 100 basert på "match" mot stillingsbeskrivelsen.
+  Toppkandidatene oversendes til menneskelig vurdering.
+
+  Hvilken AI Act-risikoklasse faller dette under, og hvorfor? Sitér Annex hvis relevant.
+
+gold_answer: |
+  Høy risiko (high-risk).
+
+  Hjemmel: Annex III, punkt 4 ("employment, workers management and access to
+  self-employment"), særlig 4(a) — "AI systems intended to be used for the
+  recruitment or selection of natural persons, in particular to ... filter ...
+  applications".
+
+  Dette utløser krav om: DPIA / fundamental-rights impact assessment,
+  Annex IV-dokumentasjon, bias-testing, post-market monitoring, registrering i
+  EU-databasen for høy-risiko-systemer, og Article 13-transparens overfor søkere.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "høy[- ]?risiko|high[- ]?risk"
+    - "annex\\s*iii|vedlegg\\s*iii"
+    - "punkt?\\s*4|art(ikkel|\\.)?\\s*4|pkt\\.?\\s*4|sysselsetting|employment|recruitment|rekruttering"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [annex-iii, høy-risiko, hr]

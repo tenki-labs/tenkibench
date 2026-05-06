@@ -1,0 +1,44 @@
+id: fin-fal-001
+bench: norwegian-finance
+category: finansavtale
+version: 1
+title: Frarådingsplikt ved låneopptak
+difficulty: medium
+
+rationale: |
+  Finansavtaleloven § 5-2 (gjeldende fra 2023): låneyter har frarådingsplikt
+  når kundens økonomi tilsier at lånet ikke bør tas opp. Brudd kan gi
+  reduksjons- eller bortfallsadgang. Sentralt for forbrukerlån, særlig
+  høyere risiko-segmenter.
+
+source: public-domain
+source_notes: Finansavtaleloven (2020-12-18 nr 146) § 5-2.
+
+user_prompt: |
+  En bank vurderer å gi et forbrukslån på 200 000 kr til en kunde med
+  betalingsanmerkninger og lav inntekt. Hvilken plikt utløser dette etter
+  finansavtaleloven, og hva er konsekvensen hvis banken bryter den?
+
+gold_answer: |
+  Banken har frarådingsplikt etter finansavtaleloven § 5-2: hvis kundens
+  økonomiske evne eller andre forhold tilsier at kunden alvorlig bør overveie
+  om lånet skal tas opp, plikter banken skriftlig å fraråde det.
+
+  Konsekvens ved brudd: banken kan miste retten til hele eller deler av
+  kravet — særlig hvis kunden ikke ville tatt opp lånet om frarådning hadde
+  blitt gitt. Lånet kan i tillegg lempes ut fra finansavtaleloven § 5-2 tredje
+  ledd og avtaleloven § 36.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "fraråding|frarådings?plikt"
+    - "finansavtale(loven)?"
+    - "§\\s*5-2"
+    - "(reduser|bortfall|miste|tap)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [finansavtale, fraråding, forbrukslån]

@@ -1,0 +1,52 @@
+id: extr-mail-001
+bench: extraction
+category: e-post-action
+version: 1
+title: Identifiser action items fra norsk e-posttråd
+difficulty: medium
+
+rationale: |
+  Daglig oppgave: en eposttråd inneholder beslutninger og oppgaver flettet
+  inn i tekst. SMB-er trenger automatisk action-extraksjon. Norske
+  formuleringer ("kan du", "vi må", "skal sende inn") må gjenkjennes —
+  modeller trent på engelsk plukker bare opp "I will".
+
+source: synthetic
+
+system_prompt: |
+  Du er en kontor-assistent som returnerer JSON-lister.
+
+user_prompt: |
+  Trekk ut alle action items fra denne e-posten som JSON-array.
+  Hver action skal ha feltene: ansvarlig (navn) og oppgave (kort beskrivelse).
+
+  ---
+  Fra: Marius Hansen <marius@bedrift.no>
+  Til: Kari Berg <kari@bedrift.no>
+  Cc: Lars Nilsen <lars@bedrift.no>
+
+  Hei Kari,
+
+  Etter møtet i går har vi blitt enige om følgende:
+
+  Du må sende oppdatert tilbud til Lillevik AS innen onsdag.
+  Lars skal kontakte advokaten om kontraktsutkastet.
+  Jeg lager budsjett for Q3 og deler med dere fredag.
+
+  Mvh,
+  Marius
+
+gold_answer: |
+  [
+    {"ansvarlig": "Kari Berg", "oppgave": "Sende oppdatert tilbud til Lillevik AS innen onsdag"},
+    {"ansvarlig": "Lars Nilsen", "oppgave": "Kontakte advokaten om kontraktsutkastet"},
+    {"ansvarlig": "Marius Hansen", "oppgave": "Lage budsjett for Q3 og dele fredag"}
+  ]
+
+eval:
+  method: json_schema
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [e-post, action-items, json]

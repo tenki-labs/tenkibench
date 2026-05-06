@@ -11,7 +11,7 @@ export function SiteHeader() {
         <nav className="flex gap-6 text-sm">
           <Link href="/leaderboard">Leaderboard</Link>
           <Link href="/sammenlign">Sammenlign</Link>
-          <Link href="/kategorier">Kategorier</Link>
+          <Link href="/benches">Benches</Link>
           <Link href="/oppgaver">Oppgaver</Link>
           <Link href="/metodikk">Metodikk</Link>
           <Link href="/om">Om</Link>

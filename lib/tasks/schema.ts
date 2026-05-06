@@ -24,6 +24,7 @@ export type Difficulty = z.infer<typeof Difficulty>;
 export const TaskSchema = z.object({
   // Identity
   id: z.string().regex(/^[a-z0-9-]+$/, "id must be lowercase-with-dashes"),
+  bench: z.string().default("norwegian-smb"),
   category: z.string(),
   version: z.number().int().positive().default(1),
 

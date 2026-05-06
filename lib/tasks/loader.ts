@@ -7,19 +7,18 @@ const TASKS_DIR = join(process.cwd(), "tasks");
 const HOLDOUT_DIR = join(process.cwd(), "tasks-holdout");
 
 /**
- * Load all valid tasks from disk.
+ * Tasks live at tasks/<bench>/<category>/<id>.yaml.
  *
- * Per-file validation: a malformed task throws a descriptive error rather than
- * being silently skipped. Authors get loud feedback at `pnpm tasks:validate`.
+ * Per-file validation: malformed → loud error from `pnpm tasks:validate`.
  *
- * @param includeHoldout if true, also reads tasks-holdout/. Hold-out tasks are
- *                       gitignored and only present on the production VPS.
+ * @param includeHoldout if true, also reads tasks-holdout/. Hold-out tasks
+ *                       are gitignored and only present on the production VPS.
  */
 export function loadAllTasks(includeHoldout = false): Task[] {
   const tasks: Task[] = [];
-  loadFromDir(TASKS_DIR, tasks);
+  loadFromRoot(TASKS_DIR, tasks);
   if (includeHoldout && existsSync(HOLDOUT_DIR)) {
-    loadFromDir(HOLDOUT_DIR, tasks);
+    loadFromRoot(HOLDOUT_DIR, tasks);
   }
   return tasks;
 }
@@ -27,51 +26,66 @@ export function loadAllTasks(includeHoldout = false): Task[] {
 export function loadHoldoutTasks(): Task[] {
   if (!existsSync(HOLDOUT_DIR)) return [];
   const tasks: Task[] = [];
-  loadFromDir(HOLDOUT_DIR, tasks);
+  loadFromRoot(HOLDOUT_DIR, tasks);
   return tasks;
 }
 
-function loadFromDir(root: string, tasks: Task[]): void {
-  const categoryDirs = readdirSync(root).filter((name) => {
-    const p = join(root, name);
-    try { return statSync(p).isDirectory(); } catch { return false; }
-  });
+/**
+ * Walk a tasks-root directory expecting tasks/<bench>/<category>/ structure.
+ */
+function loadFromRoot(root: string, tasks: Task[]): void {
+  const benches = readdirSync(root).filter((name) => isDir(join(root, name)));
 
-  for (const category of categoryDirs) {
-    const dir = join(root, category);
-    const files = readdirSync(dir).filter((f) => f.endsWith(".yaml") || f.endsWith(".yml"));
-    for (const file of files) {
-      const path = join(dir, file);
-      const raw = readFileSync(path, "utf8");
-      let parsed: unknown;
-      try {
-        parsed = yaml.load(raw);
-      } catch (e) {
-        throw new Error(`YAML parse error in ${path}: ${(e as Error).message}`);
+  for (const bench of benches) {
+    const benchDir = join(root, bench);
+    const categories = readdirSync(benchDir).filter((name) => isDir(join(benchDir, name)));
+
+    for (const category of categories) {
+      const catDir = join(benchDir, category);
+      const files = readdirSync(catDir).filter((f) => f.endsWith(".yaml") || f.endsWith(".yml"));
+      for (const file of files) {
+        const path = join(catDir, file);
+        const raw = readFileSync(path, "utf8");
+        let parsed: unknown;
+        try {
+          parsed = yaml.load(raw);
+        } catch (e) {
+          throw new Error(`YAML parse error in ${path}: ${(e as Error).message}`);
+        }
+        const result = TaskSchema.safeParse(parsed);
+        if (!result.success) {
+          throw new Error(
+            `Invalid task ${path}: ${JSON.stringify(result.error.flatten(), null, 2)}`,
+          );
+        }
+        const task = result.data;
+
+        // Authoritative: file path. Override schema fields if author was sloppy.
+        task.bench = bench;
+        task.category = category;
+
+        const expectedId = basename(file, file.endsWith(".yaml") ? ".yaml" : ".yml");
+        if (task.id !== expectedId) {
+          throw new Error(
+            `Task file ${path} has id '${task.id}' but filename suggests '${expectedId}'`,
+          );
+        }
+        tasks.push(task);
       }
-      const result = TaskSchema.safeParse(parsed);
-      if (!result.success) {
-        throw new Error(`Invalid task ${path}: ${JSON.stringify(result.error.flatten(), null, 2)}`);
-      }
-      const task = result.data;
-      if (task.category !== category) {
-        throw new Error(
-          `Task ${path} is in directory '${category}' but declares category '${task.category}'`,
-        );
-      }
-      const expectedId = basename(file, file.endsWith(".yaml") ? ".yaml" : ".yml");
-      if (task.id !== expectedId) {
-        throw new Error(
-          `Task file ${path} has id '${task.id}' but filename suggests '${expectedId}'`,
-        );
-      }
-      tasks.push(task);
     }
   }
 }
 
+function isDir(p: string): boolean {
+  try { return statSync(p).isDirectory(); } catch { return false; }
+}
+
 export function loadCategory(category: string): Task[] {
   return loadAllTasks().filter((t) => t.category === category);
+}
+
+export function loadBench(bench: string): Task[] {
+  return loadAllTasks().filter((t) => t.bench === bench);
 }
 
 export function loadTask(id: string): Task | null {

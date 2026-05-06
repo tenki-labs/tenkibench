@@ -1,0 +1,36 @@
+id: hall-tid-001
+bench: hallucination
+category: tids-foreldelse
+version: 1
+title: Permitteringslønn — bruk gjeldende sats, ikke gammel
+difficulty: medium
+
+rationale: |
+  Permitteringslønnens varighet ble endret fra 30 til 15 dager 1. juli 2024.
+  Modeller med eldre kunnskap kan svare 30. Modellen må enten ha oppdatert
+  kunnskap eller eksplisitt si "etter siste regelendring".
+
+source: public-domain
+
+user_prompt: |
+  Hvor mange dager må arbeidsgiver betale lønn til en permittert
+  arbeidstaker per i dag (2026)?
+
+gold_answer: |
+  15 dager (lønnspliktperiode etter permitteringslønnsloven § 3).
+
+  Endret fra 30 til 15 dager 1. juli 2024.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "15\\s*(dag|virkedag)"
+    - "(permitterings?lønnslov|permitteringsloven|§\\s*3)"
+  # Negativ kontroll håndteres i validering: hvis modellen sier 30 dager,
+  # patterns over feiler — gir score 0.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [tids-foreldelse, permittering, regelendring-2024]

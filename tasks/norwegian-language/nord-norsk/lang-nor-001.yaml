@@ -1,0 +1,45 @@
+id: lang-nor-001
+bench: norwegian-language
+category: nord-norsk
+version: 1
+title: Tolk nord-norsk setning med "æ" og "dem"
+difficulty: medium
+
+rationale: |
+  Nord-norske dialekter (Bodø, Tromsø, Finnmark) bruker "æ" for "jeg",
+  "dem" for "de", og en rekke distinkte vendinger. Sentral test på
+  norsk språkdekning.
+
+source: synthetic
+
+user_prompt: |
+  Hva betyr denne setningen på Bokmål?
+
+  "Æ veit kje ka æ skal gjør, men dem sa æ måtte komma ned tidlig."
+
+gold_answer: |
+  "Jeg vet ikke hva jeg skal gjøre, men de sa jeg måtte komme ned tidlig."
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-jeg
+      weight: 0.25
+      description: '"Æ"/"æ" → "jeg".'
+    - criterion: korrekt-vet-ikke
+      weight: 0.2
+      description: '"veit kje" → "vet ikke".'
+    - criterion: korrekt-hva
+      weight: 0.15
+      description: '"ka" → "hva".'
+    - criterion: korrekt-de
+      weight: 0.2
+      description: '"dem" (her) → "de".'
+    - criterion: bevarer-meningen
+      weight: 0.2
+      description: Den helhetlige meningen er klart oversatt.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [nord-norsk, dialekt, llm-judge]

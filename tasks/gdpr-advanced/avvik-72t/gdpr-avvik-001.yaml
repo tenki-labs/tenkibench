@@ -1,0 +1,45 @@
+id: gdpr-avvik-001
+bench: gdpr-advanced
+category: avvik-72t
+version: 1
+title: 72-timers avviksrapportering — når starter klokken
+difficulty: medium
+
+rationale: |
+  Article 33 GDPR: melde brudd til tilsynsmyndighet innen 72 timer etter
+  "becoming aware". Hyppig misforståelse: at klokken starter ved selve
+  hendelsen — den starter ved oppdagelse / kunnskap. Modellen må kjenne
+  forskjellen.
+
+source: public-domain
+source_notes: GDPR Article 33.
+
+user_prompt: |
+  Et selskap oppdaget mandag morgen kl 09:00 et databrudd som faktisk
+  skjedde fredagen før, kl 14:00. Innen hvilken tid og dato må
+  Datatilsynet varsles?
+
+gold_answer: |
+  Innen onsdag kl 09:00 (samme uke som oppdagelsen).
+
+  Article 33 GDPR krever varsling "uten ugrunnet opphold og senest innen
+  72 timer etter at den behandlingsansvarlige er blitt klar over bruddet".
+
+  Klokken starter ved oppdagelse (mandag 09:00), ikke ved selve hendelsen
+  (fredag 14:00). 72 timer fra mandag 09:00 = onsdag 09:00.
+
+  Hvis varsling skjer senere enn 72 timer, skal varselet inneholde en
+  begrunnelse for forsinkelsen.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "onsdag|72\\s*time|innen\\s*onsdag|wed"
+    - "klar\\s+over|oppdaget|aware|kunnskap"
+    - "art(ikkel|\\.)?\\s*33"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [art-33, avvik, 72-timer]

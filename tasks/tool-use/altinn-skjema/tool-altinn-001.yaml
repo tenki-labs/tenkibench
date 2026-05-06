@@ -1,0 +1,31 @@
+id: tool-altinn-001
+bench: tool-use
+category: altinn-skjema
+version: 1
+title: Identifiser riktig Altinn-skjema for MVA-melding
+difficulty: medium
+
+rationale: |
+  RF-0002 er skjemaet for ordinær MVA-melding (kvartalsvis). Forskjellige
+  RF-koder for ulike formål er notorisk lett å forveksle. Riktig svar
+  her handler om praktisk veiledning, ikke teoretisk kunnskap.
+
+source: public-domain
+source_notes: Skatteetaten / Altinn skjemakatalog.
+
+user_prompt: |
+  En SMB-eier skal levere ordinær mva-melding for 1. kvartal 2026
+  via Altinn. Hvilket Altinn-skjema (RF-nummer) skal brukes?
+
+gold_answer: |
+  RF-0002 (Skattemelding for merverdiavgift, ordinær mva-melding).
+
+eval:
+  method: regex
+  flags: i
+  pattern: "RF-?0002"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [altinn, mva, skjema-rf]

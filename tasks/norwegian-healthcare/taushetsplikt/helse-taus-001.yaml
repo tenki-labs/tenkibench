@@ -1,0 +1,50 @@
+id: helse-taus-001
+bench: norwegian-healthcare
+category: taushetsplikt
+version: 1
+title: Pårørende får informasjon — taushetsplikten gjelder
+difficulty: medium
+
+rationale: |
+  Helsepersonelloven § 21 om taushetsplikt: helsepersonell skal hindre at
+  andre får adgang eller kjennskap til opplysninger om folks legems- eller
+  sykdomsforhold. Pårørende har som hovedregel IKKE rett til informasjon
+  uten pasientens samtykke. Unntak: pasientrettighetsloven §§ 3-3 om barn
+  under 16 og pasienter uten samtykkekompetanse.
+
+source: public-domain
+
+user_prompt: |
+  Sønnen til en pasient på sykehjem ringer og krever informasjon om mors
+  diagnose og behandling. Pasienten er 78 år, har samtykkekompetanse, og
+  har ikke gitt samtykke til informasjonsdeling.
+
+  Kan pleieren gi sønnen informasjon? Hjemle svaret.
+
+gold_answer: |
+  Nei. Pleieren har taushetsplikt etter helsepersonelloven § 21.
+
+  Pasienten er voksen og har samtykkekompetanse. Pårørende har som hovedregel
+  ikke rett på opplysninger uten pasientens samtykke (jf. pasient- og
+  brukerrettighetsloven § 3-3).
+
+  Pleieren bør:
+  1. Bekrefte overfor sønnen at pasienten finnes hos dem (kun det), uten å gi
+     helseopplysninger.
+  2. Be ham snakke med moren direkte og evt. få hennes samtykke til at
+     opplysninger kan deles.
+  3. Hvis pasienten ikke vil dele: respektere det.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "\\bnei\\b|kan\\s+ikke|ikke\\s+gi"
+    - "helsepersonelloven|hpl"
+    - "§\\s*21"
+    - "samtykke"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [taushetsplikt, hpl-21, pårørende]

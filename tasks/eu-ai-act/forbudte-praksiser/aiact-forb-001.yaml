@@ -1,0 +1,49 @@
+id: aiact-forb-001
+bench: eu-ai-act
+category: forbudte-praksiser
+version: 1
+title: Real-time biometrisk identifikasjon i offentlig rom
+difficulty: medium
+
+rationale: |
+  Article 5(1)(h) forbyr "real-time" remote biometric identification i offentlig
+  rom for politi-formål, med svært snevre unntak (terror-trussel, søk etter
+  bortførte, alvorlig kriminalitet listet i annex). Modellen må kjenne unntakene.
+
+source: public-domain
+source_notes: EU AI Act Article 5(1)(h).
+
+user_prompt: |
+  Politiet vil installere et KI-ansiktsgjenkjenningssystem på Karl Johans gate
+  i Oslo for kontinuerlig å identifisere personer mistenkt for økonomisk
+  kriminalitet ut fra et register. Er dette tillatt under EU AI Act?
+
+gold_answer: |
+  Nei, dette er forbudt under Article 5(1)(h).
+
+  Real-time biometrisk fjern-identifikasjon i offentlig rom for politi-formål er
+  hovedregel forbudt. Unntak finnes for:
+  - Målrettet søk etter spesifikke ofre for kriminalitet (bortføring, mennesker
+    handel, seksuell utnyttelse)
+  - Forebygging av spesifikk og betydelig terror-trussel
+  - Lokalisering / identifisering av mistenkte for alvorlige forbrytelser
+    listet i Annex II med strafferamme ≥ 4 år
+
+  Økonomisk kriminalitet generelt faller IKKE inn under unntakene (kun spesifikke
+  alvorlige forbrytelser i Annex II), og selv da kreves rettslig forhåndsgodkjenning.
+  Kontinuerlig overvåking i offentlig rom er heller ikke tillatt — bare
+  "målrettet" bruk.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "forbudt|ikke\\s+tillatt|ulovlig"
+    - "art(ikkel|\\.)?\\s*5|article\\s*5"
+    - "real[- ]?time|sanntid"
+    - "(annex|vedlegg)\\s*ii|alvorlig|forhåndsgodkjenning|specific|målrettet"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [article-5h, biometri, politi]

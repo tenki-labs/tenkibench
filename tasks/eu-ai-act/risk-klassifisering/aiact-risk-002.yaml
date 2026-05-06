@@ -1,0 +1,48 @@
+id: aiact-risk-002
+bench: eu-ai-act
+category: risk-klassifisering
+version: 1
+title: Identifiser forbudt sosial-score-praksis
+difficulty: easy
+
+rationale: |
+  Article 5 forbyr KI-systemer som rangerer fysiske personer basert på
+  sosial atferd over tid (sosial score) når dette fører til skadelig eller
+  uforholdsmessig behandling. Dette er en åpenbar prøve — modeller som
+  feiler her er ikke compliance-egnet i det hele tatt.
+
+source: public-domain
+source_notes: EU AI Act Article 5(1)(c).
+
+user_prompt: |
+  Et offentlig serviceprogram vurderer å bygge et KI-system som tildeler
+  hver borger en "samfunnspoeng" basert på (1) deltakelse i frivillig arbeid,
+  (2) skattebetalingshistorikk, (3) deltakelse i sosiale medier-kampanjer.
+  Borgere med høy poengsum får raskere saksbehandling.
+
+  Er dette tillatt under EU AI Act? Begrunn med riktig artikkel.
+
+gold_answer: |
+  Nei, dette er forbudt under Article 5(1)(c) i EU AI Act.
+
+  Article 5(1)(c) forbyr KI-systemer som "evaluate or classify natural persons
+  ... based on their social behaviour or known, inferred or predicted personal
+  or personality characteristics" når dette leder til:
+  - skadelig eller uforholdsmessig behandling i utenomliggende sammenhenger
+  - skadelig eller uforholdsmessig behandling som er ubegrunnet
+
+  Forskjellsbehandling i offentlig saksbehandling basert på sosial score
+  møter begge vilkår og er ulovlig.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "forbudt|prohibited|ulovlig|ikke\\s+tillatt"
+    - "art(ikkel|\\.)?\\s*5|article\\s*5"
+    - "sosial[- ]?score|social[- ]?scor"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [article-5, forbudt-praksis]

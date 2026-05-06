@@ -1,0 +1,57 @@
+id: aiact-art13-001
+bench: eu-ai-act
+category: artikkel-13-transparens
+version: 1
+title: Article 13 transparens-tekst for kunde-chatbot
+difficulty: medium
+
+rationale: |
+  Article 13 krever transparens-instrukser for høy-risiko-systemer. Article 50
+  krever at brukere informeres om at de samhandler med KI når dette ikke er
+  åpenbart. Modellen må kunne skrive teksten på norsk, kort og forståelig.
+
+source: public-domain
+source_notes: EU AI Act Article 50.
+
+user_prompt: |
+  En norsk strømleverandør lanserer en kunde-chatbot. Skriv en kort tekst
+  (maks 4 setninger) som vises til kunden ved første interaksjon for å
+  oppfylle EU AI Acts åpenhets-krav etter Article 50.
+
+gold_answer: |
+  Eksempel:
+
+  "Du chatter nå med en KI-basert assistent fra [Selskap]. Assistenten er ikke
+  et menneske og kan gjøre feil. Hvis du vil snakke med en kunderådgiver, skriv
+  «menneske» eller ring 815 [tlf]. Samtalen blir lagret i 90 dager for å
+  forbedre tjenesten."
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: nevner-ki
+      weight: 0.3
+      description: |
+        Eksplisitt informerer at kunden snakker med KI / KI-basert assistent
+        (ikke vagt — "automatisk system" alene er ikke nok).
+    - criterion: nevner-ikke-menneske
+      weight: 0.2
+      description: |
+        Klargjør at det ikke er et menneske / kan gjøre feil.
+    - criterion: tilbyr-menneske-vei
+      weight: 0.2
+      description: |
+        Forteller hvordan man kommer til menneske-rådgiver.
+    - criterion: konsis-norsk
+      weight: 0.15
+      description: |
+        Maks 4 setninger, ren Bokmål, ingen kalker fra engelsk.
+    - criterion: nevner-data-håndtering
+      weight: 0.15
+      description: |
+        Sier noe kort om data-håndtering / lagring (kort-form personvern).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [article-50, transparens, chatbot, llm-judge]

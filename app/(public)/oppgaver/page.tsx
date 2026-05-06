@@ -9,11 +9,13 @@ export const revalidate = 300;
 export default async function TasksPage({
   searchParams,
 }: {
-  searchParams: Promise<{ kategori?: string }>;
+  searchParams: Promise<{ kategori?: string; bench?: string }>;
 }) {
-  const { kategori } = await searchParams;
+  const { kategori, bench } = await searchParams;
   const all = loadAllTasks();
-  const tasks = kategori ? all.filter((t) => t.category === kategori) : all;
+  let tasks = all;
+  if (bench) tasks = tasks.filter((t) => t.bench === bench);
+  if (kategori) tasks = tasks.filter((t) => t.category === kategori);
 
   return (
     <>

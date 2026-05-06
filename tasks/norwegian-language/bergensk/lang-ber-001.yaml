@@ -1,0 +1,45 @@
+id: lang-ber-001
+bench: norwegian-language
+category: bergensk
+version: 1
+title: Forstå "kje" og "ikkje" i bergensk
+difficulty: medium
+
+rationale: |
+  Bergensk har særtrekk: bruker "ikkje" (ikke) og dels "kje", "korr"
+  (hvor), "korsen" (hvordan). Modellen må kjenne til sentrale ord for
+  å forstå Vestlands-dialekt-input.
+
+source: synthetic
+
+user_prompt: |
+  Hva betyr følgende setning på Bokmål?
+
+  "Korsen kommer du deg dit, ikkje kjør kje med bilen for han starta ikkje?"
+
+gold_answer: |
+  "Hvordan kommer du deg dit, ikke kjør med bilen for den starter ikke?"
+
+  (Eventuelt: "Hvordan kommer du deg dit — ikke kjør med bilen for den
+  startet ikke" — avhengig av tempus-tolking.)
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-hvordan
+      weight: 0.25
+      description: '"Korsen" → "hvordan".'
+    - criterion: korrekt-ikke
+      weight: 0.25
+      description: '"ikkje" og "kje" begge oversatt til "ikke".'
+    - criterion: korrekt-han-den
+      weight: 0.2
+      description: '"han" (om bilen) → "den" på Bokmål.'
+    - criterion: bevarer-meningen
+      weight: 0.3
+      description: Setningens meningshelhet er klart oversatt.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-07"
+
+tags: [bergensk, vestlands-dialekt, llm-judge]
