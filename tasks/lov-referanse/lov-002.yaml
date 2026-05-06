@@ -1,0 +1,45 @@
+id: lov-002
+category: lov-referanse
+version: 1
+title: Hjemmel for permittering uten lønn
+difficulty: medium
+
+rationale: |
+  Permittering reguleres av permitteringslønnsloven. Arbeidsgiver kan permittere
+  ved "saklig grunn" — typisk midlertidig redusert produksjon. Etter
+  permitteringslønnsloven § 3 har arbeidsgiver lønnsplikt i de første 15 dagene
+  av permitteringsperioden (lønnspliktdagene), deretter går den ansatte over
+  på dagpenger fra NAV.
+
+  Dette er en hyppig forekommende SMB-situasjon (særlig under nedgangstider) og
+  riktig sitering er kritisk. Modeller som hallusinerer "arbeidsmiljøloven § 14"
+  eller "ferielov" tas ut.
+
+source: public-domain
+source_notes: |
+  Permitteringslønnsloven (1988-08-06 nr 22). Lønnspliktperioden ble redusert
+  fra 30 til 15 dager fra 1. juli 2024 og er stabil i 2026.
+
+system_prompt: |
+  Du er en norsk juridisk assistent.
+
+user_prompt: |
+  Hvor mange dager må arbeidsgiver betale lønn til en permittert arbeidstaker
+  før dagpenger fra NAV trer inn (etter gjeldende rett 2026), og hvilken lov
+  og paragraf hjemler dette?
+
+gold_answer: |
+  Lønnspliktperioden er 15 dager. Hjemmelen er permitteringslønnsloven § 3.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "15\\s*(dag|virkedag)"
+    - "permitteringslønnslov(en)?"
+    - "§\\s*3"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [permittering, permitteringslønnsloven, NAV]

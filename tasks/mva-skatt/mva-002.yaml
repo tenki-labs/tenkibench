@@ -1,0 +1,58 @@
+id: mva-002
+category: mva-skatt
+version: 1
+title: Identifiser at importert vare krever omvendt avgiftsplikt
+difficulty: hard
+
+rationale: |
+  Omvendt avgiftsplikt (reverse charge) gjelder for byggetjenester innenlands
+  (mva-loven § 11-1) og for visse importerte tjenester fra utlandet. Når en
+  norsk SMB kjøper konsulent-tjenester fra utlandet (eks. Tyskland), må kjøper
+  selv beregne og betale MVA i Norge — leverandøren fakturerer uten MVA.
+
+  Dette er en hyppig kilde til feil: SMB-er som ikke kjenner reglene, betaler
+  ikke MVA og blir tatt på revisjon. En modell som anbefaler riktig her sparer
+  kunden tilleggsskatt.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps- og skatte-assistent.
+
+user_prompt: |
+  En norsk konsulentbedrift har mottatt en faktura fra en tysk SaaS-leverandør:
+
+  ---
+  INVOICE
+  CloudCo GmbH
+  VAT ID: DE123456789
+
+  To: Tenki AS
+  VAT ID: NO 919 123 456 MVA
+
+  Software subscription Q2 2026         500,00 EUR
+  VAT: 0% (reverse charge — Article 196 EU VAT Directive)
+
+  Total: 500,00 EUR
+  ---
+
+  Hva må Tenki AS gjøre med MVA i sitt regnskap? Svar kort.
+
+gold_answer: |
+  Tenki AS må selv beregne og innberette norsk MVA (omvendt avgiftsplikt /
+  reverse charge) på kjøpet. Med 25% MVA-sats blir det 125 EUR i utgående MVA
+  og samtidig 125 EUR i inngående MVA hvis bedriften har full fradragsrett —
+  netto-effekt typisk null, men beløpet må rapporteres på MVA-meldingen.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "omvendt avgiftsplikt|reverse charge|snudd avregning"
+    - "25\\s*%|125"
+    - "selv\\s+(beregne|innberett|rapport)|må\\s+(beregne|innberett|rapport)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [omvendt-avgiftsplikt, import, hard, mva-loven]

@@ -1,0 +1,42 @@
+id: lov-003
+category: lov-referanse
+version: 1
+title: Maks ukentlig arbeidstid for kontoransatt
+difficulty: medium
+
+rationale: |
+  Arbeidsmiljøloven § 10-4 første ledd: alminnelig arbeidstid skal ikke
+  overstige 9 timer per dag og 40 timer per uke. Mange tariffavtaler har
+  37,5 timer som standard, men loven setter taket på 40. Tilleggsavtaler
+  kan utvides til 48 ved gjennomsnittsberegning.
+
+  Sondringen mellom "alminnelig arbeidstid" (§ 10-4) og "totale arbeidstid
+  inkl. overtid" (§ 10-6) er en typisk feil-kilde — modellen bør oppgi 40
+  for det første spørsmålet.
+
+source: public-domain
+source_notes: |
+  Arbeidsmiljøloven (2005-06-17 nr 62), § 10-4 første ledd.
+
+system_prompt: |
+  Du er en norsk juridisk assistent.
+
+user_prompt: |
+  Hva er maksimal alminnelig arbeidstid per uke etter norsk lov, og hvilken
+  paragraf i hvilken lov hjemler dette?
+
+gold_answer: |
+  40 timer per uke. Hjemmel: arbeidsmiljøloven § 10-4 (første ledd).
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "40\\s*(time|t\\b)"
+    - "arbeidsmiljølov(en)?|aml"
+    - "§\\s*10-4"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [arbeidsmiljøloven, arbeidstid, AML-10-4]

@@ -1,0 +1,96 @@
+id: kundeservice-001
+category: kundeservice
+version: 1
+title: Avslå urettferdig refusjon på en høflig måte
+difficulty: medium
+
+rationale: |
+  Norsk forretnings-tone er saklig og direkte uten å være kald. Modeller trent
+  primært på engelsk har en tendens til å bli enten (a) overdrevent unnskyldende
+  ("I am SO incredibly sorry...") eller (b) for direkte og uhøflige.
+  Riktig norsk tone: vennlig, beklagende der det passer, klar og uten omsvøp.
+
+  Denne oppgaven tester evnen til å avvise et krav uten å skape kunde-konflikt.
+
+source: synthetic
+
+user_prompt: |
+  Du er kundeservice-medarbeider hos en norsk netthandel. En kunde har sendt
+  følgende e-post:
+
+  ---
+  Hei. Jeg kjøpte en sofa hos dere for 6 måneder siden.
+  Den har nå begynt å miste fargen på armlenene fordi solen treffer den.
+  Jeg krever full refusjon eller ny sofa kostnadsfritt. Sofaen var 18 000 kr.
+  Sender bilder.
+  ---
+
+  Reklamasjon på fargefading på grunn av direkte sollys er IKKE en reklamasjons-
+  berettiget mangel under forbrukerkjøpsloven (vanlig slitasje + brukerfeil).
+  Skriv et profesjonelt avslags-svar. Vær empatisk men tydelig. Forklar
+  hvorfor og hva kunden eventuelt kan gjøre videre.
+
+gold_answer: |
+  (Eksempel på godt svar — ikke eneste riktige formulering)
+
+  Hei,
+
+  Takk for at du tok kontakt og sendte bilder.
+
+  Vi forstår at det er kjedelig at sofaen har endret seg, og vi setter pris
+  på at du er åpen om hva som har skjedd. Dessverre kan vi ikke imøtekomme
+  kravet om refusjon eller ny sofa.
+
+  Misfarging på grunn av direkte sollys faller utenfor det vi etter
+  forbrukerkjøpsloven kan dekke som mangel — det regnes som vanlig
+  slitasje og påvirkning fra omgivelsene snarere enn en feil ved produktet.
+  De fleste tekstil- og lærtyper vil over tid endre seg ved direkte UV-eks-
+  ponering. Dette er beskrevet i vedlikeholdsanvisningen som fulgte sofaen.
+
+  Vi har likevel et par konkrete forslag du kan vurdere:
+  - Vi kan tilby et restaurerings-/farge-pleie-produkt som kan jevne ut
+    fargen noe — pris ca. 450 kr.
+  - For fremtiden anbefaler vi å unngå direkte sollys på møblet, eller
+    bruke et tynt teppe på de eksponerte flatene.
+
+  Si gjerne ifra om du vil bestille pleie-produktet eller ønsker mer
+  informasjon.
+
+  Vennlig hilsen,
+  Kundeservice
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: høflig-norsk-tone
+      weight: 0.3
+      description: |
+        Tonen er saklig og vennlig, ikke overdreven unnskyldende eller kald.
+        Føles autentisk norsk, ikke oversatt fra engelsk.
+    - criterion: avviser-klart
+      weight: 0.25
+      description: |
+        Sier tydelig at kravet ikke kan imøtekommes — ikke vag eller
+        vidåpent for forhandling.
+    - criterion: forklarer-juridisk-grunn
+      weight: 0.2
+      description: |
+        Forklarer at sol-fading faller utenfor reklamasjons-rettighet
+        (forbrukerkjøpsloven, slitasje, brukerfeil). Behøver ikke sitere § men
+        må forklare resonnementet.
+    - criterion: tilbyr-noe-konstruktivt
+      weight: 0.15
+      description: |
+        Foreslår en alternativ vei (pleie-produkt, vedlikeholds-tips,
+        rabatt på neste kjøp).
+    - criterion: ingen-engelske-kalker
+      weight: 0.1
+      description: |
+        Unngår direkte oversettelser fra engelsk ("I apologize for the
+        inconvenience" → "Beklager ulempen" er greit; "Vi setter pris på
+        din henvendelse" er en kalk).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [kundeservice, norsk-tone, reklamasjon, llm-judge]

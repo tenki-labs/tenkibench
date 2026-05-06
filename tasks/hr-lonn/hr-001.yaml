@@ -1,0 +1,52 @@
+id: hr-001
+category: hr-lonn
+version: 1
+title: Sykepenger — arbeidsgiverperiode og NAV-overgang
+difficulty: medium
+
+rationale: |
+  Arbeidsgiverperioden for sykepenger er 16 kalenderdager (folketrygdloven
+  § 8-19). Etter dette tar NAV over. Beløpet er begrenset til 6 G
+  (grunnbeløpet, ca. 124 000 kr per 1G fra 1. mai 2025).
+
+  Dette er en svært vanlig SMB-spørsmål — bedrifts-eier eller daglig leder
+  må forstå hva som gjelder ved sykefravær.
+
+source: public-domain
+source_notes: |
+  Folketrygdloven § 8-19 (arbeidsgiverperioden), § 8-10 (6 G-grensen).
+
+user_prompt: |
+  En av mine ansatte (kontoransatt, fast lønn 700 000 NOK/år) er sykmeldt
+  fra mandag 4. mai 2026. Hvor lenge må jeg som arbeidsgiver betale lønn
+  før NAV tar over, og er det tak på beløpet NAV utbetaler?
+
+gold_answer: |
+  Arbeidsgiverperioden er 16 kalenderdager (folketrygdloven § 8-19).
+  Det betyr at du som arbeidsgiver dekker lønn for dagene 4. til og med
+  19. mai 2026. Fra 20. mai trer NAV inn.
+
+  NAV utbetaler sykepenger inntil 6 G. 1 G er per mai 2025 124 028 kr,
+  6 G er ca. 744 168 kr/år. En lønn på 700 000 kr ligger under 6 G og blir
+  derfor dekket fullt ut av NAV (etter at arbeidsgiverperioden er ferdig).
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-arbeidsgiverperiode
+      weight: 0.4
+      description: Sier 16 kalenderdager (eller "16 dager") som arbeidsgiverperiode.
+    - criterion: korrekt-hjemmel
+      weight: 0.2
+      description: Refererer til folketrygdloven § 8-19 eller "ftrl § 8-19".
+    - criterion: nevner-6g-grensen
+      weight: 0.2
+      description: Nevner 6 G-taket på NAVs sykepenger.
+    - criterion: relevant-for-spesifikt-tilfelle
+      weight: 0.2
+      description: Anvender på den konkrete situasjonen (datoer, lønn under 6G).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [sykepenger, folketrygdloven, arbeidsgiverperiode, llm-judge]

@@ -1,0 +1,29 @@
+name: tenkibench
+
+services:
+  web:
+    image: tenkibench-web:latest
+    container_name: tenkibench-web-1
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    networks:
+      - tenkibench
+      - edge_net
+    env_file:
+      - /opt/tenkibench/env/.env.production
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    expose:
+      - "3000"
+
+networks:
+  tenkibench:
+    name: tenkibench
+  edge_net:
+    external: true

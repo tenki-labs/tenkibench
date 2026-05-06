@@ -1,0 +1,39 @@
+id: lov-001
+category: lov-referanse
+version: 1
+title: Riktig lov-§ for 4 ukers ferie
+difficulty: easy
+
+rationale: |
+  Ferieloven § 5 første ledd er hjemmelen for at arbeidstakere har rett til
+  ferie i 25 virkedager (4 uker og 1 dag — den ekstra dagen er den såkalte
+  "Grunnlovsdagen"-tradisjonen). Sitering av riktig § er en lakmustest på
+  norsk juridisk grunnkunnskap. Hallusinerte § (eks. "§ 4 ferieloven" eller
+  "§ 12") er en svært vanlig feil i utenlandske LLM-er.
+
+source: public-domain
+source_notes: |
+  Basert på Lovdata-publikasjon av Ferieloven (1988-04-29 nr 21), § 5.
+
+system_prompt: |
+  Du er en norsk juridisk assistent. Når du siterer norske lover, oppgi alltid
+  paragraf-nummer på formen "§ X" eller "§ X-Y" og lovens navn.
+
+user_prompt: |
+  Hvilken paragraf i norsk lov hjemler arbeidstakerens rett til
+  4 ukers ferie? Oppgi lov og paragraf.
+
+gold_answer: |
+  Ferieloven § 5
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "ferielov(en)?"
+    - "§\\s*5"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [ferieloven, juridisk-sitering, basis]

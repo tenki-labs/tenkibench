@@ -1,0 +1,58 @@
+id: brreg-001
+category: brreg
+version: 1
+title: Strukturer rådata fra Brreg som JSON
+difficulty: medium
+
+rationale: |
+  En vanlig SMB-oppgave: noen sender deg en kunde-bestilling og du må slå opp
+  selskapet i Brønnøysund. Modellen må kunne lese typisk Brreg-respons og
+  produsere strukturert JSON for videre bruk i regnskap eller CRM.
+
+  Krever at modellen kjenner norske selskapsformer (AS, ASA, ENK, ANS, DA),
+  organisasjonsnummer-format (9 siffer, leses som "XXX XXX XXX"), og
+  at den ikke blander sammen "stiftelsesdato" og "registreringsdato".
+
+source: synthetic
+source_notes: |
+  Strukturert som typisk Brreg-eksport. Org-nr er fiktivt.
+
+system_prompt: |
+  Du er en norsk dataingeniør. Når du blir bedt om JSON, returner gyldig JSON
+  uten kommentarer eller markdown-fences.
+
+user_prompt: |
+  Strukturer følgende selskaps-data som JSON. Bruk feltnavnene:
+  navn, organisasjonsnummer, organisasjonsform, stiftelsesdato, naeringskode,
+  forretningsadresse (med felt: gate, postnummer, poststed).
+
+  ---
+  Tenki Labs AS
+  Org.nr: 919 845 311
+  Selskapsform: Aksjeselskap (AS)
+  Stiftet: 12. mars 2024
+  Registrert i Foretaksregisteret: 15. mars 2024
+  Næring: 62.020 - Konsulentvirksomhet tilknyttet informasjonsteknologi
+  Forretningsadresse: Storgata 12, 0155 Oslo
+
+gold_answer: |
+  {
+    "navn": "Tenki Labs AS",
+    "organisasjonsnummer": "919845311",
+    "organisasjonsform": "AS",
+    "stiftelsesdato": "2024-03-12",
+    "naeringskode": "62.020",
+    "forretningsadresse": {
+      "gate": "Storgata 12",
+      "postnummer": "0155",
+      "poststed": "Oslo"
+    }
+  }
+
+eval:
+  method: json_schema
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [json, strukturering, brreg]

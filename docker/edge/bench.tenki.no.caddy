@@ -1,0 +1,21 @@
+bench.tenki.no {
+    encode gzip zstd
+    log {
+        output stdout
+        format console
+    }
+
+    @cron path /api/cron/*
+    handle @cron {
+        # Cron endpoints — let Bearer auth in the Next.js layer enforce.
+        reverse_proxy tenkibench-web:3000
+    }
+
+    handle /api/* {
+        reverse_proxy tenkibench-web:3000
+    }
+
+    handle {
+        reverse_proxy tenkibench-web:3000
+    }
+}

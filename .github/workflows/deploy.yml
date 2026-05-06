@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Validate tasks
+        run: pnpm tasks:validate
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Add VPS to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Sync source to VPS
+        run: |
+          rsync -az --delete --exclude=node_modules --exclude=.next --exclude=.git \
+            ./ deploy@${{ secrets.DEPLOY_HOST }}:/opt/tenkibench/repo/
+
+      - name: Run deploy.sh on VPS
+        run: |
+          ssh deploy@${{ secrets.DEPLOY_HOST }} 'cd /opt/tenkibench/repo && bash scripts/deploy.sh'

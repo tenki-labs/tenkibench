@@ -1,0 +1,52 @@
+id: faktura-002
+category: faktura
+version: 1
+title: Faktura med blandet MVA-sats (25%, 15%, 0%)
+difficulty: medium
+
+rationale: |
+  Norske SMB-er som driver kafé, butikk eller blandet virksomhet får ofte
+  fakturaer med varer på flere MVA-satser: 25% standard, 15% mat (servering 25%),
+  0% bøker/aviser. Modellen må identifisere hver sats og beregne riktig totalt
+  MVA-beløp. Dette er en typisk feil-kilde i regnskapsprogrammer som kjører
+  automatisk og en god test for finkornet faktura-forståelse.
+
+source: synthetic
+source_notes: |
+  Realistisk leverandør-faktura til en kafé. Ingen reelle organisasjonsnumre.
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent. Svar kun med totalbeløpet.
+
+user_prompt: |
+  Hva er totalbeløpet inklusive MVA?
+
+  ---
+  FAKTURA fra Nordavind Engros AS
+  Til: Kafé Vest AS
+  Dato: 03.05.2026
+
+  Vare                              Antall    Pris       MVA-sats   Sum eks.MVA
+  Kaffe (i bønner) ramme à 1 kg     5         180,00     15%        900,00
+  Bordglass dusin                   2         420,00     25%        840,00
+  Avis abonnement (Aftenposten)     1         390,00     0%         390,00
+  Kakebakst-mel sekk                3         265,00     15%        795,00
+  Sjokolade-pulver                  2         385,00     15%        770,00
+  Frakt                             1         180,00     25%        180,00
+
+  --------------------------------------------------------
+  Sum eks. MVA                                            3 875,00
+  MVA totalt                                                ?
+  --------------------------------------------------------
+  Total inkl. MVA                                           ?
+
+gold_answer: "4 264,25"
+
+eval:
+  method: numeric_exact
+  tolerance: 0.05
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [mva-blandet, mva-15, mva-25, mva-0, kafé, varehandel]

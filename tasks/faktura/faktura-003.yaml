@@ -1,0 +1,45 @@
+id: faktura-003
+category: faktura
+version: 1
+title: Identifiser KID-nummer fra faktura-tekst
+difficulty: easy
+
+rationale: |
+  KID (Kundeidentifikasjon) er Nordens lokale faktura-referanse-format.
+  Modeller trent primært på engelsk litteratur kjenner ofte ikke KID som
+  konsept og forveksler det med andre tall (organisasjonsnummer, fakturanr).
+  Dette er en direkte test på norsk-spesifikk faktura-vokabular.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent. Svar kort: kun KID-nummeret, intet annet.
+
+user_prompt: |
+  Hva er KID-nummeret på denne fakturaen?
+
+  ---
+  Bjørnsen Rør AS · Fakturanr 2026-0143
+  Til: Solveigs Frisør AS · Org.nr 998 877 665
+  Dato: 12.04.2026 · Forfall: 26.04.2026
+
+  Reparasjon av rør i kjeller    4 200,00
+  MVA 25%                        1 050,00
+  Total                          5 250,00
+
+  Bankkonto: 1234.56.78901
+  KID: 5560000020260143
+  IBAN: NO93 1234 5678 901
+
+  Fakturaen forfaller 14 dager etter fakturadato.
+
+gold_answer: "5560000020260143"
+
+eval:
+  method: regex
+  pattern: "^5560000020260143$"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [kid, norsk-spesifikk, ekstraksjon]

@@ -1,0 +1,71 @@
+id: kontrakt-001
+category: kontrakt
+version: 1
+title: Identifiser ulovlig konkurranseklausul i arbeidsavtale
+difficulty: hard
+
+rationale: |
+  Arbeidsmiljøloven kapittel 14 A regulerer konkurransebegrensinger.
+  En konkurranseklausul kan kun gjelde i 12 måneder etter avsluttet arbeids-
+  forhold (§ 14 A-3) og krever at arbeidsgiver betaler kompensasjon.
+  En klausul som er på 24 måneder uten kompensasjon er ulovlig — modellen må
+  identifisere dette og sitere riktig hjemmel.
+
+  Dette er en typisk SMB-faye: standard-mal hentet fra utlandet brukes
+  ureflektert, og er ulovlig under norsk rett.
+
+source: synthetic
+
+user_prompt: |
+  Vurder følgende klausul i en arbeidsavtale. Er den lovlig under norsk rett?
+  Hvis ikke, hvilken paragraf er hjemmelen for at den er ulovlig, og hvilke
+  endringer ville gjort den lovlig?
+
+  ---
+  § 12 Konkurranseforbud
+  Den ansatte forplikter seg til, i et tidsrom av 24 måneder etter avsluttet
+  arbeidsforhold, å ikke ta arbeid hos eller etablere virksomhet i konkurranse
+  med arbeidsgiver. Klausulen gjelder uten økonomisk kompensasjon.
+
+gold_answer: |
+  Klausulen er IKKE LOVLIG.
+
+  Begrunnelse:
+  - Arbeidsmiljøloven § 14 A-3 setter maksimal varighet på 12 måneder.
+    24-måneders bindingstid er ulovlig.
+  - § 14 A-4 krever at arbeidsgiver betaler kompensasjon tilsvarende minst
+    100% av lønn opp til 8 G og 70% over. "Uten økonomisk kompensasjon" er
+    derfor også ulovlig.
+
+  For å gjøre klausulen lovlig må:
+  - Varighet reduseres til maks 12 måneder
+  - Det legges til kompensasjons-bestemmelse iht. § 14 A-4
+  - Arbeidsgiver må gi skriftlig redegjørelse om gyldighet (§ 14 A-2)
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-ulovlighet
+      weight: 0.3
+      description: |
+        Modellen konkluderer klart med at klausulen ikke er lovlig.
+        Tvilsom eller bekreftende svar gir lav score.
+    - criterion: korrekt-hjemmel-aml-14a
+      weight: 0.3
+      description: |
+        Sitterer arbeidsmiljøloven kapittel 14 A (eller § 14 A-3 / § 14 A-4
+        eksplisitt). Bruker riktige paragraf-numre.
+    - criterion: nevner-12-maaneders-grense
+      weight: 0.2
+      description: |
+        Identifiserer at 24 mnd overstiger lovens 12 mnd grense.
+    - criterion: nevner-kompensasjonskrav
+      weight: 0.2
+      description: |
+        Påpeker at "uten økonomisk kompensasjon" er ulovlig — det kreves
+        kompensasjon (typisk 100% av lønn opp til 8 G).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [arbeidsmiljøloven, konkurranseklausul, AML-14A, hard, llm-judge]

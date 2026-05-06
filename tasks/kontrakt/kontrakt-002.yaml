@@ -1,0 +1,74 @@
+id: kontrakt-002
+category: kontrakt
+version: 1
+title: Risiko-vurdering av leveranseavtale med ansvarsbegrensning
+difficulty: medium
+
+rationale: |
+  Ansvarsbegrensninger i leveranseavtaler er svært vanlige men kan være
+  problematiske: norsk rett begrenser muligheten til å fraskrive seg ansvar
+  for grov uaktsomhet og forsett (kjøpsloven § 41 om opsetlig misligholdelse,
+  avtaleloven § 36 om urimelig avtale).
+
+  Modellen må kjenne grensen mellom legitime ansvars-tak (greit) og
+  fraskrivelse av forsett (ugyldig). Dette skiller en SMB-relevant juridisk
+  modell fra en som hallusinerer.
+
+source: synthetic
+
+user_prompt: |
+  Vurder følgende ansvarsbegrensning i en leveranseavtale mellom to norske
+  selskaper. Er den juridisk holdbar i Norge? Hva ville en advokat anbefale
+  å endre?
+
+  ---
+  Klausul 14 — Ansvarsbegrensning
+  Leverandørens samlede erstatningsansvar uansett ansvarsgrunnlag,
+  herunder ved forsett, grov uaktsomhet og personskade, er begrenset til
+  10% av kontraktssummen.
+
+gold_answer: |
+  Klausulen er IKKE fullt ut juridisk holdbar.
+
+  - Ansvars-tak på 10% kan være lovlig for ordinære kontraktsbrudd.
+  - MEN: ansvarsfraskrivelse for FORSETT og GROV UAKTSOMHET er ikke
+    rettsgyldig under norsk rett. Dette følger av alminnelige obligasjons-
+    rettslige prinsipper og kan settes til side etter avtaleloven § 36.
+  - Begrensning av ansvar for PERSONSKADE er problematisk under
+    skadeerstatningsloven og produktansvarsloven (avhengig av konteksten)
+    og bør utelates.
+
+  Anbefalt endring:
+  "Leverandørens samlede erstatningsansvar er begrenset til 10% av
+   kontraktssummen, med unntak av ansvar som følger av forsett, grov
+   uaktsomhet, personskade og produktansvar etter ufravikelig lov."
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: avdekker-forsett-er-problematisk
+      weight: 0.35
+      description: |
+        Identifiserer at ansvars-fraskrivelse for forsett er ugyldig.
+    - criterion: avdekker-grov-uaktsomhet
+      weight: 0.25
+      description: |
+        Identifiserer at fraskrivelse for grov uaktsomhet er problematisk.
+    - criterion: nevner-avtaleloven-36
+      weight: 0.15
+      description: |
+        Refererer til avtaleloven § 36 (sensurregelen) eller likeverdig
+        norsk hjemmel.
+    - criterion: avdekker-personskade
+      weight: 0.15
+      description: |
+        Påpeker at personskade krever særskilt vurdering.
+    - criterion: konstruktivt-forslag
+      weight: 0.10
+      description: |
+        Foreslår konkret omformulering, ikke bare kritikk.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [avtalerett, ansvarsbegrensning, avtaleloven-36, llm-judge]

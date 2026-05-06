@@ -1,0 +1,48 @@
+id: faktura-004
+category: faktura
+version: 1
+title: Beregn forsinkelsesrente på forfalt faktura
+difficulty: hard
+
+rationale: |
+  Forsinkelsesrente i Norge reguleres av forsinkelsesrenteloven. Renten settes
+  halvårlig av Finansdepartementet (per 1. januar og 1. juli). For 1. halvår
+  2026 er den 12,75% p.a. (styringsrente 4,5% + 8,25 prosentpoeng).
+  Beregning: hovedstol × rente × dager / 365.
+
+  Dette er en hard oppgave fordi modellen må:
+  (a) kjenne dagjeldende rente-sats — kan kreve nyere kunnskap eller en god
+      forutsetning; vi gir den i prompten for å gjøre det fair
+  (b) regne dager mellom datoer riktig
+  (c) ikke bli forvirret av MVA i utgangsbeløpet
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent. Svar kun med rente-beløpet i NOK.
+
+user_prompt: |
+  Beregn forsinkelsesrenten på følgende forfalte faktura.
+  Forsinkelsesrentesatsen for 1. halvår 2026 er 12,75% per år.
+  Bruk faktiske dager / 365 som beregningsmetode.
+
+  Faktura-detaljer:
+  - Total inkl. MVA: 50 000,00 kr
+  - Forfallsdato: 1. februar 2026
+  - Betalingsdato: 1. mai 2026
+
+  Hvor mye skal det betales i forsinkelsesrente?
+
+  Svar kun med beløpet i NOK (f.eks. "1 234,56").
+
+# 50 000 × 0.1275 × 89 / 365 = 1554.45...
+gold_answer: "1 554,45"
+
+eval:
+  method: numeric_exact
+  tolerance: 1.0  # tolerate ±1 kr for rounding differences
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [forsinkelsesrente, dato-aritmetikk, hard]

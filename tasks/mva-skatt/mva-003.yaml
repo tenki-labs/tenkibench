@@ -1,0 +1,35 @@
+id: mva-003
+category: mva-skatt
+version: 1
+title: Identifiser MVA-fritak for bok
+difficulty: easy
+
+rationale: |
+  Bøker er MVA-fritatt i Norge (mva-loven § 6-3). Aviser, tidsskrifter og
+  e-bøker har varierende behandling. Modellen må kjenne den grunnleggende
+  regelen og ikke automatisk legge på 25% MVA.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent.
+
+user_prompt: |
+  Et bokhandel selger en bok til 350 kr (utsalgspris).
+  Hva er totalbeløpet kunden skal betale, og hvor mye MVA er inkludert?
+
+gold_answer: |
+  Total: 350 kr
+  MVA: 0 kr (bøker er MVA-fritatt etter mva-loven § 6-3)
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "350\\s*kr"
+    - "0\\s*(kr|%)|MVA-fritatt|fritatt|fritak"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [mva-fritak, bok, mva-loven-6-3, basis]

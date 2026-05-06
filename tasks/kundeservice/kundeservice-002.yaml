@@ -1,0 +1,80 @@
+id: kundeservice-002
+category: kundeservice
+version: 1
+title: Beklage forsinket leveranse uten å påta seg ansvar utenfor kontroll
+difficulty: easy
+
+rationale: |
+  Klassisk SMB-situasjon: kundens pakke er forsinket pga transportør, ikke
+  bedriften. Den ansatte må uttrykke beklagelse uten å:
+  (a) lyve om hva som skjedde,
+  (b) eskalere saken (kunden får krav som vi ikke kan oppfylle),
+  (c) være kald og defensiv.
+
+  Tester den karakteristiske norske kundeservice-tonen: direkte, ærlig,
+  konstruktivt løsende.
+
+source: synthetic
+
+user_prompt: |
+  En kunde har skrevet:
+
+  "Jeg bestilte en gave til bursdag 4. mai og dere lovet leveranse innen 3. mai.
+  Nå er det 5. mai og jeg har fortsatt ikke fått pakken. Bursdagen var i går.
+  Hvorfor er dere så useriøse?"
+
+  Pakken ble sendt til rett tid fra deres lager 2. mai med PostNord.
+  Det er PostNord som har forsinket leveransen, pakken er på vei og forventes
+  i morgen.
+
+  Skriv et kort, profesjonelt svar.
+
+gold_answer: |
+  (Eksempel)
+
+  Hei,
+
+  Beklager virkelig at pakken ikke kom frem til bursdagen — det forstår vi
+  må ha vært veldig kjedelig. Jeg har sjekket forsendelsen og kan se at vi
+  sendte den fra lageret 2. mai som planlagt, men PostNord har dessverre fått
+  en forsinkelse i transporten.
+
+  Pakken er nå på vei og er forventet hos deg i morgen 6. mai.
+
+  For å gjøre opp for ulempen tilbyr vi deg et gavekort på 200 kr som du kan
+  bruke ved neste handel. Det er sendt til e-posten din.
+
+  Si gjerne ifra om noe ikke stemmer når pakken kommer.
+
+  Vennlig hilsen,
+  Kundeservice
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: empatisk-uten-ydmyk
+      weight: 0.25
+      description: |
+        Beklager genuint, men ikke overdreven eller selvflagellerende.
+    - criterion: ærlig-om-årsak
+      weight: 0.25
+      description: |
+        Er åpen om at PostNord (eller transportør) er forsinket — ikke
+        skyver det vekk, ikke tar ansvar for noe utenfor egen kontroll.
+    - criterion: gir-status-eller-løsning
+      weight: 0.25
+      description: |
+        Forteller hvor pakken er og når den kommer.
+    - criterion: kompensasjon-eller-godvilje
+      weight: 0.15
+      description: |
+        Tilbyr noe konkret (gavekort, fri frakt, beklagelses-rabatt).
+    - criterion: kort-og-effektiv
+      weight: 0.10
+      description: |
+        Ikke for langt. Kunden er irritert; et kort, klart svar er bedre.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [kundeservice, leveranse, transportør, llm-judge]

@@ -1,0 +1,63 @@
+id: bn-001
+category: bokmal-nynorsk
+version: 1
+title: Oversett kontraktklausul fra Bokmål til Nynorsk
+difficulty: medium
+
+rationale: |
+  Statlige organer er pliktige til å bruke begge målformer (mållova).
+  Norske SMB-er som vil selge til offentlig sektor må kunne levere dokumenter
+  i Nynorsk. Riktig oversettelse krever ikke bare ord-for-ord-bytting, men
+  Nynorsk-kompatibel grammatikk og setningsstruktur.
+
+  Modeller trent primært på Bokmål (som de fleste er) gjør ofte feil her:
+  bruker bokmålske bøyninger, blander inn engelske kalker, eller produserer
+  uleselig Nynorsk.
+
+source: synthetic
+
+user_prompt: |
+  Oversett følgende klausul fra Bokmål til Nynorsk. Behold juridisk presisjon.
+  Returner kun den oversatte teksten.
+
+  ---
+  § 7 — Mislighold
+  Dersom én av partene vesentlig misligholder sine forpliktelser etter denne
+  avtalen, kan den andre parten heve avtalen med umiddelbar virkning.
+  Heving må meddeles skriftlig.
+
+gold_answer: |
+  § 7 — Misleghald
+  Dersom ein av partane vesentleg misleghaldar pliktene sine etter denne
+  avtalen, kan den andre parten heve avtalen med umiddelbar verknad.
+  Heving må meldast skriftleg.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: er-faktisk-nynorsk
+      weight: 0.4
+      description: |
+        Resultatet er gjenkjennelig Nynorsk: bruker "ein/eit" (ikke "en/et"),
+        "ikkje" (ikke "ikke"), "kva" (ikke "hva"), passende verbformer
+        (-ar/-er, infinitiv på -e), pronomen ("han/ho/det" formelle Nynorsk).
+    - criterion: bevarer-juridisk-mening
+      weight: 0.3
+      description: |
+        Den juridiske meningen er fullt bevart: "vesentlig mislighold",
+        "umiddelbar virkning", "skriftlig" oversettes presist.
+    - criterion: konsistent-rettskriving
+      weight: 0.2
+      description: |
+        Bruker konsistent Nynorsk-rettskrivning, ikke blander Bokmål-former
+        ("misligholdet" + "misleghald" eksempelvis).
+    - criterion: ingen-tegn-på-ai-generering
+      weight: 0.1
+      description: |
+        Ingen ekstra forklaringer, ingen "Her er oversettelsen…", ingen
+        markdown-fences. Bare den oversatte teksten.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [nynorsk, juridisk-oversettelse, mållova, llm-judge]

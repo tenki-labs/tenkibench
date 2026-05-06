@@ -1,0 +1,61 @@
+id: hr-002
+category: hr-lonn
+version: 1
+title: Beregn feriepenger ved oppsigelse
+difficulty: hard
+
+rationale: |
+  Feriepenger er 10,2% av brutto lønn (12% for tariff-bundne med 5 ukers ferie).
+  Ferieloven § 11 nr 1 — feriepenger utbetales i juni eller ved sluttoppgjør.
+  Ved oppsigelse: opptjente feriepenger frem til sluttdato skal utbetales,
+  pluss feriepenger av kommende ferieår's opptjening dersom relevant.
+
+  Hyppig SMB-feil: blande "feriepenger" med "fritidsdager", glemme tilleggs-
+  satsen for tariff-bundne, eller ikke regne med opptjening i sluttkvartalet.
+
+source: synthetic
+
+user_prompt: |
+  En ansatt slutter 31. august 2026. Vedkommende har ikke tatt ut ferie i 2026.
+  Lønnen var 600 000 kr/år (fast). Bedriften har ikke tariffavtale.
+
+  Hvor mye skal utbetales i feriepenger ved sluttoppgjør? Antakelser tillatt
+  så lenge de er klart opplyst.
+
+gold_answer: |
+  Feriepengene beregnes av lønn opptjent i 2025 (året før ferieåret 2026):
+  600 000 × 10,2% = 61 200 kr.
+
+  I tillegg har vedkommende opptjent feriepenger gjennom 2026 (jan–aug):
+  ca. 8/12 av årslønn × 10,2% = 400 000 × 10,2% = 40 800 kr.
+  Disse skal også med i sluttoppgjøret.
+
+  Totalt feriepenger ved sluttdato 31.08.2026: 61 200 + 40 800 = 102 000 kr.
+
+  (Antakelse: lønn har vært stabil de siste 12 mnd. Bedriften betaler
+  10,2% etter ferielovens minimum siden den ikke har tariffavtale.)
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: bruker-10-2-prosent
+      weight: 0.3
+      description: |
+        Bruker 10,2% feriepenger-sats (ikke 12% siden ikke tariff).
+    - criterion: dekker-fjorårets-opptjening
+      weight: 0.25
+      description: |
+        Inkluderer feriepenger opptjent i 2025 (61 200 kr).
+    - criterion: dekker-årets-opptjening
+      weight: 0.25
+      description: |
+        Inkluderer feriepenger opptjent i 2026 frem til sluttdato.
+    - criterion: rimelig-totalbeløp
+      weight: 0.2
+      description: |
+        Totalt rundt 100 000 kr (±20 000 aksepteres for ulike antakelser).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [feriepenger, oppsigelse, ferieloven, hard, llm-judge]

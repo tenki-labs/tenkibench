@@ -1,0 +1,62 @@
+id: faktura-001
+category: faktura
+version: 1
+title: Totalbeløp inkl. MVA på enkel faktura
+difficulty: easy
+
+rationale: |
+  Dette er den vanligste faktura-oppgaven en regnskapsfører eller bedriftseier
+  møter daglig: gitt en faktura, finn totalbeløpet inklusive MVA. Modellen må
+  håndtere norsk tallnotasjon (mellomrom som tusenskiller, komma som desimal-
+  separator), gjenkjenne MVA-25%-satsen, og legge til riktig.
+
+source: synthetic
+source_notes: |
+  Generert basert på malen til norske håndverker-fakturaer. Ingen reelle
+  organisasjons- eller personopplysninger.
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent. Svar kort og presist.
+  Ikke forklar prosessen med mindre du blir bedt om det.
+
+user_prompt: |
+  Hva er totalbeløpet inklusive MVA på følgende faktura?
+
+  ---
+  FAKTURA
+  Fakturanr: 24-4231
+  Dato: 15.04.2026
+  Forfall: 29.04.2026
+
+  Til:
+  Lillevik AS
+  Storgata 5
+  1234 Lillevik
+  Org.nr: 999 888 777
+
+  Fra:
+  Hansen Bygg AS
+  Org.nr: 123 456 789
+
+  Beskrivelse                                  Beløp
+  --------------------------------------------------
+  Renovering av bad - timer (24 t a 950 kr)    22 800,00
+  Materialer                                    8 450,00
+  --------------------------------------------------
+  Sum eks. MVA                                 31 250,00
+  MVA 25%                                       7 812,50
+  --------------------------------------------------
+  Total
+
+  KID: 0042310000048
+
+gold_answer: "39 062,50"
+
+eval:
+  method: numeric_exact
+  tolerance: 0.01
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [mva-25, byggebransjen, basis]

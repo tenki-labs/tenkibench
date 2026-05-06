@@ -1,0 +1,45 @@
+id: brreg-002
+category: brreg
+version: 1
+title: Identifiser om signaturberettigede er korrekt registrert
+difficulty: hard
+
+rationale: |
+  Vurdering av signaturrett er kritisk i SMB-jus. "Signatur" i Brreg betyr hvem
+  som kan binde selskapet juridisk. "Hver for seg" vs "i fellesskap" er ulike
+  konfigurasjoner med store konsekvenser. En modell som anbefaler at en
+  prokurist kan signere kontrakter alene når kun "to i fellesskap" er
+  registrert, kan utløse store erstatningskrav.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk juridisk assistent.
+
+user_prompt: |
+  Et selskap har følgende registrering i Brønnøysund:
+
+  Signatur: To styremedlemmer i fellesskap.
+  Prokura: Daglig leder alene.
+
+  Spørsmål: Kan daglig leder alene signere en leveranseavtale på 5 mill. NOK
+  som binder selskapet? Begrunn kort.
+
+gold_answer: |
+  Nei. Signatur (rett til å binde selskapet i alle disposisjoner) er kun gitt
+  til to styremedlemmer i fellesskap. Prokura gir daglig leder rett til
+  ordinære forretninger og daglig drift, men en avtale på 5 millioner ligger
+  utenfor "ordinær daglig drift" og krever signatur fra to styremedlemmer.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "\\bnei\\b|kan\\s+ikke|ikke\\s+(alene|aleine)"
+    - "signatur|to\\s+styremedlemmer|i\\s+fellesskap"
+    - "ordinær|prokura|daglig\\s+drift"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [signatur, prokura, hard, selskapsrett]

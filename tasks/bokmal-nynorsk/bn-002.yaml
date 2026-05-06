@@ -1,0 +1,64 @@
+id: bn-002
+category: bokmal-nynorsk
+version: 1
+title: Identifiser blanding av målformer i utkast
+difficulty: hard
+
+rationale: |
+  Vanlig kvalitetsproblem i offentlige dokumenter: en tekst som *utgir seg*
+  for å være Nynorsk men inneholder Bokmål-former (eller motsatt). Modellen
+  må kunne identifisere konkret hvilke ord som er feil målform — en strengere
+  test enn å bare oversette.
+
+  Refererer til mållova § 1 om at offentlige organer skal bruke korrekt målform.
+
+source: synthetic
+
+user_prompt: |
+  Følgende tekst skal være i Nynorsk, men inneholder feil. Identifiser hvilke
+  ord/uttrykk som er på Bokmål (ikke Nynorsk), og hva de bør erstattes med.
+
+  ---
+  "Kommunen ønsker å invitere alle bedrifter som ikke har deltatt i prosessen
+  til å sende inn sine forslag innen fristen. Vi ber om at innspillene er
+  konkrete og at de tar utgangspunkt i kommunens prioriteringer."
+
+gold_answer: |
+  Bokmålske ord/uttrykk i den "nynorske" teksten:
+  - "ønsker" → "ønskjer" (eller "vil")
+  - "å" → "å" (riktig i Nynorsk for infinitivsmerke, men sjekk verb-formen)
+  - "ikke" → "ikkje"
+  - "deres" / "sine" — "sine" er greit
+  - "innspillene" → "innspela"
+  - "tar" → "tek"
+
+  Hovedfeilene: "ønsker" → "ønskjer", "ikke" → "ikkje", "innspillene" → "innspela",
+  "tar" → "tek".
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: finner-ikke-ikkje
+      weight: 0.25
+      description: Identifiserer "ikke" som Bokmål, foreslår "ikkje".
+    - criterion: finner-onsker-onskjer
+      weight: 0.25
+      description: Identifiserer "ønsker" som Bokmål, foreslår "ønskjer".
+    - criterion: finner-tar-tek
+      weight: 0.2
+      description: Identifiserer "tar" som Bokmål, foreslår "tek".
+    - criterion: finner-flertall-bestemt
+      weight: 0.2
+      description: |
+        Identifiserer at "innspillene" har Bokmål-flertallsform —
+        Nynorsk har "innspela".
+    - criterion: ingen-falske-positiver
+      weight: 0.1
+      description: |
+        Plager ikke ord som er korrekt Nynorsk (eks. "vi", "kommunen",
+        "sine") — falske positiver trekker score.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [nynorsk, blandet-mål, kvalitetskontroll, hard, llm-judge]

@@ -1,0 +1,19 @@
+title = "tenkibench gitleaks config"
+
+[[rules]]
+id = "openai"
+description = "OpenAI API key"
+regex = '''sk-[A-Za-z0-9]{32,}'''
+tags = ["key", "openai"]
+
+[[rules]]
+id = "anthropic"
+description = "Anthropic API key"
+regex = '''sk-ant-[A-Za-z0-9-]{32,}'''
+tags = ["key", "anthropic"]
+
+[[rules]]
+id = "mammouth"
+description = "Mammouth API key"
+regex = '''mmth_[A-Za-z0-9]{20,}'''
+tags = ["key", "mammouth"]

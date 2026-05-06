@@ -1,0 +1,47 @@
+id: mva-001
+category: mva-skatt
+version: 1
+title: Beregn MVA på serveringssted (25%, ikke 15%)
+difficulty: medium
+
+rationale: |
+  Vanlig misforståelse: matvarer har 15% MVA, men servering på sted (kafé,
+  restaurant) er 25%. Take-away er 15%. Denne sondringen er kjent å feile i
+  generelle modeller som ikke kjenner Merverdiavgiftsforskriften § 5-2 grundig.
+
+  Reelt konsekvens: en kafé som beregner 15% MVA i stedet for 25% får tilbake-
+  betalingskrav fra Skatteetaten med tilleggsskatt.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent med ekspertise på MVA-loven.
+  Svar med beløpet i NOK, og oppgi MVA-prosent.
+
+user_prompt: |
+  Et kafe-besøk: kunden har spist på stedet og bestilt:
+  - 1 kaffe: 45 kr eks. MVA
+  - 1 wienerbrød: 60 kr eks. MVA
+
+  Hva er totalbeløpet kunden skal betale (inkl. MVA), og hvilken MVA-prosent gjelder?
+
+  Servering på stedet — ikke take-away.
+
+  Svar i format:
+  Total: <beløp> kr
+  MVA-sats: <X>%
+
+gold_answer: |
+  Total: 131,25 kr
+  MVA-sats: 25%
+
+eval:
+  method: regex_all
+  patterns:
+    - "Total[:\\s]+131[,.]25"
+    - "MVA-sats[:\\s]+25\\s*%"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [mva-25, servering, mva-loven]
