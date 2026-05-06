@@ -14,7 +14,7 @@ export function CategoryBarChart({
         <XAxis type="number" domain={[0, 1]} tickFormatter={(n) => `${(n * 100).toFixed(0)}%`} />
         <YAxis dataKey="name" type="category" width={140} tick={{ fontSize: 12 }} />
         <Tooltip
-          formatter={(value: number) => `${(value * 100).toFixed(1)}%`}
+          formatter={(value) => `${((Number(value) || 0) * 100).toFixed(1)}%`}
           contentStyle={{ background: "#fff", border: "1px solid #E2E2E2", fontSize: 12 }}
         />
         <Bar dataKey="score" fill="#1A4DFF" radius={0} />

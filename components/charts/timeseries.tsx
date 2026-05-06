@@ -27,7 +27,7 @@ export function TimeseriesChart({
         <XAxis dataKey="date" tick={{ fontSize: 11 }} />
         <YAxis domain={[0, 1]} tickFormatter={(n) => `${(n * 100).toFixed(0)}%`} />
         <Tooltip
-          formatter={(value: number) => `${(value * 100).toFixed(1)}%`}
+          formatter={(value) => `${((Number(value) || 0) * 100).toFixed(1)}%`}
           contentStyle={{ background: "#fff", border: "1px solid #E2E2E2", fontSize: 12 }}
         />
         <Legend wrapperStyle={{ fontSize: 12 }} />

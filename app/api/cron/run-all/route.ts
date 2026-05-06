@@ -5,13 +5,11 @@ import { startRun, executeRun } from "@/lib/eval/runner";
 export const runtime = "nodejs";
 export const maxDuration = 600;
 
-/**
- * Cron-triggered: run benchmark against every active model.
- * Hit by host crontab (or GitHub Actions) with Bearer token.
- *
- * Example: 0 3 1 */3 * curl -H "Authorization: Bearer $CRON_TOKEN" \
- *          https://bench.tenki.no/api/cron/run-all
- */
+// Cron-triggered: run benchmark against every active model.
+// Hit by host crontab (or GitHub Actions) with Bearer token.
+//
+// Example: 0 3 1 */3 * curl -H "Authorization: Bearer $CRON_TOKEN" \
+//          https://bench.tenki.no/api/cron/run-all
 export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization") ?? "";
   if (auth !== `Bearer ${process.env.CRON_TOKEN}`) {

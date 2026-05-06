@@ -4,6 +4,7 @@ import { Card, CardEyebrow, CardTitle } from "@/components/ui/card";
 import { query } from "@/lib/db";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export default async function CategoriesIndex() {

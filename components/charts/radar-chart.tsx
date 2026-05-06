@@ -31,7 +31,7 @@ export function ModelRadarChart({
           fillOpacity={0.18}
         />
         <Tooltip
-          formatter={(value: number) => `${(value * 100).toFixed(1)}%`}
+          formatter={(value) => `${((Number(value) || 0) * 100).toFixed(1)}%`}
           contentStyle={{ background: "#fff", border: "1px solid #E2E2E2", fontSize: 12 }}
         />
       </RadarChart>

@@ -5,27 +5,27 @@ declare global {
   var __pgPool: Pool | undefined;
 }
 
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set");
-}
-
-export const pool: Pool =
-  global.__pgPool ??
-  new Pool({
+function getPool(): Pool {
+  if (global.__pgPool) return global.__pgPool;
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not set");
+  }
+  const pool = new Pool({
     connectionString,
     max: 10,
     idleTimeoutMillis: 30_000,
   });
-
-if (process.env.NODE_ENV !== "production") global.__pgPool = pool;
+  if (process.env.NODE_ENV !== "production") global.__pgPool = pool;
+  else global.__pgPool = pool;
+  return pool;
+}
 
 export async function query<T extends QueryResultRow = QueryResultRow>(
   text: string,
   params?: unknown[],
 ): Promise<{ rows: T[]; rowCount: number }> {
-  const res = await pool.query<T>(text, params as never[]);
+  const res = await getPool().query<T>(text, params as never[]);
   return { rows: res.rows, rowCount: res.rowCount ?? 0 };
 }
 

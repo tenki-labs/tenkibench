@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { formatDate, formatScore, formatCost, formatNumber } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 3;
 
 export default async function RunDetail({ params }: { params: Promise<{ id: string }> }) {

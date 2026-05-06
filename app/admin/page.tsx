@@ -2,6 +2,8 @@ import { query } from "@/lib/db";
 import Link from "next/link";
 import { formatDate, formatScore, formatCost } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminHome() {
   const { rows: stats } = await query<{
     models: string; runs: string; tasks: string; latest_run_at: string | null;

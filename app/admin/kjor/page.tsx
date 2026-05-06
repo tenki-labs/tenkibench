@@ -1,5 +1,8 @@
 import { query } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { startRun, executeRun } from "@/lib/eval/runner";
+
+export const dynamic = "force-dynamic";
 
 async function startRunAction(formData: FormData) {
   "use server";
@@ -7,17 +10,18 @@ async function startRunAction(formData: FormData) {
   const category = String(formData.get("category") ?? "") || undefined;
   if (!modelId) redirect("/admin/kjor?err=no-model");
 
-  // Hit our own /api/admin/run endpoint to fire-and-forget
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/api/admin/run`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `tenkibench_admin=${process.env.ADMIN_TOKEN}`,
-    },
-    body: JSON.stringify({ modelId, category }),
+  const benchVersion = process.env.GIT_COMMIT?.slice(0, 7) ?? "manual";
+  const runId = await startRun({ modelId, category, benchVersion });
+
+  // Fire-and-forget background execution. Errors update the run row.
+  void executeRun(runId, { modelId, category, benchVersion }).catch(async (err) => {
+    await query(
+      `update runs set status = 'failed', notes = $1, finished_at = now() where id = $2`,
+      [String(err?.message ?? err).slice(0, 1000), runId],
+    );
   });
-  const body = await res.json();
-  redirect(`/admin/runs/${body.runId}`);
+
+  redirect(`/admin/runs/${runId}`);
 }
 
 export default async function RunPage() {

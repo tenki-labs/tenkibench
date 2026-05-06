@@ -5,6 +5,7 @@ import { Card, CardEyebrow, CardTitle } from "@/components/ui/card";
 import { query } from "@/lib/db";
 import { formatScore, formatDate } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 interface LeaderRow {

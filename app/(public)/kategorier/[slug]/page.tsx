@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { formatScore, formatDate } from "@/lib/utils";
 import { CategoryBarChart } from "@/components/charts/category-bar";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 interface CategoryRow {

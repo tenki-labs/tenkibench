@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { loadAllTasks } from "@/lib/tasks/loader";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
 export default async function TasksPage({

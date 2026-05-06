@@ -1,6 +1,8 @@
 import { query } from "@/lib/db";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function ModelsPage() {
   const { rows } = await query<{
     id: number; slug: string; display_name: string; provider: string;

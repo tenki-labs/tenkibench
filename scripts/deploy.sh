@@ -20,7 +20,12 @@ EDGE_DIR=/opt/edge
 cd "$REPO_DIR"
 
 echo "▸ Loading secrets"
-source "$ENV_DIR/admin.env"
+# tenkibench uses .env.production at runtime; deploy.sh reads it once to source
+# values needed for build args + DB-bootstrap. Same file must contain at least:
+# DATABASE_URL, MAMMOUTH_API_KEY, ADMIN_TOKEN, CRON_TOKEN, POSTGRES_PASSWORD.
+set -a
+source "$ENV_DIR/.env.production"
+set +a
 
 echo "▸ Building image"
 docker build \

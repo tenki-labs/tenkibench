@@ -7,6 +7,7 @@ import { formatScore, formatCost, formatDate, formatNumber } from "@/lib/utils";
 import { ModelRadarChart } from "@/components/charts/radar-chart";
 import { TimeseriesChart } from "@/components/charts/timeseries";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export default async function ModelPage({ params }: { params: Promise<{ slug: string }> }) {

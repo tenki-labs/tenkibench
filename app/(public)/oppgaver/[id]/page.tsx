@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadTask } from "@/lib/tasks/loader";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
 export default async function TaskPage({ params }: { params: Promise<{ id: string }> }) {

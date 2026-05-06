@@ -2,6 +2,8 @@ import { query } from "@/lib/db";
 import Link from "next/link";
 import { formatDate, formatScore, formatCost } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export default async function RunsList() {
   const { rows } = await query<{
     id: number; status: string; display_name: string; started_at: string; finished_at: string | null;

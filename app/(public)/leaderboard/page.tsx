@@ -4,6 +4,7 @@ import { query } from "@/lib/db";
 import Link from "next/link";
 import { formatScore, formatCost, formatDate } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 interface FullRow {
