@@ -1,0 +1,53 @@
+id: hr-004
+category: hr-lonn
+version: 1
+title: Foreldrepermisjon — fordeling mellom foreldre
+difficulty: hard
+
+rationale: |
+  Foreldrepermisjon i Norge er strukturert som total ramme på 49/59 uker
+  (100%/80% lønn) etter folketrygdloven kapittel 14. Av disse er det
+  mors-/fars-kvoter (15 uker hver) og en fellesperiode. Modellen må kunne
+  redegjøre for at det IKKE er full valgfri fordeling — kvotene er
+  reservert.
+
+  Hyppig forveksling: at "all permisjon kan gis til mor". Feil — far/medmor
+  har egen kvote på 15 uker som ikke kan overføres (med visse unntak).
+
+source: public-domain
+source_notes: |
+  Folketrygdloven kapittel 14, særlig § 14-9 (fedrekvote) og § 14-10
+  (mødrekvote). Tall stabile per 2026.
+
+user_prompt: |
+  Hvordan er foreldrepermisjon i Norge strukturert per 2026? Hvor mye er
+  forbeholdt mor, hvor mye far/medmor, og hvor mye kan deles fritt?
+  Antakelse: full lønn (100%-dekningsgrad).
+
+gold_answer: |
+  Total ramme ved 100% dekningsgrad: 49 uker (folketrygdloven kapittel 14).
+
+  Fordeling:
+  - 3 uker FØR fødselen: forbeholdt mor.
+  - 6 uker ETTER fødselen: forbeholdt mor (medisinsk).
+  - 15 uker: mødrekvote (etter foreldrepenger-perioden, kan ikke overføres).
+  - 15 uker: fedrekvote (kan ikke overføres til mor unntatt ved særskilte
+    forhold som sykdom eller alvorlig sykdom hos far).
+  - 16 uker: fellesperiode som kan deles fritt mellom foreldrene.
+
+  Hjemmel: folketrygdloven §§ 14-9 og 14-10.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "49\\s*uker"
+    - "15\\s*uker"
+    - "(fedrekvote|farskvote|fars\\s*kvote)"
+    - "(mødrekvote|mors\\s*kvote)"
+    - "fellesperiode|deles\\s*fritt"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [foreldrepermisjon, ftrl-14, hard]

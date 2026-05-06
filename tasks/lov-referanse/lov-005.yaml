@@ -1,0 +1,37 @@
+id: lov-005
+category: lov-referanse
+version: 1
+title: Varsling av kritikkverdige forhold
+difficulty: medium
+
+rationale: |
+  Arbeidsmiljøloven kapittel 2 A regulerer varsling om kritikkverdige forhold
+  i virksomheten (whistleblowing). § 2 A-1 gir rett til å varsle, § 2 A-3
+  setter varslingsrutine-krav for virksomheter med ≥ 5 ansatte. Hyppig
+  feil-svar er "arbeidsmiljøloven § 14" eller "personopplysningsloven".
+
+source: public-domain
+
+user_prompt: |
+  Hvilke paragrafer i arbeidsmiljøloven regulerer varsling av kritikkverdige
+  forhold (whistleblowing)? Nevn særlig varslingsrutine-kravet for store
+  virksomheter.
+
+gold_answer: |
+  Kapittel 2 A i arbeidsmiljøloven (§§ 2 A-1 til 2 A-7) regulerer varsling.
+  - § 2 A-1: rett til å varsle om kritikkverdige forhold.
+  - § 2 A-3: virksomheter med minst 5 arbeidstakere skal ha varslingsrutiner.
+  - § 2 A-4: forbud mot gjengjeldelse.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "kapittel\\s*2\\s*A|\\bkap\\b\\s*2\\s*A|2\\s*A-1"
+    - "arbeidsmiljølov|aml"
+    - "varsling"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [varsling, aml-2A, whistleblowing]

@@ -1,0 +1,37 @@
+id: lov-006
+category: lov-referanse
+version: 1
+title: Reklamasjonsfrist for forbruker
+difficulty: medium
+
+rationale: |
+  Forbrukerkjøpsloven § 27: reklamasjonsfrist er 2 år for ordinære varer,
+  5 år for varer som er ment å vare vesentlig lengre enn 2 år (eks. møbler,
+  hvitevarer, elektronikk over en viss verdi). Uovervinnelig at modellen ikke
+  kan denne — ofte spør SMB-er som driver netthandel.
+
+source: public-domain
+
+user_prompt: |
+  Hva er reklamasjonsfristen for forbrukerkjøp i Norge, og er det forskjellige
+  frister for ulike typer varer? Oppgi lov og paragraf.
+
+gold_answer: |
+  Forbrukerkjøpsloven § 27 setter fristen.
+  - Hovedregel: 2 år.
+  - Utvidet frist 5 år for varer som er ment å vare vesentlig lengre enn 2 år
+    (eks. hvitevarer, møbler, biler, dyrere elektronikk).
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "forbrukerkjøps?lov(en)?|fkl"
+    - "§\\s*27"
+    - "2\\s*år"
+    - "5\\s*år"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [forbrukerkjøp, reklamasjon, fkl-27]

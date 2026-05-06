@@ -1,0 +1,31 @@
+id: mva-005
+category: mva-skatt
+version: 1
+title: Trekke ut MVA fra brutto-beløp
+difficulty: easy
+
+rationale: |
+  Vanlig oppgave: gitt et beløp inkl. 25% MVA, hva er beløpet eks. MVA?
+  Riktig formel: brutto / 1,25 = netto. Modellen må kjenne denne ikke regne
+  feilaktig "brutto × 0,75" eller "brutto × 0,8" (sistnevnte gir 25% av brutto,
+  ikke av netto).
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent. Svar kun med beløpet eks. MVA.
+
+user_prompt: |
+  Et beløp på 12 500,00 kr inkluderer 25% MVA. Hva er beløpet eksklusive MVA?
+
+# 12 500 / 1.25 = 10 000
+gold_answer: "10 000,00"
+
+eval:
+  method: numeric_exact
+  tolerance: 0.01
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [mva-25, formel, basis]

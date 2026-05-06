@@ -1,0 +1,40 @@
+id: hr-003
+category: hr-lonn
+version: 1
+title: Overtidsbetaling — minimum-tillegg
+difficulty: medium
+
+rationale: |
+  Arbeidsmiljøloven § 10-6 niende ledd: minimum 40% tillegg for overtid.
+  Tariff- eller individuell avtale kan ha høyere (50% eller mer). Modellen
+  må kjenne lovens minimum og forklare at avtale kan øke det.
+
+source: public-domain
+
+user_prompt: |
+  En arbeidstaker har ordinær timelønn 350 kr og jobber 5 timer overtid
+  i en uke. Bedriften har ingen tariffavtale. Hvor mye skal overtidsbetalingen
+  være, og hvilken paragraf i hvilken lov hjemler tillegget?
+
+gold_answer: |
+  Lovens minimum er 40% tillegg etter arbeidsmiljøloven § 10-6 niende ledd.
+
+  Beregning:
+  Ordinær timelønn:    350 kr
+  Tillegg (40%):       140 kr
+  Overtidstimelønn:    490 kr per time
+  5 timer × 490:       2 450 kr
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "40\\s*%"
+    - "arbeidsmiljølov(en)?|aml"
+    - "§\\s*10-6"
+    - "490|2\\s*450"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [overtid, aml-10-6, beregning]

@@ -1,0 +1,39 @@
+id: mva-004
+category: mva-skatt
+version: 1
+title: MVA-grense for registreringsplikt (50 000 NOK)
+difficulty: easy
+
+rationale: |
+  Mva-loven § 2-1 første ledd: virksomhet med årlig omsetning > 50 000 kr
+  må MVA-registreres. Frivillig registrering kan gjøres tidligere
+  (§ 2-3). Mange nye gründere kjenner ikke grensa og enten registrerer
+  for tidlig eller for sent.
+
+source: public-domain
+source_notes: |
+  Mva-loven § 2-1. Grensa har ligget på 50 000 kr i mange år (og er stabil).
+
+system_prompt: |
+  Du er en norsk skatte- og MVA-rådgiver.
+
+user_prompt: |
+  Hva er omsetningsgrensa for når en virksomhet plikter å registrere seg
+  for merverdiavgift i Norge, og hvilken paragraf hjemler dette?
+
+gold_answer: |
+  Omsetningsgrensa er 50 000 kr i løpet av en 12-måneders periode.
+  Hjemmel: mva-loven § 2-1 første ledd.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "50\\s*000"
+    - "mva-?lov|merverdiavgiftslov"
+    - "§\\s*2-1"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [mva-registrering, mva-loven-2-1, basis]

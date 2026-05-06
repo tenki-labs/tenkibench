@@ -40,7 +40,13 @@ user_prompt: |
   --------------------------------------------------------
   Total inkl. MVA                                           ?
 
-gold_answer: "4 264,25"
+# Beregning:
+#   15% MVA på 900+795+770 = 2465 → MVA = 369,75
+#   25% MVA på 840+180 = 1020 → MVA = 255,00
+#    0% MVA på 390 → MVA = 0
+#   Sum MVA = 624,75
+#   Total inkl. MVA = 3875,00 + 624,75 = 4499,75
+gold_answer: "4 499,75"
 
 eval:
   method: numeric_exact

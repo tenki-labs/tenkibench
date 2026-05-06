@@ -1,0 +1,79 @@
+id: kundeservice-003
+category: kundeservice
+version: 1
+title: Forklare prisøkning til lojal kunde
+difficulty: medium
+
+rationale: |
+  Klassisk SMB-utfordring: kommunisere prisøkning uten å miste kunden.
+  Norsk forretnings-kultur verdsetter ærlighet og kontekst over markedsspeak.
+  Modellen må unngå (a) corporate-fluff ("for å fortsette å levere førsteklasses
+  verdi…"), (b) defensiv unnskyldning, (c) blame på "markedet" uten innhold.
+
+source: synthetic
+
+user_prompt: |
+  Du er kundeansvarlig hos et regnskapsbyrå. En kunde har vært hos dere i 4 år
+  og betaler i dag 4 500 kr/mnd. Dere må heve prisen til 5 200 kr/mnd
+  (+15,5%) på grunn av økte lønnskostnader og bredere oppgaver.
+
+  Skriv en kort, ærlig e-post som:
+  - Forklarer årsaken til økningen
+  - Anerkjenner kundens lojalitet
+  - Tilbyr en samtale hvis kunden har spørsmål
+  - Ikke er for lang
+
+gold_answer: |
+  Eksempel:
+
+  Hei Marius,
+
+  Jeg vil informere deg om at vi fra og med 1. juli 2026 må justere månedshonoraret
+  ditt fra 4 500 til 5 200 kr — en økning på 15,5%.
+
+  Bakgrunnen er todelt: lønnskostnadene våre har økt vesentlig over de siste
+  to årene, og oppgavene vi gjør for deg har gradvis blitt mer omfattende
+  (særlig MVA-rapportering og kvartalsrapporter for nye datterselskap).
+
+  Jeg vet du har vært kunde hos oss i fire år, og det setter vi stor pris på.
+  Det er derfor jeg vil at du skal høre dette direkte fra meg, ikke som en
+  formell prisliste i posten.
+
+  Hvis du har spørsmål eller vil ha en samtale om hva økningen dekker —
+  ring meg på [telefon] eller svar på denne e-posten.
+
+  Med vennlig hilsen,
+  [Navn]
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: ærlig-årsak
+      weight: 0.3
+      description: |
+        Forklarer årsak konkret (lønn, oppgavevolum, etc.) — ikke vag
+        markedsspeak som "økte kostnader generelt" uten innhold.
+    - criterion: anerkjenner-lojalitet
+      weight: 0.2
+      description: |
+        Nevner eksplisitt at kunden har vært lenge hos dere, eller på annen
+        måte anerkjenner relasjonen.
+    - criterion: tilbyr-dialog
+      weight: 0.2
+      description: |
+        Inviterer til samtale, ikke "her er prisen, ta det eller la det".
+    - criterion: norsk-direkte-tone
+      weight: 0.2
+      description: |
+        Tonen er saklig og direkte — unngår "for å fortsette å levere
+        førsteklasses verdi til våre verdifulle kunder"-fraser.
+    - criterion: passe-lengde
+      weight: 0.1
+      description: |
+        Ikke kortere enn 5 setninger, ikke lenger enn 15. En e-post, ikke et
+        whitepaper.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [prisøkning, kundeservice, llm-judge]

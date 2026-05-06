@@ -1,0 +1,37 @@
+id: faktura-007
+category: faktura
+version: 1
+title: Konverter EUR-faktura til NOK med dagskurs
+difficulty: medium
+
+rationale: |
+  Norske SMB-er som handler internasjonalt får jevnlig EUR/USD-fakturaer som
+  må bokføres i NOK med dagskurs. Bokføringsforskriften § 5-2 sier at man
+  skal bruke kursen på fakturadato (eller månedsgjennomsnitt om man har det
+  som fast praksis).
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent. Returner kun beløpet i NOK avrundet
+  til to desimaler.
+
+user_prompt: |
+  Konverter dette fakturabeløpet fra EUR til NOK ved bruk av oppgitt dagskurs.
+
+  Faktura-beløp: 1 250,00 EUR
+  EUR/NOK kurs på fakturadato: 11,7250
+
+  Hva er beløpet i NOK?
+
+# 1250 × 11.7250 = 14 656.25
+gold_answer: "14 656,25"
+
+eval:
+  method: numeric_exact
+  tolerance: 0.05
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [valuta, eur, multiplikasjon]

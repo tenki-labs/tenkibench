@@ -1,5 +1,5 @@
 import { query } from "@/lib/db";
-import { loadAllTasks } from "@/lib/tasks/loader";
+import { loadAllTasks, loadHoldoutTasks } from "@/lib/tasks/loader";
 import type { Task } from "@/lib/tasks/schema";
 import type { ModelRow } from "@/lib/llm/types";
 import { makeClient } from "@/lib/llm";
@@ -20,10 +20,22 @@ export interface RunOptions {
   taskIds?: string[];
   benchVersion?: string;
   judgeModelId?: number;
+  includeHoldout?: boolean;
+}
+
+// In-process cancel signals. Survives until the process restarts.
+const cancelSignals = new Set<number>();
+
+export function signalCancel(runId: number): void {
+  cancelSignals.add(runId);
+}
+
+export function isCancelled(runId: number): boolean {
+  return cancelSignals.has(runId);
 }
 
 export async function startRun(opts: RunOptions): Promise<number> {
-  const tasks = filterTasks(loadAllTasks(), opts);
+  const tasks = filterTasks(loadAllTasks(opts.includeHoldout), opts);
   const promptHash = hashPrompts(tasks);
   const benchVersion = opts.benchVersion ?? "dev";
   const { rows } = await query<{ id: number }>(
@@ -46,7 +58,7 @@ export async function executeRun(
   const judge = opts.judgeModelId ? await getModel(opts.judgeModelId) : await getDefaultJudge();
   const judgeClient = judge ? makeClient(judge) : null;
 
-  const tasks = filterTasks(loadAllTasks(), opts);
+  const tasks = filterTasks(loadAllTasks(opts.includeHoldout), opts);
   const client = makeClient(model);
 
   let done = 0;
@@ -56,14 +68,19 @@ export async function executeRun(
   let totalOut = 0;
 
   for (const task of tasks) {
+    if (isCancelled(runId)) break;
+
     try {
-      const llm = await client.invoke({
-        systemPrompt: task.system_prompt,
-        userPrompt: task.user_prompt,
-        temperature: 0,
-        maxTokens: 2048,
-        responseFormat: task.eval.method === "json_schema" ? "json" : "text",
-      });
+      const llm = await invokeWithRetry(
+        () => client.invoke({
+          systemPrompt: task.system_prompt,
+          userPrompt: task.user_prompt,
+          temperature: 0,
+          maxTokens: 2048,
+          responseFormat: task.eval.method === "json_schema" ? "json" : "text",
+        }),
+        { max: 3, baseDelayMs: 1000 },
+      );
 
       const evalResult = await evaluateOne(task, llm.text, judgeClient);
 
@@ -112,12 +129,49 @@ export async function executeRun(
     );
   }
 
+  if (isCancelled(runId)) {
+    cancelSignals.delete(runId);
+    // Run was cancelled mid-flight — leave run row alone (already set to 'cancelled' by handler)
+    // but materialize whatever scores we did manage to compute
+    await materializeAggregates(runId);
+    return;
+  }
+
   await materializeAggregates(runId);
 
   await query(
-    `update runs set status = 'finished', finished_at = now() where id = $1`,
+    `update runs set status = 'finished', finished_at = now() where id = $1
+     and status = 'running'`,
     [runId],
   );
+}
+
+async function invokeWithRetry<T>(
+  fn: () => Promise<T>,
+  opts: { max: number; baseDelayMs: number },
+): Promise<T> {
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < opts.max; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastErr = err;
+      if (!isRetryable(err) || attempt === opts.max - 1) throw err;
+      const delay = opts.baseDelayMs * Math.pow(2, attempt) + Math.random() * 250;
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  throw lastErr;
+}
+
+function isRetryable(err: unknown): boolean {
+  if (!err || typeof err !== "object") return false;
+  const e = err as { status?: number; code?: string; message?: string };
+  // OpenAI-style errors expose .status; transient: 429, 500, 502, 503, 504
+  if (e.status && [429, 500, 502, 503, 504].includes(e.status)) return true;
+  if (e.code === "ECONNRESET" || e.code === "ETIMEDOUT" || e.code === "ENOTFOUND") return true;
+  if (typeof e.message === "string" && /timeout|temporarily|rate limit/i.test(e.message)) return true;
+  return false;
 }
 
 async function evaluateOne(
@@ -143,7 +197,6 @@ async function evaluateOne(
 }
 
 async function materializeAggregates(runId: number): Promise<void> {
-  // Per-category mean / median
   await query(
     `insert into run_category_scores (run_id, category_slug, task_count, mean_score, median_score)
      select run_id, category_slug, count(*),
@@ -159,7 +212,6 @@ async function materializeAggregates(runId: number): Promise<void> {
     [runId],
   );
 
-  // Total = weighted average of per-category mean, weighted by category.weight
   await query(
     `insert into run_total_scores (run_id, total_score, category_count)
      select rcs.run_id,

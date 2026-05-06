@@ -1,0 +1,64 @@
+id: kontrakt-003
+category: kontrakt
+version: 1
+title: Force majeure-klausul — er pandemi inkludert
+difficulty: medium
+
+rationale: |
+  Etter Covid-19 har "force majeure"-klausuler blitt nøye gransket.
+  Vanlig listing er "krig, opprør, naturkatastrofer, brann" — mens pandemi
+  ikke står eksplisitt og må tolkes inn. Norsk høyesterettspraksis varierer.
+  Modellen må kunne identifisere at klausulen er åpen for tolkning og
+  anbefale eksplisitt tilføyelse.
+
+source: synthetic
+
+user_prompt: |
+  Vurder denne force majeure-klausulen. Dekker den en pandemi-relatert
+  forsinkelse, eller bør klausulen oppdateres?
+
+  ---
+  § 11 — Force majeure
+  Ingen part hefter for forsinkelse eller mislighold som skyldes
+  ekstraordinære og uforutsigbare hendelser utenfor partenes kontroll,
+  herunder krig, terrorhandling, opprør, naturkatastrofer, brann og
+  myndighetsvedtak.
+
+gold_answer: |
+  Klausulen er IKKE eksplisitt om pandemi. Den lister "krig, terror, opprør,
+  natur, brann, myndighetsvedtak" men ikke pandemier eller epidemier.
+
+  Tolkningsspørsmål: pandemi kan FALLE INNUNDER "ekstraordinære og uforutsig-
+  bare hendelser utenfor partenes kontroll" (vid formulering), særlig hvis
+  pandemien utløser konkrete myndighetsvedtak (lockdown, reiserestriksjoner)
+  som er listet. Men dette er tolknings-usikkert og blir ofte tvistepunkt.
+
+  Anbefaling:
+  - Legg til "pandemi, epidemi, og helse-relaterte myndighetspålegg" eksplisitt
+  - Vurder også cyber-angrep og kritisk infrastruktur-svikt
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-mangel
+      weight: 0.4
+      description: |
+        Påpeker at "pandemi" ikke står eksplisitt i klausulen.
+    - criterion: nevner-tolknings-usikkerhet
+      weight: 0.25
+      description: |
+        Påpeker at pandemi kan/kan ikke regnes inn under "ekstraordinære
+        hendelser" og at dette er åpent for tolkning.
+    - criterion: konkret-anbefaling
+      weight: 0.25
+      description: |
+        Foreslår eksplisitt tilføyelse av pandemi/epidemi i listen.
+    - criterion: nevner-myndighetsvedtak-link
+      weight: 0.10
+      description: |
+        Påpeker koblingen mellom pandemi og myndighetsvedtak (som er listet).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [force-majeure, pandemi, llm-judge]

@@ -41,6 +41,33 @@ export default async function RunDetail({ params }: { params: Promise<{ id: stri
         Status: <strong>{run.status}</strong> · Bench v{run.bench_version} · Prompt-hash {run.prompt_version}
       </p>
 
+      <div className="mb-6 flex gap-3 text-sm">
+        <a
+          href={`/api/public/runs/${run.id}?format=json`}
+          className="border hairline border-[var(--tenki-subtle)] px-3 py-1"
+          download
+        >
+          JSON ↓
+        </a>
+        <a
+          href={`/api/public/runs/${run.id}?format=csv`}
+          className="border hairline border-[var(--tenki-subtle)] px-3 py-1"
+          download
+        >
+          CSV ↓
+        </a>
+        {run.status === "running" && (
+          <form action={`/api/admin/run/${run.id}/cancel`} method="post">
+            <button
+              type="submit"
+              className="border hairline border-red-700 text-red-700 px-3 py-1 text-sm"
+            >
+              Avbryt kjøring
+            </button>
+          </form>
+        )}
+      </div>
+
       <div className="grid sm:grid-cols-4 gap-4 mb-10">
         <Stat label="Total-score" value={formatScore(run.total_score)} mono />
         <Stat label="Fremdrift" value={`${run.completed_count}/${run.task_count}`} mono />

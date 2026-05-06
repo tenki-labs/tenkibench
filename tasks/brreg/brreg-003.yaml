@@ -1,0 +1,44 @@
+id: brreg-003
+category: brreg
+version: 1
+title: NUF — vurder norsk utenlandsk filial
+difficulty: hard
+
+rationale: |
+  NUF (Norsk avdeling av utenlandsk foretak) er en filial av et utenlandsk
+  selskap registrert i Norge. Eier-strukturen ligger i utlandet, men filialen
+  kan inngå avtaler med norske kunder. Modellen må kjenne strukturen og at
+  morselskapet hefter for filialens forpliktelser (i motsetning til norske AS).
+
+  Hyppig misforståelse: NUF har "begrenset ansvar" som norsk AS — feil.
+
+source: public-domain
+
+user_prompt: |
+  En norsk kunde lurer på å inngå en stor avtale med "Acme Solutions NUF",
+  en NUF av et britisk Ltd-selskap. Hva er det viktige å vite om
+  ansvarsstrukturen ved en NUF, og hva bør kunden sjekke før avtaleinngåelse?
+
+gold_answer: |
+  En NUF er ikke en selvstendig juridisk enhet — det er en filial. Det
+  utenlandske morselskapet (her: et britisk Ltd) er den juridiske kontraktsparten
+  og er ansvarlig for forpliktelsene.
+
+  Kunden bør sjekke:
+  1. Det utenlandske morselskapets økonomiske soliditet (Companies House for UK Ltd).
+  2. At NUFen har norsk daglig leder/representant registrert i Brreg.
+  3. Vurder om norsk eller engelsk lov gjelder (inntas typisk i avtalen).
+  4. Risiko hvis morselskapet går konkurs i hjemlandet — kreditorforfølgelse i UK.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "NUF|filial"
+    - "morselskap|Ltd|utenland|hovedselskap"
+    - "ansvar|hefter|juridisk"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [nuf, selskapsrett, hard]

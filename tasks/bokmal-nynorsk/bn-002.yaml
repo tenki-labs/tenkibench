@@ -24,16 +24,13 @@ user_prompt: |
   konkrete og at de tar utgangspunkt i kommunens prioriteringer."
 
 gold_answer: |
-  Bokmålske ord/uttrykk i den "nynorske" teksten:
-  - "ønsker" → "ønskjer" (eller "vil")
-  - "å" → "å" (riktig i Nynorsk for infinitivsmerke, men sjekk verb-formen)
+  Bokmålske ord/uttrykk i den "nynorske" teksten (med rettelse):
+  - "ønsker" → "ønskjer"
   - "ikke" → "ikkje"
-  - "deres" / "sine" — "sine" er greit
   - "innspillene" → "innspela"
   - "tar" → "tek"
 
-  Hovedfeilene: "ønsker" → "ønskjer", "ikke" → "ikkje", "innspillene" → "innspela",
-  "tar" → "tek".
+  Note: "sine forslag" er greit nynorsk; "å invitere" og "frist" er felles.
 
 eval:
   method: llm_judge

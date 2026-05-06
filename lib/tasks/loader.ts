@@ -1,25 +1,44 @@
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import yaml from "js-yaml";
 import { TaskSchema, type Task } from "./schema";
 
 const TASKS_DIR = join(process.cwd(), "tasks");
+const HOLDOUT_DIR = join(process.cwd(), "tasks-holdout");
 
 /**
  * Load all valid tasks from disk.
  *
  * Per-file validation: a malformed task throws a descriptive error rather than
  * being silently skipped. Authors get loud feedback at `pnpm tasks:validate`.
+ *
+ * @param includeHoldout if true, also reads tasks-holdout/. Hold-out tasks are
+ *                       gitignored and only present on the production VPS.
  */
-export function loadAllTasks(): Task[] {
+export function loadAllTasks(includeHoldout = false): Task[] {
   const tasks: Task[] = [];
-  const categoryDirs = readdirSync(TASKS_DIR).filter((name) => {
-    const p = join(TASKS_DIR, name);
+  loadFromDir(TASKS_DIR, tasks);
+  if (includeHoldout && existsSync(HOLDOUT_DIR)) {
+    loadFromDir(HOLDOUT_DIR, tasks);
+  }
+  return tasks;
+}
+
+export function loadHoldoutTasks(): Task[] {
+  if (!existsSync(HOLDOUT_DIR)) return [];
+  const tasks: Task[] = [];
+  loadFromDir(HOLDOUT_DIR, tasks);
+  return tasks;
+}
+
+function loadFromDir(root: string, tasks: Task[]): void {
+  const categoryDirs = readdirSync(root).filter((name) => {
+    const p = join(root, name);
     try { return statSync(p).isDirectory(); } catch { return false; }
   });
 
   for (const category of categoryDirs) {
-    const dir = join(TASKS_DIR, category);
+    const dir = join(root, category);
     const files = readdirSync(dir).filter((f) => f.endsWith(".yaml") || f.endsWith(".yml"));
     for (const file of files) {
       const path = join(dir, file);
@@ -49,7 +68,6 @@ export function loadAllTasks(): Task[] {
       tasks.push(task);
     }
   }
-  return tasks;
 }
 
 export function loadCategory(category: string): Task[] {
@@ -57,5 +75,5 @@ export function loadCategory(category: string): Task[] {
 }
 
 export function loadTask(id: string): Task | null {
-  return loadAllTasks().find((t) => t.id === id) ?? null;
+  return loadAllTasks(true).find((t) => t.id === id) ?? null;
 }

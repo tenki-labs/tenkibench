@@ -1,0 +1,52 @@
+id: faktura-006
+category: faktura
+version: 1
+title: Identifiser kreditnota vs ordinær faktura
+difficulty: easy
+
+rationale: |
+  Kreditnota har negativt fortegn på beløp og brukes til å reversere en
+  tidligere faktura. Modeller skal kjenne forskjellen og ikke behandle en
+  kreditnota som en ny utgift.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent.
+
+user_prompt: |
+  Hvilken type dokument er dette, og hva blir effekten på regnskapet?
+
+  ---
+  KREDITNOTA
+  Kreditnotanr: KN-2026-018
+  Refererer til faktura: 2026-0142
+  Dato: 03.05.2026
+
+  Fra: Hansen Bygg AS
+  Til: Lillevik AS
+
+  Beskrivelse                            Beløp
+  -------------------------------------------
+  Refusjon — feil mengde fakturert     -2 500,00
+  MVA 25%                                -625,00
+  -------------------------------------------
+  Total                                -3 125,00
+
+gold_answer: |
+  Dette er en kreditnota (ikke en faktura). Den reverserer en tidligere faktura
+  delvis. Effekten på regnskapet er at det reduserer skyldig beløp med
+  3 125,00 kr (negativt — reduserer leverandørgjeld og inngående MVA tilsvarende).
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "kreditnota"
+    - "redus|negativ|trekkes|reversér"
+    - "3\\s*125"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [kreditnota, basis]

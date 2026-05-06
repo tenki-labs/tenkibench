@@ -1,0 +1,41 @@
+id: lov-004
+category: lov-referanse
+version: 1
+title: GDPR vs personopplysningsloven — hvilken gjelder
+difficulty: medium
+
+rationale: |
+  GDPR (forordning 2016/679) gjelder direkte i Norge. Personopplysningsloven
+  (2018) er den nasjonale gjennomføringen som supplerer GDPR. Modellen skal
+  vite at GDPR har forrang og at personopplysningsloven dekker norsk-spesifikke
+  forhold (eks. behandling av personnummer, kameraovervåking, kredittopplysninger).
+
+source: public-domain
+
+user_prompt: |
+  En norsk SMB lurer på om de må følge GDPR eller personopplysningsloven
+  når de behandler kundeopplysninger. Forklar kort sammenhengen mellom
+  de to og hvilken som har forrang.
+
+gold_answer: |
+  Begge gjelder samtidig. GDPR (EU-forordning 2016/679) er direkte gjeldende i
+  Norge gjennom EØS-avtalen og har forrang ved konflikt. Personopplysningsloven
+  (lov av 15. juni 2018 nr. 38) gjennomfører GDPR i norsk rett og supplerer
+  med norsk-spesifikke regler — for eksempel om behandling av fødselsnummer
+  (§ 12), kameraovervåking (kapittel 9) og forholdet til ytringsfriheten (§ 3).
+
+  Praktisk konsekvens: følg GDPR som basis. Sjekk personopplysningsloven for
+  norske særregler.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "gdpr|2016/679|personvernforordning"
+    - "personopplysningslov(en)?|popplyl"
+    - "begge|samtidig|sammen|supplerer|gjelder"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [gdpr, personvern, popplyl]

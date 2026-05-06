@@ -1,0 +1,61 @@
+id: bn-003
+category: bokmal-nynorsk
+version: 1
+title: Oversett offentlig informasjonstekst fra Nynorsk til Bokmål
+difficulty: easy
+
+rationale: |
+  Mange offentlige etater publiserer informasjon på Nynorsk. Norske SMB-er
+  må kunne oversette til Bokmål for sin kommunikasjon. Dette er den
+  motsatte retningen av bn-001 og tester om modellen håndterer Nynorsk-input
+  presist.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk språk-assistent. Returner kun den oversatte teksten, ingen
+  forklaringer eller markdown-fences.
+
+user_prompt: |
+  Oversett følgende tekst fra Nynorsk til Bokmål. Bevar betydningen presist.
+
+  ---
+  Verksemder med fleire enn fem tilsette skal ha skriftlege rutinar for
+  varsling om kritikkverdige forhold. Rutinane skal utformast i samarbeid
+  med arbeidstakarane og deira tillitsvalde, og skal gjerast kjende for
+  alle tilsette.
+
+gold_answer: |
+  Virksomheter med flere enn fem ansatte skal ha skriftlige rutiner for
+  varsling om kritikkverdige forhold. Rutinene skal utformes i samarbeid
+  med arbeidstakerne og deres tillitsvalgte, og skal gjøres kjent for
+  alle ansatte.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: er-faktisk-bokmal
+      weight: 0.4
+      description: |
+        Resultatet bruker Bokmål-konsistente former: "virksomheter" (ikke
+        verksemder), "tilsette" → "ansatte", "rutinar" → "rutiner",
+        "tillitsvalde" → "tillitsvalgte", "kjende" → "kjent".
+    - criterion: bevarer-juridisk-mening
+      weight: 0.3
+      description: |
+        Den juridiske meningen er fullt bevart: "skriftlige rutiner",
+        "kritikkverdige forhold", "i samarbeid med", "tillitsvalgte".
+    - criterion: ingen-blanding
+      weight: 0.2
+      description: |
+        Ingen Nynorsk-former lekker inn ("ikkje", "verksemd", "fleire"
+        skal ikke stå i resultatet).
+    - criterion: ingen-tegn-på-ai
+      weight: 0.1
+      description: |
+        Ingen "Her er oversettelsen…", ingen markdown-fences, bare teksten.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-06"
+
+tags: [bokmål, nynorsk-til-bokmål, varsling, llm-judge]
