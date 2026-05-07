@@ -1,0 +1,46 @@
+id: reason-tool-002
+bench: tool-use
+category: tool-reasoning
+version: 1
+title: Beslutt når verktøy ikke skal kalles
+difficulty: medium
+
+rationale: |
+  Reasoning på "ingen verktøy nødvendig". Mange modeller kaller verktøy
+  reflexivt. Test om modellen kan bestemme at verktøy ikke trengs og
+  bare svare med kunnskap.
+
+source: synthetic
+
+system_prompt: |
+  Du har tilgang til disse verktøyene:
+    - brreg_lookup(orgnr)
+    - lovdata_search(query)
+    - mva_calculate(amount, rate)
+    - altinn_form(rf_number)
+  Returner JSON med felt `tool_calls` (kan være tom array) og `direct_answer`.
+
+user_prompt: |
+  En SMB-eier spør: "Kan en arbeidstaker si opp seg selv mens hun er
+  sykmeldt?"
+
+  Skal du kalle et verktøy, eller bare svare direkte?
+
+gold_answer: |
+  {
+    "tool_calls": [],
+    "direct_answer": "Ja. Sykmelding stopper ikke arbeidstakerens rett til å si opp. Oppsigelsestiden løper som normalt. Arbeidsgiver kan derimot ikke si opp i sykmeldings-perioden uten saklig grunn (verneperiode 12 måneder etter arbeidsmiljøloven § 15-8). Spørsmålet er rent juridisk og krever ikke oppslag i Lovdata, Brreg eller kalkulator."
+  }
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - '"tool_calls"\s*:\s*\[\s*\]'
+    - "(ja|kan)"
+    - "(arbeidsmiljølov|aml|§\\s*15-8|sykmeld)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, no-tool-needed, judgment]

@@ -1,0 +1,95 @@
+id: reason-gdpr-002
+bench: gdpr-advanced
+category: gdpr-reasoning
+version: 1
+title: Vurder grenser for behandlings-grunnlag-skifte midt i forhold
+difficulty: hard
+
+rationale: |
+  Reasoning på purpose-limitation. Når en SMB endrer hva de bruker
+  data til, er det lov å fortsette med samme grunnlag, eller må de
+  innhente nytt samtykke?
+
+source: synthetic
+
+user_prompt: |
+  En SMB samlet inn e-postadresser fra kunder ved kjøp, basert på
+  avtale-grunnlag (Article 6(1)(b)) for å sende ordrebekreftelser og
+  følge opp leveranser. Nå vil de bruke samme adressene til å sende
+  månedlige nyhetsbrev med produkt-tips.
+
+  Er dette gyldig? Resonner gjennom prinsippene.
+
+gold_answer: |
+  Nei, ikke uten nytt grunnlag.
+
+  Resonnement:
+
+  1) Purpose limitation (Art. 5(1)(b)):
+     - GDPR krever at data behandles for "specified, explicit and
+       legitimate purposes" og ikke videre-behandles på en måte som
+       er uforenlig med de opprinnelige formål.
+     - Opprinnelig formål: avtale-oppfyllelse (ordre + levering).
+     - Nytt formål: markedsføring / nyhetsbrev.
+     - Markedsføring er IKKE forenlig med avtale-oppfyllelse — det er
+       et separat formål.
+
+  2) Hva må til for det nye formålet:
+     a) Samtykke (Art. 6(1)(a)): pasienten må aktivt samtykke til
+        nyhetsbrevene. Opt-in, ikke opt-out.
+     b) Berettiget interesse (Art. 6(1)(f)): KAN brukes for direkte
+        markedsføring til EKSISTERENDE kunder, men:
+        - Recital 47 nevner direkte markedsføring som mulig berettiget
+          interesse
+        - MEN: ekomloven § 13-1 (Norge) krever uttrykkelig at
+          elektronisk markedsføring til e-post krever forhåndssamtykke
+          UTENFOR eksisterende kundeforhold
+        - "Soft opt-in"-unntak: kan markedsføre LIGNENDE produkter til
+          eksisterende kunder, hvis de ble informert ved innsamling og
+          har enkel opt-out (ekomloven § 13-1 andre ledd)
+
+  3) Anbefaling:
+     - Send ut en informasjons-epost til eksisterende kunder med
+       enkel opt-in: "Vil du motta månedlige produkt-tips?"
+     - For nye kunder fra nå: legg en avkryssingsboks (ikke forhåndsavkrysset)
+       på checkout: "Jeg vil motta nyhetsbrev"
+     - Hvis dere argumenterer for soft opt-in (Art. 6(1)(f) +
+       ekomloven), må:
+       - Dere kun markedsføre LIGNENDE produkter til opprinnelig kjøp
+       - Inkludere "avregistrer"-link i hver epost
+       - Ha dokumentert at kunder ble informert om muligheten ved kjøp
+     - Trygt valg: gå med eksplisitt opt-in. Lavere reaksjonsrate, men
+       fri fra Datatilsynet-risiko.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-formal-skifte
+      weight: 0.3
+      description: |
+        Påpeker at markedsføring er nytt formål, ikke forenlig med
+        avtale-oppfyllelse.
+    - criterion: art-5-purpose-limitation
+      weight: 0.2
+      description: |
+        Refererer til Article 5(1)(b) eller principle of purpose
+        limitation.
+    - criterion: ekomloven
+      weight: 0.25
+      description: |
+        Refererer til ekomloven § 13-1 og kravet om forhåndssamtykke
+        for elektronisk markedsføring (norsk særregel).
+    - criterion: soft-opt-in-vurdering
+      weight: 0.15
+      description: |
+        Diskuterer "soft opt-in"-mekanismen og dens forutsetninger.
+    - criterion: konkrete-tiltak
+      weight: 0.1
+      description: |
+        Foreslår konkrete handlinger (opt-in epost, checkout-checkbox,
+        avregistrer-link).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, purpose-limitation, ekomloven, marketing, llm-judge, hard]

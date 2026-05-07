@@ -1,0 +1,58 @@
+id: reason-extr-002
+bench: extraction
+category: extr-reasoning
+version: 1
+title: Identifiser konflikt mellom to faktura-felter
+difficulty: medium
+
+rationale: |
+  Reasoning ved data-konsistens: gitt en faktura med interne
+  motsetninger (sum-felt stemmer ikke med linjesum), modellen må
+  identifisere feilen og foreslå hva som er sannsynlig riktig.
+
+source: synthetic
+
+system_prompt: |
+  Du er en regnskaps-assistent. Vurder data og pek på inkonsistenser.
+
+user_prompt: |
+  En faktura inneholder:
+  - 3 linjer á 1 200 kr eks. MVA = 3 600 kr
+  - 2 linjer á 850 kr eks. MVA = 1 700 kr
+  - "Sum eks. MVA" oppgitt som 5 350 kr
+  - "MVA 25%" oppgitt som 1 325 kr
+  - "Total" oppgitt som 6 675 kr
+
+  Hva stemmer ikke, og hva er den sannsynlige korrekte beregningen?
+
+gold_answer: |
+  Inkonsistenser:
+
+  1) Linjesum stemmer ikke med oppgitt Sum eks. MVA:
+     - Faktisk linjesum: 3 600 + 1 700 = 5 300 kr
+     - Oppgitt Sum eks. MVA: 5 350 kr
+     - Avvik: 50 kr (oppgitt sum er for høy)
+
+  2) 25% MVA på riktig linjesum (5 300):
+     - Korrekt: 5 300 × 0.25 = 1 325 kr ← stemmer
+     - 25% på oppgitt 5 350 ville vært 1 337,50 kr ≠ 1 325 kr
+
+  3) Konsistens-sjekk: oppgitt MVA (1 325) tilsvarer 25% av 5 300, ikke
+     5 350. Det betyr Sum eks. MVA-feltet er feil ført — den korrekte
+     summen er 5 300 kr, og total skulle vært 6 625 kr (ikke 6 675).
+
+  Konklusjon: 50-kroners avvik i Sum eks. MVA-feltet, sannsynlig
+  taste-/skrivefeil. Korrekt total: 6 625 kr.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(5\\s*300)"
+    - "(50)"
+    - "(6\\s*625|sum eks).*(?!.*5\\s*350.*ok)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, konsistens, faktura, medium]

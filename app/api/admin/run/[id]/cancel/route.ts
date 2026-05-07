@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
 import { query } from "@/lib/db";
 import { signalCancel } from "@/lib/eval/runner";
+import { requireStaff } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
 
@@ -9,9 +10,10 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const token = req.cookies.get("tenkibench_admin")?.value;
-  if (token !== process.env.ADMIN_TOKEN) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  try {
+    await requireStaff();
+  } catch (e) {
+    return NextResponse.json({ error: (e as Error).message }, { status: 401 });
   }
 
   const { id } = await params;
@@ -28,6 +30,5 @@ export async function POST(
     [runId],
   );
 
-  // Redirect back to the run detail
   redirect(`/admin/runs/${runId}`);
 }

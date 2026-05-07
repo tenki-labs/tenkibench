@@ -1,0 +1,67 @@
+id: reason-bygg-002
+bench: norwegian-construction
+category: bygg-reasoning
+version: 1
+title: Vurder akkord-system når lønnstilbud strider mot tariff
+difficulty: hard
+
+rationale: |
+  Reasoning over kollisjon mellom akkord-system og tariffavtale i bygg.
+  Krever å holde to systemer i hodet samtidig: NAFs Fellesoverenskomst
+  vs spesifikt akkord-tilbud.
+
+source: synthetic
+
+user_prompt: |
+  En entreprenør tilbyr akkord på 850 kr/m² for armeringsarbeid i et
+  betongprosjekt. Ifølge NAFs Fellesoverenskomst (Tømmer- og snekker)
+  for året 2026 skal akkord-grunnlaget være minimum 920 kr/m² for
+  tilsvarende arbeid med tilsvarende kvalitetskrav. Tre tømrere har
+  signert akkord-avtalen.
+
+  Resonner: er denne avtalen gyldig? Hva er tømrernes rettigheter, og
+  hva må entreprenøren gjøre?
+
+gold_answer: |
+  Avtalen er IKKE fullt gyldig — den underbyder tariff-grunnlaget.
+
+  Resonnement:
+
+  1) Tariff er ufravikelig minimum.
+     NAF (Norske anleggs- og elektromontører) sin Fellesoverenskomst er
+     en tariff-avtale som gjelder mellom partene LO/NHO. Akkord-tilbud
+     under tariff-grunnlag er ugyldig som tariff-stridig.
+
+  2) Ansattes rettigheter:
+     - De har krav på å få differansen mellom 850 og 920 = 70 kr/m²
+       etterbetalt for alt utført arbeid.
+     - De kan kreve at akkord-avtalen omforhandles eller ugyldiggjøres.
+     - Bedriften kan bli holdt erstatningsansvarlig overfor LO-medlemmer.
+     - Hvis dette systematisk bryter tariff, kan det utløse arbeidskamp.
+
+  3) Bedriftens plikter:
+     - Justere akkord-tilbud til minst 920 kr/m².
+     - Etterbetale differansen for arbeid allerede utført.
+     - Sjekke at signaturen ikke er gjort under tvang eller villedende
+       informasjon — i så fall kan avtalen være ugyldig på flere måter.
+     - Dokumentere ny akkord-avtale skriftlig.
+
+  4) Hvorfor ikke akseptere underbud:
+     Selv om tømrerne har "samtykket", kan ikke individuell avtale
+     underby tariff (jf. arbeidstvistloven § 6 om bindende tariff-avtale).
+     Dette er fordi tariff-systemet er en kollektiv beskyttelse —
+     individuell aksept svekker ikke den.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(ikke|ugyldig|tariff[\\s-]*strid)"
+    - "(tariff|fellesoverenskomst|naf)"
+    - "(70|differanse|etterbetal)"
+    - "(arbeidstvist|kollektiv|minimum)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, akkord, tariff, arbeidstvistloven, hard]

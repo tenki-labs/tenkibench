@@ -1,0 +1,92 @@
+id: reason-helse-002
+bench: norwegian-healthcare
+category: helse-reasoning
+version: 1
+title: Pasientens rett til journalinnsyn vs taushetsplikt om tredjeperson
+difficulty: hard
+
+rationale: |
+  Klassisk konflikt: pasient ber om hele journalen, men der står
+  informasjon om en pårørende som ble innhentet i fortrolighet. Modellen
+  må vekte to konkurrerende hensyn fra pasientrettighetsloven og
+  helsepersonelloven.
+
+source: synthetic
+
+user_prompt: |
+  En pasient ber om kopi av hele journalen sin. I journalen står en
+  notat fra en samtale med pasientens søster, der søsteren forteller
+  om bekymringer for pasientens rusbruk. Søsteren ba uttrykkelig om at
+  pasienten ikke skulle få vite om samtalen.
+
+  Hva er riktig fremgangsmåte?
+
+gold_answer: |
+  Pasienten har som hovedregel rett til journalinnsyn (pasient- og
+  brukerrettighetsloven § 5-1), men det finnes unntak.
+
+  Vurdering:
+
+  1) Hjemmel for å unnta opplysninger fra innsyn:
+     - Pasrl § 5-1 tredje ledd: "Pasient eller bruker kan nektes innsyn
+       i opplysninger i journalen dersom dette er påtrengende nødvendig
+       for å hindre fare for liv eller alvorlig helseskade for pasienten
+       selv, eller innsyn er klart utilrådelig av hensyn til personer som
+       står pasienten nær."
+     - Innsyn i opplysninger om søsteren (en tredjeperson) faller under
+       siste punkt — "hensyn til personer som står pasienten nær".
+
+  2) Praktisk fremgangsmåte:
+     - Tilkall journalansvarlig lege/leder. Beslutningen om å nekte
+       innsyn skal være medisinsk/faglig vurdert.
+     - Sladd eller utelat den konkrete passusen om søsteren ved
+       utlevering. Pasienten kan ikke få tilgang til søsterens
+       fortrolige opplysning.
+     - Opplys pasienten om at deler av journalen er sladdet/unntatt og
+       om hjemmelen.
+     - Pasienten kan klage på avgjørelsen til Statsforvalteren
+       (pasrl § 7-2).
+
+  3) Søsterens rettigheter:
+     - Helsepersonelloven § 21 om taushetsplikt gjelder fortsatt for
+       det helsepersonellet vet om henne.
+     - Hun har ikke direkte innsyn i pasientens journal (hun er ikke
+       pasienten).
+
+  Dette er en vurdering hvor man ALDRI gir søsterens identitet eller
+  fortrolige uttalelser tilbake til pasienten uten hennes samtykke.
+  Hvis pasienten utrykkelig spør "har søsteren snakket med deg om meg?"
+  kan man som helsepersonell ikke bekrefte eller avkrefte uten å bryte
+  taushetsplikt.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: hjemmel-pasrl-5-1
+      weight: 0.3
+      description: |
+        Refererer til pasient- og brukerrettighetsloven § 5-1 (eller
+        likeverdig) og dens unntak for tredjeperson-hensyn.
+    - criterion: konkret-fremgangsmaate
+      weight: 0.3
+      description: |
+        Foreslår konkret hva som skal gjøres: sladd det aktuelle
+        avsnittet, opplys om hjemmel, beslutning av lege.
+    - criterion: hpl-21-taushetsplikt
+      weight: 0.2
+      description: |
+        Refererer til helsepersonelloven § 21 om taushetsplikt overfor
+        søsterens informasjon.
+    - criterion: klagerett
+      weight: 0.1
+      description: Nevner at pasienten kan klage til Statsforvalteren.
+    - criterion: ikke-bekreft-tredjeperson
+      weight: 0.1
+      description: |
+        Påpeker at man ikke kan bekrefte/avkrefte søsterens kontakt
+        med helsetjenesten direkte.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, journal-innsyn, pasrl-5-1, hpl-21, llm-judge, hard]

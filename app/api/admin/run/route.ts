@@ -1,13 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { startRun, executeRun } from "@/lib/eval/runner";
+import { requireStaff } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
-export const maxDuration = 600; // 10 minutes — for large runs
+export const maxDuration = 600;
 
 export async function POST(req: NextRequest) {
-  const token = req.cookies.get("tenkibench_admin")?.value;
-  if (token !== process.env.ADMIN_TOKEN) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  try {
+    await requireStaff();
+  } catch (e) {
+    return NextResponse.json({ error: (e as Error).message }, { status: 401 });
   }
 
   const body = (await req.json()) as { modelId: number; category?: string };
@@ -22,7 +24,6 @@ export async function POST(req: NextRequest) {
     benchVersion,
   });
 
-  // Fire and forget. The client polls /admin/runs/[id] for progress.
   void executeRun(runId, {
     modelId: body.modelId,
     category: body.category,

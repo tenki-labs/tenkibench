@@ -1,0 +1,64 @@
+id: reason-lang-002
+bench: norwegian-language
+category: lang-reasoning
+version: 1
+title: Identifiser hvilken målform en blandet tekst gravitterer mot
+difficulty: medium
+
+rationale: |
+  Test på språk-deteksjon ut fra konkrete språktrekk, ikke metadata.
+  Modellen må telle Bokmål-/Nynorsk-trekk og avgjøre dominant målform.
+
+source: synthetic
+
+user_prompt: |
+  Vurder denne teksten — er den i hovedsak Bokmål eller Nynorsk? Begrunn med
+  konkrete språk-trekk.
+
+  "Verksemda har valgt å utvide kontoret. Vi har ansatt to nye medarbeidarar
+  og forventar at omsetninga skal auke neste år. Styret vil komme tilbake til
+  saka i neste møte."
+
+gold_answer: |
+  Teksten er i hovedsak Nynorsk, men med Bokmål-innslag.
+
+  Nynorsk-trekk:
+  - "Verksemda" (Bokmål: virksomheten)
+  - "valgt" — i moderne Nynorsk er valgt godkjent (også "vald")
+  - "medarbeidarar" (Bokmål: medarbeidere) — Nynorsk a-flertall
+  - "auke" (Bokmål: øke)
+  - "saka" (Bokmål: saken)
+  - "møte" — felles
+  - "kontoret" — felles
+
+  Bokmål-innslag (potensielt feil):
+  - "har valgt" — kan stå, men "har valt" er mer entydig Nynorsk
+  - "ansatt" (Nynorsk: tilsett)
+  - "forventar" — felles
+  - "skal" — felles
+  - "neste" — felles
+
+  Konklusjon: Hovedsakelig Nynorsk, men "ansatt" bør være "tilsett" for å
+  være konsistent.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-nynorsk-dominant
+      weight: 0.4
+      description: |
+        Konkluderer at teksten er hovedsakelig Nynorsk.
+    - criterion: peker-paa-konkrete-trekk
+      weight: 0.4
+      description: |
+        Identifiserer minst 3 konkrete Nynorsk-trekk (verksemda, medarbeidarar,
+        auke, saka, etc.) — ikke bare "ser nynorsk ut".
+    - criterion: identifiserer-bokmal-innslag
+      weight: 0.2
+      description: |
+        Påpeker at "ansatt" er Bokmål-form og bør være "tilsett".
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, malform-deteksjon, llm-judge]

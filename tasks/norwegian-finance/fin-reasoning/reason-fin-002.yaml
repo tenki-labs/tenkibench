@@ -1,0 +1,91 @@
+id: reason-fin-002
+bench: norwegian-finance
+category: fin-reasoning
+version: 1
+title: Vurder PEP-screening når kobling er uklart
+difficulty: hard
+
+rationale: |
+  Reasoning over indirekte koblinger til PEP. Hvitvaskingsforskriften
+  inkluderer "nær medarbeider" — modellen må vurdere når en kobling
+  er nær nok til å utløse plikt.
+
+source: synthetic
+
+user_prompt: |
+  En bank vurderer å åpne konto for et nytt selskap. Eier er en
+  privatperson som ikke selv er PEP. Men selskapet har som styreleder
+  en person som har vært finansminister i et OECD-land for 5 år siden.
+  I dag er hun pensjonert og har ikke politisk stilling.
+
+  Utløser dette PEP-status og forsterkede tiltak?
+
+gold_answer: |
+  Ja, sannsynligvis fortsatt PEP — eller minst nær-medarbeider av
+  tidligere PEP. Forsterkede tiltak utløses.
+
+  Resonnement:
+
+  1) Tidligere PEP — varighet:
+     - Hvitvaskingsforskriften § 4-2 (3) ledd: en person regnes som
+       PEP "i minst 12 måneder etter at vedkommende er fratrådt".
+     - Etter 12 måneder kan den behandlingsansvarlige vurdere
+       individuell risiko, men de fleste banker beholder PEP-status
+       i 18-24 måneder eller lenger.
+     - 5 år siden er over 12-måneders-grensa, men finansminister er
+       en høy-profil rolle. Forsiktig praksis er fortsatt forhøyet
+       oppmerksomhet.
+
+  2) Indirekte kobling — selskaps-styre:
+     - Eier er ikke PEP, men hennes selskap har en tidligere
+       finansminister som styreleder.
+     - Spørsmål: er styrelederen "reell rettighetshaver" eller
+       "nær medarbeider" til eieren?
+     - Hvitvaskingsforskriften § 4-3 (1) c): "personer som har felles
+       reell rettighetshaver-status i selskap, stiftelse eller
+       lignende" — uklart i dette tilfellet.
+     - § 4-3 (2): "kjente nære medarbeidere" inkluderer styre-/
+       lederkollegiet hvis de har selskaps-bånd som er kjent for å
+       gi direkte fordel.
+
+  3) Praktisk vurdering:
+     - Selv om ikke teknisk-PEP, er kombinasjonen (tidligere
+       finansminister som styreleder i ny etablert virksomhet) en
+       risiko-indikator.
+     - Forsterkede tiltak burde gjennomføres uansett:
+       - Krev uttrykkelig dokumentasjon av forholdet mellom eier
+         og styreleder
+       - Spør om opprinnelse til kapital og inntektskilder
+       - Beslutning om kontoåpning bør tas av høyere ledd
+       - Forsterket transaksjons-overvåking i minst 12 mnd
+
+  Banken skal i det minste behandle dette som "økt risiko" og dokumentere
+  vurderingen. Manglende vurdering kan utløse Datatilsynets eller
+  Finanstilsynets reaksjoner.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-pep-residual
+      weight: 0.3
+      description: |
+        Påpeker at PEP-status varer minst 12 mnd etter fratredelse, og
+        at høy-profil roller bør behandles forsiktig lenger.
+    - criterion: vurderer-styre-kobling
+      weight: 0.3
+      description: |
+        Vurderer om styrelederen er "nær medarbeider" eller utløser
+        PEP-relevans gjennom selskaps-rolle.
+    - criterion: forsterkede-tiltak-anbefales
+      weight: 0.25
+      description: |
+        Konkluderer at forsterkede tiltak bør gjennomføres.
+    - criterion: hjemmel-hvitvaskingsforskrift
+      weight: 0.15
+      description: |
+        Refererer til hvitvaskingsforskriften § 4-2 og/eller § 4-3.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, pep, nær-medarbeider, hvitvaskingsforskrift, llm-judge, hard]
