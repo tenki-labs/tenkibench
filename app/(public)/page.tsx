@@ -64,19 +64,20 @@ export default async function HomePage() {
       {/* HERO */}
       <section className="container max-w-7xl mx-auto px-6 md:px-10 pt-16 pb-24 md:pt-24 md:pb-36">
         <p className="mb-6 font-mono text-[11px] md:text-xs font-medium uppercase tracking-eyebrow text-tenki-accent hero-animate">
-          [ Norsk SMB · GDPR · AI Act ]
+          [ Norsk · SMB · GDPR · AI Act ]
         </p>
         <h1 className="font-mono font-medium leading-[0.95] tracking-tighter text-tenki-ink text-[2.5rem] sm:text-[3.5rem] md:text-[5rem] lg:text-[6rem] max-w-5xl hero-animate">
-          Hvor god er språkmodellen
+          Vi tester om kunstig intelligens
+          <br className="hidden md:inline" />
+          {" "}forstår Norge
           <span className="text-tenki-accent">.</span>
-          {" "}på norske SMB-oppgaver
-          <span className="text-tenki-accent">?</span>
         </h1>
         <p className="mt-10 text-base md:text-lg text-tenki-muted max-w-2xl leading-relaxed">
-          Åpen test av faktura-tolkning, kontrakts-analyse, MVA, lov-referanse,
+          Åpen, uavhengig benchmark for hvor godt språkmodeller fungerer på
+          norske SMB-oppgaver: faktura, kontrakter, MVA, lov-referanse,
           Brønnøysund-data, HR/lønn, kundeservice og Bokmål↔Nynorsk.
-          Alle oppgavene, evalueringen og resultatene er offentlig.
-          Vi tar aldri penger fra modell-leverandører for å bli evaluert.
+          Alle oppgavene, evalueringen og resultatene er offentlige.
+          Modell-leverandører betaler ikke for å bli evaluert.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
           <Pill href="/leaderboard" variant="primary">Se leaderboard</Pill>

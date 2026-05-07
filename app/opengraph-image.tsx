@@ -32,15 +32,15 @@ export default function OG() {
         </div>
         <div
           style={{
-            fontSize: 88,
+            fontSize: 96,
             fontWeight: 500,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.0,
+            letterSpacing: "-0.04em",
+            lineHeight: 0.95,
             marginTop: 40,
-            maxWidth: "1000px",
+            maxWidth: "1040px",
           }}
         >
-          Hvor god er språkmodellen din på norske SMB-oppgaver?
+          Vi tester om kunstig intelligens forstår Norge<span style={{ color: "#1A4DFF" }}>.</span>
         </div>
         <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
           <div style={{ fontSize: 24, color: "#6E6E76" }}>bench.tenki.no</div>
