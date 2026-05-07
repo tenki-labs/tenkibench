@@ -1,0 +1,61 @@
+id: reason-bygg-001
+bench: norwegian-construction
+category: bygg-reasoning
+version: 1
+title: Vurder krav-domino fra én endring i NS 8407-totalentreprise
+difficulty: hard
+
+rationale: |
+  Reasoning over kontraktsmessig kausal-kjede: én endring i grunnforhold
+  utløser flere krav samtidig. Modellen må kunne følge kjeden og identifisere
+  alle relevante NS 8407-bestemmelser.
+
+source: synthetic
+source_notes: NS 8407:2011 (Alminnelige kontraktsbestemmelser for totalentrepriser).
+
+user_prompt: |
+  Under en NS 8407-totalentreprise oppdager entreprenøren etter graving at
+  grunnforholdene er vesentlig dårligere enn det byggherrens grunn-
+  undersøkelser viste. Det krever 3 ekstra ukers fundamenteringsarbeid og
+  ekstra materialer for 2,5 mill kr.
+
+  Resonner: hvilke krav kan entreprenøren reise, hvilke NS 8407-paragrafer
+  hjemler dem, og hva må entreprenøren gjøre for å bevare kravene?
+
+gold_answer: |
+  Krav-kjede:
+
+  1) Vederlagsjustering (krav på ekstra penger) — punkt 25 (endringer)
+     og punkt 23 (uforutsette grunnforhold). Utgangspunktet er at byggherren
+     bærer risikoen for grunnforhold som avviker vesentlig fra opplysningene
+     han har gitt.
+
+  2) Fristforlengelse — punkt 33. Krav på 3 uker tilleggstid for fundamentering.
+
+  3) Eventuelt erstatning for forsinkelseskostnader — punkt 24.4 (om
+     byggherrens forhold).
+
+  Prosessuelle krav for å bevare kravene:
+  - Varsle byggherren skriftlig "uten ugrunnet opphold" når avviket
+    oppdages — dette er preklusiv (punkt 33.4 og 25.5).
+  - Beskrive avviket konkret: hva som er funnet, hvordan det avviker fra
+    grunnundersøkelsen, hvilke tiltak som kreves.
+  - Spesifisere krav om vederlag og fristforlengelse i varselet.
+  - Dokumentere med foto, prøvegravinger, og eventuelt geotekniker-uttalelse.
+
+  Hvis entreprenøren bare fortsetter uten varsel og ber om ekstra betaling
+  ved sluttoppgjør, kan kravet være tapt.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(varsl|skriftlig|ugrunnet\\s+opphold)"
+    - "(vederlag|fristforlengelse|tidsfristen)"
+    - "(punkt\\s*23|punkt\\s*25|punkt\\s*33|grunnforhold)"
+    - "(NS\\s*8407|totalentreprise)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, ns-8407, grunnforhold, kausal-kjede, hard]

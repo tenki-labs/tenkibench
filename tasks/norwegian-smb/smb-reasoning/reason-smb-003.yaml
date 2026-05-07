@@ -1,0 +1,57 @@
+id: reason-smb-003
+bench: norwegian-smb
+category: smb-reasoning
+version: 1
+title: Avled hvilken regnskapsmessig periode en transaksjon hører til
+difficulty: medium
+
+rationale: |
+  Reasoning over periodisering — sammenstillingsprinsippet i bokførings-
+  loven. Modellen må velge riktig regnskapsperiode basert på når kostnaden
+  PÅDRAS, ikke når fakturaen kommer eller betales.
+
+source: synthetic
+
+user_prompt: |
+  En SMB med kalenderårs regnskap mottar i januar 2026 en faktura
+  fra et forsikringsselskap på 24 000 kr for bedriftsforsikring som
+  dekker 1. november 2025 — 31. oktober 2026.
+
+  Hvordan skal denne fordeles regnskapsmessig? Resonner gjennom
+  sammenstillingsprinsippet.
+
+gold_answer: |
+  Sammenstillingsprinsippet (regnskapsloven § 4-1 punkt 3) krever at
+  utgifter sammenstilles med inntektene de er knyttet til, og fordeles
+  over de periodene de gjelder.
+
+  Forsikringsperioden er 12 måneder (1.11.25 — 31.10.26) til 24 000 kr =
+  2 000 kr/måned.
+
+  Fordeling:
+  - 2025: 2 måneder (november + desember) = 4 000 kr som kostnad
+  - 2026: 10 måneder (januar — oktober) = 20 000 kr som kostnad
+
+  Posteringer:
+  - Ved fakturamottak (jan 2026): Bokfør 24 000 mot leverandørgjeld og
+    forskuddsbetalte kostnader (eiendel).
+  - Per 31.12.2025 (justeringspostering): 4 000 kr fra forskuddsbetalte
+    kostnader → kostnad for 2025.
+  - Månedlig 2026: 2 000 kr fra forskuddsbetalte kostnader → kostnad.
+
+  Hvis bedriften ikke har gjort justeringspostering i 2025-regnskapet, må
+  resultatregnskapet revideres for å reflektere riktig periode.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(sammenstilling|periodiser)"
+    - "(4\\s*000|2\\s*000)"
+    - "(20\\s*000)"
+    - "(forskuddsbetalt|forskudd)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, periodisering, sammenstilling, regnskapsloven, medium]

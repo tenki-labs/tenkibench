@@ -14,6 +14,8 @@ interface FullRow {
   family: string | null;
   is_open_weights: boolean;
   total_score: string;
+  knowledge_score: string | null;
+  reasoning_score: string | null;
   run_id: number;
   finished_at: string;
   total_cost_usd: string;
@@ -28,7 +30,8 @@ async function getFullLeaderboard(): Promise<FullRow[]> {
       order by r.model_id, r.finished_at desc
     )
     select m.id as model_id, m.slug as model_slug, m.display_name, m.family, m.is_open_weights,
-           rts.total_score, latest.run_id, latest.finished_at, latest.total_cost_usd
+           rts.total_score, rts.knowledge_score, rts.reasoning_score,
+           latest.run_id, latest.finished_at, latest.total_cost_usd
     from latest
     join models m on m.id = latest.model_id
     join run_total_scores rts on rts.run_id = latest.run_id

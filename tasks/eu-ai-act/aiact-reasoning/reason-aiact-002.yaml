@@ -1,0 +1,102 @@
+id: reason-aiact-002
+bench: eu-ai-act
+category: aiact-reasoning
+version: 1
+title: GPAI vs spesifikk anvendelse — hvor faller plikten?
+difficulty: hard
+
+rationale: |
+  AI Act har separat regulering for General Purpose AI (GPAI, Art. 50-55) og
+  spesifikke anvendelser (Annex III høy-risiko). Når et selskap finetuner
+  GPT-4 til norsk medisinsk diagnose, hvem har hvilke plikter? Krever flerlags
+  reasoning over distinksjonen.
+
+source: synthetic
+
+user_prompt: |
+  Tenki AS finetuner GPT-4 (fra OpenAI) på norske medisinske journaler for å
+  bygge "MediBot" som leger kan bruke til å foreslå differensialdiagnoser.
+
+  Resonner gjennom: hvem er provider, hvem er deployer, hvilke plikter
+  faller på hvem under AI Act?
+
+gold_answer: |
+  Distinksjon:
+
+  GPAI-laget (foundation model):
+  - GPT-4 er en General Purpose AI Model (GPAI). OpenAI er provider av
+    GPAI med systemic risk (Art. 51). Pliktene de oppfyller: teknisk
+    dokumentasjon, copyright-policy, summary av treningsdata (Art. 53), og
+    risiko-vurdering for systemic risk (Art. 55).
+  - Tenki som finetuner blir "downstream provider" og overtar provider-
+    pliktene for det modifiserte systemet — ikke for hele GPT-4-en, men
+    for deres versjon.
+
+  Anvendelses-laget (MediBot):
+  - MediBot brukes for medisinsk diagnose-støtte → Annex III pkt 5(c)
+    (helsetjenester med vesentlig påvirkning) → HØY-RISIKO.
+  - Tenki er provider av høy-risiko-system (når det settes på markedet
+    eller tas i bruk).
+  - Sykehus / leger som bruker MediBot er deployers (Art. 26).
+
+  Plikter-fordeling:
+
+  Tenki (provider av høy-risiko-system + downstream GPAI-provider):
+  - Risk management system (Art. 9)
+  - Data og data governance (Art. 10) — særlig kritisk fordi finetune-data
+    er sensitive helsedata
+  - Teknisk dokumentasjon (Art. 11) per Annex IV
+  - Logging (Art. 12)
+  - Transparens overfor deployer (Art. 13)
+  - Menneskelig tilsyn (Art. 14) — spesielt at lege beholder beslutnings-
+    myndighet
+  - Robusthet og sikkerhet (Art. 15)
+  - Konformitetsvurdering (Art. 43) — sannsynligvis tredjeparts (Annex VII)
+    fordi det er medisinsk
+  - Registrering i EU-databasen (Art. 49)
+  - Post-market monitoring + incident reporting (Art. 72-73)
+
+  Sykehus/lege som deployer:
+  - Bruke i tråd med instruksjoner (Art. 26.1)
+  - Menneskelig tilsyn (Art. 26.2) — lege må vurdere, ikke blindt følge
+  - Pasient-informasjon (Art. 26.11) — pasienter må vite at AI er involvert
+  - Data-input-kvalitet (Art. 26.4)
+  - Logging-oppbevaring (Art. 26.6)
+  - FRIA hvis offentlig institusjon (Art. 27)
+
+  OpenAI (GPAI-provider):
+  - GPAI-plikter (Art. 53), men IKKE direkte for MediBot-anvendelsen.
+  - Må gi Tenki tilstrekkelig info for at de kan oppfylle sine plikter
+    (Art. 53.1.b).
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: skiller-gpai-fra-anvendelse
+      weight: 0.3
+      description: |
+        Identifiserer at det er to separate regulerings-lag: GPAI (OpenAI)
+        og høy-risiko-anvendelse (Tenki/MediBot).
+    - criterion: tenki-er-provider
+      weight: 0.2
+      description: |
+        Tenki blir "provider" av høy-risiko-systemet (ikke bare deployer).
+    - criterion: medibot-er-hoy-risiko
+      weight: 0.2
+      description: |
+        Klassifiserer MediBot som høy-risiko under Annex III pkt 5
+        (helsetjenester).
+    - criterion: lege-er-deployer
+      weight: 0.15
+      description: |
+        Sykehus/lege blir deployer med egne plikter (Art. 26).
+    - criterion: konkret-pliktliste
+      weight: 0.15
+      description: |
+        Lister konkrete plikter (risk management, dokumentasjon, FRIA,
+        konformitetsvurdering, etc.) — ikke bare vag "compliance".
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, gpai, downstream-provider, art-26, llm-judge, hard]

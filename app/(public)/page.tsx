@@ -16,6 +16,8 @@ interface LeaderRow {
   family: string | null;
   is_open_weights: boolean;
   total_score: string;
+  knowledge_score: string | null;
+  reasoning_score: string | null;
   run_id: number;
   finished_at: string;
 }
@@ -29,7 +31,8 @@ async function getTopLeaderboard(): Promise<LeaderRow[]> {
       order by r.model_id, r.finished_at desc
     )
     select m.id as model_id, m.slug as model_slug, m.display_name, m.family, m.is_open_weights,
-           rts.total_score, latest.run_id, latest.finished_at
+           rts.total_score, rts.knowledge_score, rts.reasoning_score,
+           latest.run_id, latest.finished_at
     from latest
     join models m on m.id = latest.model_id
     join run_total_scores rts on rts.run_id = latest.run_id
@@ -122,10 +125,11 @@ export default async function HomePage() {
                 <tr className="border-b border-tenki-subtle text-left">
                   <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">#</th>
                   <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">Modell</th>
-                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">Familie</th>
-                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">Vekter</th>
-                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right">Score</th>
-                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right">Sist kjørt</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted hidden md:table-cell">Familie</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right">Total</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right">Knowledge</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right">Reasoning</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right hidden lg:table-cell">Sist kjørt</th>
                 </tr>
               </thead>
               <tbody>
@@ -140,12 +144,11 @@ export default async function HomePage() {
                         {row.display_name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-tenki-muted">{row.family ?? "—"}</td>
-                    <td className="px-4 py-3 text-tenki-muted text-xs">
-                      {row.is_open_weights ? "Åpen" : "Lukket"}
-                    </td>
-                    <td className="px-4 py-3 text-right font-mono">{formatScore(row.total_score)}</td>
-                    <td className="px-4 py-3 text-right text-tenki-muted text-xs">
+                    <td className="px-4 py-3 text-tenki-muted hidden md:table-cell">{row.family ?? "—"}</td>
+                    <td className="px-4 py-3 text-right font-mono font-medium">{formatScore(row.total_score)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-tenki-muted">{formatScore(row.knowledge_score)}</td>
+                    <td className="px-4 py-3 text-right font-mono text-tenki-muted">{formatScore(row.reasoning_score)}</td>
+                    <td className="px-4 py-3 text-right text-tenki-muted text-xs hidden lg:table-cell">
                       {formatDate(row.finished_at)}
                     </td>
                   </tr>

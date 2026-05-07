@@ -24,18 +24,23 @@ export async function GET() {
       m.family,
       m.is_open_weights as open_weights,
       rts.total_score,
+      rts.knowledge_score,
+      rts.reasoning_score,
       latest.bench_version,
       latest.prompt_version,
       latest.finished_at,
       coalesce(json_object_agg(rcs.category_slug, rcs.mean_score)
-               filter (where rcs.category_slug is not null), '{}'::json) as categories
+               filter (where rcs.category_slug is not null), '{}'::json) as categories,
+      m.external_scores
     from latest
     join models m on m.id = latest.model_id
     join run_total_scores rts on rts.run_id = latest.run_id
     left join run_category_scores rcs on rcs.run_id = latest.run_id
     where m.is_active = true
     group by m.slug, m.display_name, m.provider, m.family, m.is_open_weights,
-             rts.total_score, latest.bench_version, latest.prompt_version, latest.finished_at
+             rts.total_score, rts.knowledge_score, rts.reasoning_score,
+             latest.bench_version, latest.prompt_version, latest.finished_at,
+             m.external_scores
     order by rts.total_score desc
   `);
 

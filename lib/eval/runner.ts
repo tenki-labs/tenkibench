@@ -212,11 +212,23 @@ async function materializeAggregates(runId: number): Promise<void> {
     [runId],
   );
 
+  // Total + knowledge + reasoning, alle vektet etter category.weight.
+  // FILTER-klausuler beregner kind-spesifikke aggregater i samme query.
   await query(
-    `insert into run_total_scores (run_id, total_score, category_count)
+    `insert into run_total_scores (
+       run_id, total_score, category_count,
+       knowledge_score, knowledge_count,
+       reasoning_score, reasoning_count
+     )
      select rcs.run_id,
             (sum(rcs.mean_score * c.weight) / nullif(sum(c.weight), 0))::numeric(4,3),
-            count(*)
+            count(*),
+            (sum(rcs.mean_score * c.weight) filter (where c.kind = 'knowledge')
+              / nullif(sum(c.weight) filter (where c.kind = 'knowledge'), 0))::numeric(4,3),
+            count(*) filter (where c.kind = 'knowledge'),
+            (sum(rcs.mean_score * c.weight) filter (where c.kind = 'reasoning')
+              / nullif(sum(c.weight) filter (where c.kind = 'reasoning'), 0))::numeric(4,3),
+            count(*) filter (where c.kind = 'reasoning')
      from run_category_scores rcs
      join categories c on c.slug = rcs.category_slug
      where rcs.run_id = $1
@@ -224,6 +236,10 @@ async function materializeAggregates(runId: number): Promise<void> {
      on conflict (run_id) do update set
        total_score = excluded.total_score,
        category_count = excluded.category_count,
+       knowledge_score = excluded.knowledge_score,
+       knowledge_count = excluded.knowledge_count,
+       reasoning_score = excluded.reasoning_score,
+       reasoning_count = excluded.reasoning_count,
        computed_at = now()`,
     [runId],
   );

@@ -11,9 +11,13 @@ interface Row {
   family: string | null;
   is_open_weights: boolean;
   total_score: string;
+  knowledge_score?: string | null;
+  reasoning_score?: string | null;
   total_cost_usd?: string;
   finished_at: string;
 }
+
+type SortKey = "total" | "knowledge" | "reasoning";
 
 export function LeaderboardTable({
   rows,
@@ -25,6 +29,7 @@ export function LeaderboardTable({
   const [query, setQuery] = useState("");
   const [familyFilter, setFamilyFilter] = useState<string | "all">("all");
   const [openOnly, setOpenOnly] = useState(false);
+  const [sortBy, setSortBy] = useState<SortKey>("total");
   const deferred = useDeferredValue(query.trim().toLowerCase());
 
   const families = useMemo(
@@ -33,7 +38,7 @@ export function LeaderboardTable({
   );
 
   const filtered = useMemo(() => {
-    return rows.filter((r) => {
+    const out = rows.filter((r) => {
       if (deferred) {
         const hay = `${r.display_name} ${r.model_slug} ${r.family ?? ""}`.toLowerCase();
         if (!hay.includes(deferred)) return false;
@@ -42,7 +47,28 @@ export function LeaderboardTable({
       if (openOnly && !r.is_open_weights) return false;
       return true;
     });
-  }, [rows, deferred, familyFilter, openOnly]);
+    const key = sortBy === "knowledge" ? "knowledge_score"
+              : sortBy === "reasoning" ? "reasoning_score"
+              : "total_score";
+    return [...out].sort((a, b) => {
+      const av = Number(a[key as keyof Row] ?? -1);
+      const bv = Number(b[key as keyof Row] ?? -1);
+      return bv - av;
+    });
+  }, [rows, deferred, familyFilter, openOnly, sortBy]);
+
+  const SortHeader = ({ label, k }: { label: string; k: SortKey }) => (
+    <button
+      onClick={() => setSortBy(k)}
+      className={
+        "inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-eyebrow " +
+        (sortBy === k ? "text-tenki-accent" : "text-tenki-muted hover:text-tenki-ink")
+      }
+    >
+      {label}
+      {sortBy === k && <span aria-hidden>↓</span>}
+    </button>
+  );
 
   return (
     <div>
@@ -81,20 +107,22 @@ export function LeaderboardTable({
       <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">
-              <th className="px-4 py-3 eyebrow">#</th>
-              <th className="px-4 py-3 eyebrow">Modell</th>
-              <th className="px-4 py-3 eyebrow">Familie</th>
-              <th className="px-4 py-3 eyebrow">Vekter</th>
-              <th className="px-4 py-3 eyebrow text-right">Score</th>
-              {showCost && <th className="px-4 py-3 eyebrow text-right">Kostnad</th>}
-              <th className="px-4 py-3 eyebrow text-right">Kjørt</th>
+            <tr className="border-b border-tenki-subtle text-left">
+              <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">#</th>
+              <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">Modell</th>
+              <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted hidden md:table-cell">Familie</th>
+              <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted hidden lg:table-cell">Vekter</th>
+              <th className="px-4 py-3 text-right"><SortHeader label="Total" k="total" /></th>
+              <th className="px-4 py-3 text-right"><SortHeader label="Knowledge" k="knowledge" /></th>
+              <th className="px-4 py-3 text-right"><SortHeader label="Reasoning" k="reasoning" /></th>
+              {showCost && <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right hidden lg:table-cell">Kostnad</th>}
+              <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right hidden md:table-cell">Kjørt</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={showCost ? 7 : 6} className="px-4 py-8 text-center text-[var(--tenki-muted)]">
+                <td colSpan={showCost ? 9 : 8} className="px-4 py-8 text-center text-tenki-muted">
                   Ingen treff.
                 </td>
               </tr>
@@ -102,25 +130,33 @@ export function LeaderboardTable({
               filtered.map((r, i) => (
                 <tr
                   key={r.model_id}
-                  className="border-b hairline border-b-[var(--tenki-subtle)] last:border-0"
+                  className="border-b border-tenki-subtle last:border-0 hover:bg-tenki-surface/50 transition-colors"
                 >
-                  <td className="px-4 py-3 font-mono text-[var(--tenki-muted)]">{i + 1}</td>
+                  <td className="px-4 py-3 font-mono text-tenki-muted">{i + 1}</td>
                   <td className="px-4 py-3">
-                    <Link href={`/modell/${r.model_slug}`} className="font-medium">
+                    <Link href={`/modell/${r.model_slug}`} className="link-underline font-medium">
                       {r.display_name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-[var(--tenki-muted)]">{r.family ?? "—"}</td>
-                  <td className="px-4 py-3 text-[var(--tenki-muted)]">
+                  <td className="px-4 py-3 text-tenki-muted hidden md:table-cell">{r.family ?? "—"}</td>
+                  <td className="px-4 py-3 text-tenki-muted text-xs hidden lg:table-cell">
                     {r.is_open_weights ? "Åpen" : "Lukket"}
                   </td>
-                  <td className="px-4 py-3 text-right font-mono">{formatScore(r.total_score)}</td>
+                  <td className={"px-4 py-3 text-right font-mono " + (sortBy === "total" ? "font-medium" : "")}>
+                    {formatScore(r.total_score)}
+                  </td>
+                  <td className={"px-4 py-3 text-right font-mono " + (sortBy === "knowledge" ? "font-medium" : "text-tenki-muted")}>
+                    {formatScore(r.knowledge_score)}
+                  </td>
+                  <td className={"px-4 py-3 text-right font-mono " + (sortBy === "reasoning" ? "font-medium" : "text-tenki-muted")}>
+                    {formatScore(r.reasoning_score)}
+                  </td>
                   {showCost && (
-                    <td className="px-4 py-3 text-right text-[var(--tenki-muted)]">
+                    <td className="px-4 py-3 text-right text-tenki-muted hidden lg:table-cell">
                       {formatCost(r.total_cost_usd)}
                     </td>
                   )}
-                  <td className="px-4 py-3 text-right text-[var(--tenki-muted)] text-xs">
+                  <td className="px-4 py-3 text-right text-tenki-muted text-xs hidden md:table-cell">
                     {formatDate(r.finished_at)}
                   </td>
                 </tr>

@@ -1,0 +1,67 @@
+id: reason-tool-001
+bench: tool-use
+category: tool-reasoning
+version: 1
+title: Velg riktig sekvens av verktøy for sammensatt oppgave
+difficulty: hard
+
+rationale: |
+  Reasoning over verktøys-bruk: ikke bare "kall riktig API", men "i hvilken
+  rekkefølge og avhengig av hva". Sammensatte SMB-oppgaver krever ofte
+  Brreg-oppslag → Lovdata-søk → kalkyle. Modellen må velge riktig kjede.
+
+source: synthetic
+
+system_prompt: |
+  Du har tilgang til disse verktøyene:
+    - brreg_lookup(orgnr): returnerer selskapsdata fra Brønnøysund
+    - lovdata_search(query): søker i Lovdata, returnerer paragraf-tekster
+    - mva_calculate(amount, rate): beregner MVA
+    - altinn_form(rf_number): henter skjema-meta
+  Returner JSON med en array `tool_calls` som beskriver sekvensen, med felt
+  `step`, `tool`, `args`, `reason`.
+
+user_prompt: |
+  En SMB-eier spør: "Selskapet 919 845 311 sendte meg en fakturalignende EUR-
+  faktura på 5 000 EUR for konsulent-tjenester. Må jeg betale norsk MVA på
+  dette? Hvilket Altinn-skjema bruker jeg for å rapportere det?"
+
+  Planlegg verktøys-sekvensen.
+
+gold_answer: |
+  {
+    "tool_calls": [
+      {
+        "step": 1,
+        "tool": "brreg_lookup",
+        "args": {"orgnr": "919845311"},
+        "reason": "Verifiser at avsender faktisk er norsk-registrert. Hvis utenlandsk, har det implikasjoner for omvendt avgiftsplikt."
+      },
+      {
+        "step": 2,
+        "tool": "lovdata_search",
+        "args": {"query": "mva-loven omvendt avgiftsplikt tjenester utlandet"},
+        "reason": "Hent mva-lovens regler for omvendt avgiftsplikt på importerte tjenester (typisk § 11-3)."
+      },
+      {
+        "step": 3,
+        "tool": "altinn_form",
+        "args": {"rf_number": "RF-0002"},
+        "reason": "RF-0002 er ordinær mva-melding. Verifiser at det er rett skjema for å rapportere snudd avregning."
+      }
+    ]
+  }
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "brreg_lookup"
+    - "lovdata_search"
+    - "(altinn|RF-0002)"
+    - "(omvendt|snudd|reverse)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, tool-sequencing, omvendt-avgiftsplikt, hard]

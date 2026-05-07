@@ -1,0 +1,95 @@
+id: reason-helse-001
+bench: norwegian-healthcare
+category: helse-reasoning
+version: 1
+title: Vurder etisk-juridisk dilemma i pasient-overføring
+difficulty: hard
+
+rationale: |
+  Reasoning over flere overlappende juridiske rammer: helsepersonelloven,
+  pasientrettighetsloven, GDPR, og krever vekting av motstridende hensyn.
+  Test på om modellen kan holde flere ting i hodet samtidig uten å
+  fortrenge ett rammeverk for et annet.
+
+source: synthetic
+
+user_prompt: |
+  Et privat helsehus planlegger å selge til konkurrenten. Kjøper vil ha
+  med pasient-listene som del av oppkjøpet. Ledelsen vurderer:
+  (a) Selge med pasient-listene, basert på berettiget interesse i å
+      videreføre pasienters behandling.
+  (b) Slette listene før salget (men da har kjøper en mindre verdsatt eiendel).
+  (c) Selge med eksplisitt samtykke fra hver pasient (kan ta måneder).
+
+  Resonner gjennom de juridiske implikasjonene av hver vei og foreslå
+  riktig fremgangsmåte.
+
+gold_answer: |
+  Vurdering:
+
+  (a) Berettiget interesse — IKKE forsvarlig her.
+  - Pasientopplysninger er sensitive personopplysninger (GDPR Art. 9).
+  - Behandlings-grunnlaget krever uttrykkelig samtykke eller annet
+    Art. 9-grunnlag (typisk helsetjenestens behandlingsplikt).
+  - Berettiget interesse fungerer IKKE som grunnlag for sensitive data
+    (Art. 6(1)(f) gjelder kun for ikke-sensitive).
+  - Salg av pasient-listene som "eiendel" er en helt ny formål — krever
+    nytt grunnlag.
+
+  (b) Slette først — juridisk forsvarlig.
+  - Pasienter får sin journal flyttet til offentlig helsetjeneste eller
+    annen ny behandler de selv velger (jf. helsepersonelloven § 45 om
+    pasientens rett til journalkopi).
+  - Helsehuset må uansett oppbevare journalene i 10 år (hpl § 43), så
+    "slette" er upresist — men ikke overføre til kjøper.
+  - Kjøper får virksomheten uten kundebase — riktig juridisk men
+    kommersielt mindre attraktivt.
+
+  (c) Innhente samtykke — juridisk gull-standard, kommersielt vanskelig.
+  - Krever individuell informasjon og frivillig samtykke fra hver pasient.
+  - Tar tid; mange svarer ikke.
+  - Pasienter som ikke samtykker får sin journal "tilbake" til seg
+    selv eller offentlig sektor.
+
+  Anbefalt fremgangsmåte:
+  Kombiner (b) + (c): tilby pasienter samtykke til å bli med kjøper.
+  De som ikke svarer eller sier nei, får journalen overført til offentlig
+  helsetjeneste eller annen ny behandler. Kjøper får kun kundebasen som
+  aktivt har samtykket.
+
+  Hjemler: GDPR Art. 9, Art. 13 (informasjon), helsepersonelloven §§ 21,
+  43, 45, og pasient- og brukerrettighetsloven kap. 5.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: avviser-berettiget-interesse
+      weight: 0.3
+      description: |
+        Identifiserer at GDPR Art. 6(1)(f) berettiget interesse IKKE er
+        gyldig grunnlag for sensitive helseopplysninger.
+    - criterion: art-9-sensitiv
+      weight: 0.2
+      description: |
+        Refererer til Art. 9 om sensitive personopplysninger og
+        krav om eksplisitt samtykke / særskilt grunnlag.
+    - criterion: helpersonelloven-43
+      weight: 0.2
+      description: |
+        Nevner oppbevarings-plikt etter helsepersonelloven § 43
+        (10 år).
+    - criterion: anbefalt-fremgangsmaate
+      weight: 0.2
+      description: |
+        Foreslår kombinasjon av samtykke-innhenting + alternativ
+        for de som ikke svarer.
+    - criterion: tre-veier-vurdert
+      weight: 0.1
+      description: |
+        Vurderer alle tre alternativene (a, b, c) — ikke bare velger
+        ett uten å vurdere de andre.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, gdpr-art-9, hpl, pasient-data-overdragelse, llm-judge, hard]
