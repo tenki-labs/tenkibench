@@ -1,17 +1,12 @@
 -- TenkiBench v0.3 — register the full catalog of benches and their categories
 -- Idempotent: safe to re-run.
 
--- Categories now belong uniquely to (bench, slug). Drop the old global-unique
--- constraint and replace with composite uniqueness.
+-- Categories: vi BEHOLDER global slug-uniqueness fra 0001 (FK-er fra
+-- task_results og run_category_scores er avhengige av den). Legger heller
+-- til en composite (bench_slug, slug) UNIQUE for å støtte ON CONFLICT-spec
+-- nedenfor og fremtidig multi-bench-frihet.
 do $$
 begin
-  if exists (
-    select 1 from pg_constraint
-     where conname = 'categories_slug_key' and conrelid = 'public.categories'::regclass
-  ) then
-    alter table public.categories drop constraint categories_slug_key;
-  end if;
-
   if not exists (
     select 1 from pg_constraint
      where conname = 'categories_bench_slug_uniq' and conrelid = 'public.categories'::regclass

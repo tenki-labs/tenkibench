@@ -1,44 +1,34 @@
-name: tenkibench
-
+# Apollo-tilpasset compose. Container `app-bench` for å matche Caddyfile-fragment
+# på Apollo-VPS-en. Networks `tenki-net` (Caddy reach) + `supabase_default` (db).
 services:
-  web:
-    image: tenkibench-web:latest
-    container_name: tenkibench-web-1
+  app-bench:
+    container_name: app-bench
     build:
       context: .
       dockerfile: docker/Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: https://bench.tenki.no
     restart: unless-stopped
+    env_file: .env
     networks:
-      - tenkibench
-      - edge_net
-      - tenki    # for å nå supabase-db som ligger her
-    env_file:
-      - /opt/tenkibench/env/.env.production
+      - tenki-net
+      - supabase_default
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/healthz"]
+      test:
+        - CMD-SHELL
+        - "node -e \"require('http').get('http://localhost:3000/api/healthz', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""
       interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 30s
-    expose:
-      - "3000"
-    # Resurs-grenser: beskytter tenki-marketing-siden på samme VPS hvis bench-runs
-    # spiker. Bench er typisk network-bound (venter på Mammouth) og lett på CPU/RAM,
-    # men en sikkerhets-tak holder oss ærlige.
+      start_period: 60s
     deploy:
       resources:
         limits:
           memory: 2G
           cpus: "1.0"
-    # Koble til delt supabase-db over docker-bridge.
-    # `tenki`-nettet eksisterer fra tenki-stacken og deler supabase-db.
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
 networks:
-  tenkibench:
-    name: tenkibench
-  edge_net:
+  tenki-net:
     external: true
-  tenki:
+  supabase_default:
     external: true
