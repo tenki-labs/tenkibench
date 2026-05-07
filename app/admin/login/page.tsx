@@ -30,7 +30,7 @@ export default async function LoginPage({
           type="password"
           placeholder="ADMIN_TOKEN"
           autoFocus
-          className="w-full border hairline border-[var(--tenki-subtle)] px-4 py-3 bg-white"
+          className="tenki-input"
         />
         <button type="submit" className="border hairline border-[var(--tenki-ink)] px-4 py-2">
           Logg inn

@@ -45,7 +45,7 @@ export default async function RunPage() {
           <select
             name="model_id"
             required
-            className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white"
+            className="tenki-input"
           >
             <option value="">Velg modell…</option>
             {models.map((m) => (
@@ -58,7 +58,7 @@ export default async function RunPage() {
 
         <div>
           <label className="eyebrow block mb-1">Kategori (la stå tom for alle)</label>
-          <select name="category" className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white">
+          <select name="category" className="tenki-input">
             <option value="">Alle</option>
             {cats.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
           </select>

@@ -31,7 +31,7 @@ export default async function AdminTasksPage({
       </p>
 
       <form className="flex flex-wrap gap-3 mb-6">
-        <select name="kategori" defaultValue={kategori ?? ""} className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white text-sm">
+        <select name="kategori" defaultValue={kategori ?? ""} className="tenki-input text-sm">
           <option value="">Alle kategorier</option>
           {categories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
@@ -39,7 +39,7 @@ export default async function AdminTasksPage({
           name="q"
           defaultValue={q ?? ""}
           placeholder="Søk id, tittel eller tag…"
-          className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white text-sm flex-1 min-w-[200px]"
+          className="tenki-input text-sm flex-1 min-w-[200px]"
         />
         <button type="submit" className="border hairline border-[var(--tenki-ink)] px-4 py-2 text-sm">Filtrer</button>
       </form>

@@ -74,7 +74,7 @@ function Field({ name, label, placeholder, required }: {
         name={name}
         placeholder={placeholder}
         required={required}
-        className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white"
+        className="tenki-input"
       />
     </div>
   );

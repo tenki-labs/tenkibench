@@ -109,26 +109,26 @@ export default async function CalibrationPage() {
         <form action={recordCalibration} className="grid sm:grid-cols-2 gap-4 max-w-2xl">
           <div>
             <label className="eyebrow block mb-1">Dommer-modell *</label>
-            <select name="judge_model_id" required className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white">
+            <select name="judge_model_id" required className="tenki-input">
               <option value="">Velg…</option>
               {judgeModels.map((m) => <option key={m.id} value={m.id}>{m.display_name}</option>)}
             </select>
           </div>
           <div>
             <label className="eyebrow block mb-1">Task ID *</label>
-            <input name="task_id" required placeholder="kontrakt-001" className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white" />
+            <input name="task_id" required placeholder="kontrakt-001" className="tenki-input" />
           </div>
           <div>
             <label className="eyebrow block mb-1">Menneske-score (0–1) *</label>
-            <input name="human_score" required type="number" step="0.01" min="0" max="1" className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white" />
+            <input name="human_score" required type="number" step="0.01" min="0" max="1" className="tenki-input" />
           </div>
           <div>
             <label className="eyebrow block mb-1">Dommer-score (0–1) *</label>
-            <input name="judge_score" required type="number" step="0.01" min="0" max="1" className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white" />
+            <input name="judge_score" required type="number" step="0.01" min="0" max="1" className="tenki-input" />
           </div>
           <div>
             <label className="eyebrow block mb-1">Vurdert av</label>
-            <input name="rated_by" placeholder="navn / e-post" className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white" />
+            <input name="rated_by" placeholder="navn / e-post" className="tenki-input" />
           </div>
           <div className="sm:col-span-2">
             <button type="submit" className="border hairline border-[var(--tenki-ink)] px-4 py-2 text-sm">

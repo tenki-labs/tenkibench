@@ -46,7 +46,7 @@ export function SearchableList<T>({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="w-full sm:max-w-md border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white text-sm"
+          className="w-full sm:max-w-md tenki-input text-sm"
         />
         {deferred && (
           <span className="eyebrow text-[var(--tenki-muted)] whitespace-nowrap">
