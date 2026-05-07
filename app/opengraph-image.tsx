@@ -38,9 +38,13 @@ export default function OG() {
             lineHeight: 0.95,
             marginTop: 40,
             maxWidth: "1040px",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "baseline",
           }}
         >
-          Vi tester om kunstig intelligens forstår Norge<span style={{ color: "#1A4DFF" }}>.</span>
+          <span>Vi tester om kunstig intelligens forstår Norge</span>
+          <span style={{ color: "#1A4DFF" }}>.</span>
         </div>
         <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
           <div style={{ fontSize: 24, color: "#6E6E76" }}>bench.tenki.no</div>
