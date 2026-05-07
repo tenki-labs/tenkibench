@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { Card, CardEyebrow, CardTitle } from "@/components/ui/card";
+import { Eyebrow } from "@/components/ui/eyebrow";
 import { query } from "@/lib/db";
 import { formatScore, formatDate } from "@/lib/utils";
 
@@ -39,115 +39,199 @@ async function getTopLeaderboard(): Promise<LeaderRow[]> {
   return rows;
 }
 
+const benchCards = [
+  { eyebrow: "01", title: "Faktura",        href: "/kategorier/faktura"        },
+  { eyebrow: "02", title: "Kontrakt",       href: "/kategorier/kontrakt"       },
+  { eyebrow: "03", title: "MVA og skatt",   href: "/kategorier/mva-skatt"      },
+  { eyebrow: "04", title: "Lov-referanse",  href: "/kategorier/lov-referanse"  },
+  { eyebrow: "05", title: "Brønnøysund",    href: "/kategorier/brreg"          },
+  { eyebrow: "06", title: "HR og lønn",     href: "/kategorier/hr-lonn"        },
+  { eyebrow: "07", title: "Kundeservice",   href: "/kategorier/kundeservice"   },
+  { eyebrow: "08", title: "Bokmål↔Nynorsk", href: "/kategorier/bokmal-nynorsk" },
+];
+
 export default async function HomePage() {
   let leaderboard: LeaderRow[] = [];
   try {
     leaderboard = await getTopLeaderboard();
-  } catch {
-    // db not yet migrated / empty
-  }
+  } catch {}
 
   return (
     <>
       <SiteHeader />
-      <main className="max-w-6xl mx-auto px-6 py-16">
-        <section className="mb-16 max-w-3xl">
-          <div className="eyebrow mb-3">TenkiBench v0.1</div>
-          <h1 className="h1 mb-6">
-            Hvor god er språkmodellen din på norske SMB-oppgaver?
-          </h1>
-          <p className="text-lg text-[var(--tenki-muted)] leading-relaxed">
-            Åpen test av faktura-tolkning, kontrakts-analyse, MVA, lov-referanse, Brønnøysund-data,
-            HR/lønn, kundeservice og Bokmål↔Nynorsk. Alle oppgavene, evalueringen og resultatene er
-            offentlig. Vi tar aldri penger fra modell-leverandører for å bli evaluert.
-          </p>
-          <div className="mt-8 flex gap-4 text-sm">
-            <Link href="/leaderboard" className="border hairline border-[var(--tenki-ink)] px-4 py-2">
-              Se leaderboard →
-            </Link>
-            <Link href="/metodikk" className="px-4 py-2">
-              Les metodikken →
-            </Link>
-          </div>
-        </section>
 
-        <section className="mb-16">
-          <div className="flex items-baseline justify-between mb-6">
-            <div>
-              <div className="eyebrow">Topp-20 leaderboard</div>
-              <h2 className="h2 mt-1">Total-score, vektet per kategori</h2>
-            </div>
-            <Link href="/leaderboard" className="text-sm">Full liste →</Link>
+      {/* HERO */}
+      <section className="container max-w-7xl mx-auto px-6 md:px-10 pt-16 pb-24 md:pt-24 md:pb-36">
+        <p className="mb-6 font-mono text-[11px] md:text-xs font-medium uppercase tracking-eyebrow text-tenki-accent hero-animate">
+          [ Norsk SMB · GDPR · AI Act ]
+        </p>
+        <h1 className="font-mono font-medium leading-[0.95] tracking-tighter text-tenki-ink text-[2.5rem] sm:text-[3.5rem] md:text-[5rem] lg:text-[6rem] max-w-5xl hero-animate">
+          Hvor god er språkmodellen
+          <span className="text-tenki-accent">.</span>
+          {" "}på norske SMB-oppgaver
+          <span className="text-tenki-accent">?</span>
+        </h1>
+        <p className="mt-10 text-base md:text-lg text-tenki-muted max-w-2xl leading-relaxed">
+          Åpen test av faktura-tolkning, kontrakts-analyse, MVA, lov-referanse,
+          Brønnøysund-data, HR/lønn, kundeservice og Bokmål↔Nynorsk.
+          Alle oppgavene, evalueringen og resultatene er offentlig.
+          Vi tar aldri penger fra modell-leverandører for å bli evaluert.
+        </p>
+        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <Link
+            href="/leaderboard"
+            className="inline-flex items-center justify-center bg-tenki-ink text-tenki-bg px-7 py-[14px] font-mono text-[11px] font-medium uppercase tracking-eyebrow hover:opacity-90 transition-opacity"
+          >
+            Se leaderboard
+          </Link>
+          <Link
+            href="/metodikk"
+            className="inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-eyebrow text-tenki-accent hover:underline underline-offset-4"
+          >
+            Les metodikken <span aria-hidden>›</span>
+          </Link>
+          <Link
+            href="/api/public/leaderboard"
+            className="inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-eyebrow text-tenki-muted hover:text-tenki-accent transition-colors"
+          >
+            JSON-API <span aria-hidden>↗</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* LEADERBOARD */}
+      <section className="max-w-7xl mx-auto px-6 md:px-10 mb-24">
+        <div className="flex items-baseline justify-between mb-6">
+          <div>
+            <Eyebrow brackets dot={false}>Topp-20 leaderboard</Eyebrow>
+            <h2 className="mt-2 font-sans text-2xl md:text-3xl font-medium tracking-tight">
+              Total-score, vektet per kategori
+            </h2>
           </div>
-          {leaderboard.length === 0 ? (
-            <Card>
-              <CardEyebrow>Ingen kjøringer ennå</CardEyebrow>
-              <CardTitle>Benchmark er under oppstart.</CardTitle>
-              <p className="text-[var(--tenki-muted)] mt-2">
-                Database er tom eller ikke migrert. Kjør første benchmark fra <code>/admin</code>.
-              </p>
-            </Card>
-          ) : (
-            <div className="border hairline border-[var(--tenki-subtle)] bg-white">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">
-                    <th className="px-4 py-3 eyebrow">#</th>
-                    <th className="px-4 py-3 eyebrow">Modell</th>
-                    <th className="px-4 py-3 eyebrow">Familie</th>
-                    <th className="px-4 py-3 eyebrow">Vekter</th>
-                    <th className="px-4 py-3 eyebrow text-right">Score</th>
-                    <th className="px-4 py-3 eyebrow text-right">Sist kjørt</th>
+          <Link
+            href="/leaderboard"
+            className="hidden sm:inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent hover:underline underline-offset-4"
+          >
+            Full liste <span aria-hidden>›</span>
+          </Link>
+        </div>
+
+        {leaderboard.length === 0 ? (
+          <div className="border border-tenki-subtle bg-white p-8">
+            <Eyebrow brackets dot={false}>Ingen kjøringer ennå</Eyebrow>
+            <p className="mt-3 text-tenki-muted">
+              Benchmark er under oppstart. Første kjøring igangsettes fra <code className="font-mono">/admin/kjor</code>.
+            </p>
+          </div>
+        ) : (
+          <div className="border border-tenki-subtle bg-white">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-tenki-subtle text-left">
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">#</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">Modell</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">Familie</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">Vekter</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right">Score</th>
+                  <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted text-right">Sist kjørt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboard.map((row, i) => (
+                  <tr
+                    key={row.model_id}
+                    className="border-b border-tenki-subtle last:border-0 hover:bg-tenki-surface/50 transition-colors"
+                  >
+                    <td className="px-4 py-3 font-mono text-tenki-muted">{i + 1}</td>
+                    <td className="px-4 py-3">
+                      <Link href={`/modell/${row.model_slug}`} className="link-underline font-medium">
+                        {row.display_name}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-tenki-muted">{row.family ?? "—"}</td>
+                    <td className="px-4 py-3 text-tenki-muted text-xs">
+                      {row.is_open_weights ? "Åpen" : "Lukket"}
+                    </td>
+                    <td className="px-4 py-3 text-right font-mono">{formatScore(row.total_score)}</td>
+                    <td className="px-4 py-3 text-right text-tenki-muted text-xs">
+                      {formatDate(row.finished_at)}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {leaderboard.map((row, i) => (
-                    <tr
-                      key={row.model_id}
-                      className="border-b hairline border-b-[var(--tenki-subtle)] last:border-0"
-                    >
-                      <td className="px-4 py-3 font-mono text-[var(--tenki-muted)]">{i + 1}</td>
-                      <td className="px-4 py-3">
-                        <Link href={`/modell/${row.model_slug}`} className="font-medium">
-                          {row.display_name}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 text-[var(--tenki-muted)]">{row.family ?? "—"}</td>
-                      <td className="px-4 py-3 text-[var(--tenki-muted)]">
-                        {row.is_open_weights ? "Åpen" : "Lukket"}
-                      </td>
-                      <td className="px-4 py-3 text-right font-mono">{formatScore(row.total_score)}</td>
-                      <td className="px-4 py-3 text-right text-[var(--tenki-muted)] text-xs">
-                        {formatDate(row.finished_at)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </section>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
-        <section className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
-          {[
-            { eyebrow: "01", title: "Faktura", href: "/kategorier/faktura" },
-            { eyebrow: "02", title: "Kontrakt", href: "/kategorier/kontrakt" },
-            { eyebrow: "03", title: "MVA og skatt", href: "/kategorier/mva-skatt" },
-            { eyebrow: "04", title: "Lov-referanse", href: "/kategorier/lov-referanse" },
-            { eyebrow: "05", title: "Brønnøysund", href: "/kategorier/brreg" },
-            { eyebrow: "06", title: "HR og lønn", href: "/kategorier/hr-lonn" },
-            { eyebrow: "07", title: "Kundeservice", href: "/kategorier/kundeservice" },
-            { eyebrow: "08", title: "Bokmål↔Nynorsk", href: "/kategorier/bokmal-nynorsk" },
-          ].map((cat) => (
-            <Link key={cat.href} href={cat.href}>
-              <Card className="hover:accent-strip transition-shadow">
-                <CardEyebrow>{cat.eyebrow}</CardEyebrow>
-                <CardTitle>{cat.title}</CardTitle>
-              </Card>
+      {/* KATEGORIER */}
+      <section className="max-w-7xl mx-auto px-6 md:px-10 mb-24">
+        <div className="mb-6">
+          <Eyebrow brackets dot={false}>8 kategorier · Norsk SMB</Eyebrow>
+          <h2 className="mt-2 font-sans text-2xl md:text-3xl font-medium tracking-tight">
+            Det norske SMB-er faktisk gjør hver dag
+          </h2>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-tenki-subtle border border-tenki-subtle">
+          {benchCards.map((cat) => (
+            <Link key={cat.href} href={cat.href} className="group bg-tenki-bg card-lift p-6 relative border-0">
+              <span className="absolute left-0 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-tenki-accent transition-colors" />
+              <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">
+                {cat.eyebrow}
+              </div>
+              <div className="mt-2 font-sans text-lg font-medium tracking-tight">
+                {cat.title}
+              </div>
+              <div className="mt-4 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent">
+                Se →
+              </div>
             </Link>
           ))}
-        </section>
-      </main>
+        </div>
+
+        <div className="mt-6">
+          <Link
+            href="/benches"
+            className="link-underline font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent"
+          >
+            Alle 32 benches i katalogen ›
+          </Link>
+        </div>
+      </section>
+
+      {/* PRINSIPPER */}
+      <section className="max-w-7xl mx-auto px-6 md:px-10 mb-32">
+        <Eyebrow brackets dot={false}>Hvorfor TenkiBench</Eyebrow>
+        <div className="mt-6 grid md:grid-cols-3 gap-12 md:gap-16">
+          {[
+            {
+              n: "01",
+              title: "Norsk-spesifikt",
+              body: "Globale benchmarks misser MVA-regler, lov-§-sitering, Bokmål/Nynorsk, fødselsnummer-format. Vi tester nettopp det.",
+            },
+            {
+              n: "02",
+              title: "Uavhengig",
+              body: "Modell-leverandører betaler ikke for plassering. Tenki Labs har konsulent-virksomheten som inntektskilde.",
+            },
+            {
+              n: "03",
+              title: "Åpen",
+              body: "Alle oppgaver, evalueringskode, og resultater er åpne. Kritiser fasit, foreslå forbedringer, fork repo'et.",
+            },
+          ].map((p) => (
+            <div key={p.n} className="border-l border-tenki-subtle pl-6">
+              <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent">
+                {p.n}
+              </div>
+              <h3 className="mt-3 font-sans text-xl font-medium tracking-tight">{p.title}</h3>
+              <p className="mt-3 text-tenki-muted leading-relaxed">{p.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <SiteFooter />
     </>
   );
