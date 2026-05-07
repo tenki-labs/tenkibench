@@ -132,17 +132,21 @@ insert into public.categories (slug, name, description, weight) values
   ('bokmal-nynorsk', 'Bokmål↔Nynorsk',             'Toveis oversettelse + bevaring av juridisk presisjon', 0.5)
 on conflict (slug) do nothing;
 
--- Seed: Mammouth-aliased models (the gateway gives us all of these via one key)
+-- Seed-modeller. Lokal Gemma er aktiv fra dag 1 (krever ingen ekstern API-kost).
+-- Mammouth-baserte modeller seedes som is_active = false slik at de ikke
+-- kjører i run-all før du har lagt til MAMMOUTH_API_KEY og aktivert dem
+-- manuelt fra /admin/modeller. Direkte provider-nøkler (OPENAI_API_KEY, etc.)
+-- kan også brukes — endre da provider-feltet via admin når nøkkelen er på plass.
 insert into public.models (slug, display_name, provider, provider_model, base_url, family, is_open_weights, is_active, notes) values
-  ('gpt-5',                    'GPT-5',                   'mammouth', 'gpt-5',                    'https://api.mammouth.ai/v1', 'gpt',     false, true,  'Via Mammouth gateway'),
-  ('gpt-5-mini',               'GPT-5 mini',              'mammouth', 'gpt-5-mini',               'https://api.mammouth.ai/v1', 'gpt',     false, true,  'Via Mammouth gateway'),
-  ('claude-opus-4-7',          'Claude Opus 4.7',         'mammouth', 'claude-opus-4-7',          'https://api.mammouth.ai/v1', 'claude',  false, true,  'Via Mammouth gateway'),
-  ('claude-sonnet-4-6',        'Claude Sonnet 4.6',       'mammouth', 'claude-sonnet-4-6',        'https://api.mammouth.ai/v1', 'claude',  false, true,  'Via Mammouth gateway'),
-  ('gemini-3-pro',             'Gemini 3 Pro',            'mammouth', 'gemini-3-pro',             'https://api.mammouth.ai/v1', 'gemini',  false, true,  'Via Mammouth gateway'),
-  ('mistral-large-3',          'Mistral Large 3',         'mammouth', 'mistral-large-3',          'https://api.mammouth.ai/v1', 'mistral', false, true,  'Via Mammouth gateway'),
-  ('deepseek-v3-1',            'DeepSeek V3.1',           'mammouth', 'deepseek-v3-1',            'https://api.mammouth.ai/v1', 'deepseek',true,  true,  'Via Mammouth gateway'),
-  ('grok-4',                   'Grok 4',                  'mammouth', 'grok-4',                   'https://api.mammouth.ai/v1', 'grok',    false, true,  'Via Mammouth gateway'),
-  ('qwen-3-72b',               'Qwen 3 72B',              'mammouth', 'qwen-3-72b',               'https://api.mammouth.ai/v1', 'qwen',    true,  true,  'Via Mammouth gateway'),
-  ('llama-3-3-70b',            'Llama 3.3 70B',           'mammouth', 'llama-3-3-70b',            'https://api.mammouth.ai/v1', 'llama',   true,  true,  'Via Mammouth gateway'),
-  ('gemma-3-4b-local',         'Gemma 3 4B (lokal)',      'local',    'mlx-community/gemma-3-4b-it-4bit', 'https://mlx.tenki.no/v1', 'gemma', true, true, 'Tenki Mac Mini, mlx_lm.server')
+  ('gemma-3-4b-local',         'Gemma 3 4B (lokal)',      'local',    'mlx-community/gemma-3-4b-it-4bit', 'https://mlx.tenki.no/v1', 'gemma', true,  true,  'Tenki Mac Mini, mlx_lm.server — gratis å kjøre'),
+  ('gpt-5',                    'GPT-5',                   'mammouth', 'gpt-5',                    'https://api.mammouth.ai/v1', 'gpt',     false, false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('gpt-5-mini',               'GPT-5 mini',              'mammouth', 'gpt-5-mini',               'https://api.mammouth.ai/v1', 'gpt',     false, false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('claude-opus-4-7',          'Claude Opus 4.7',         'mammouth', 'claude-opus-4-7',          'https://api.mammouth.ai/v1', 'claude',  false, false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('claude-sonnet-4-6',        'Claude Sonnet 4.6',       'mammouth', 'claude-sonnet-4-6',        'https://api.mammouth.ai/v1', 'claude',  false, false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('gemini-3-pro',             'Gemini 3 Pro',            'mammouth', 'gemini-3-pro',             'https://api.mammouth.ai/v1', 'gemini',  false, false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('mistral-large-3',          'Mistral Large 3',         'mammouth', 'mistral-large-3',          'https://api.mammouth.ai/v1', 'mistral', false, false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('deepseek-v3-1',            'DeepSeek V3.1',           'mammouth', 'deepseek-v3-1',            'https://api.mammouth.ai/v1', 'deepseek',true,  false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('grok-4',                   'Grok 4',                  'mammouth', 'grok-4',                   'https://api.mammouth.ai/v1', 'grok',    false, false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('qwen-3-72b',               'Qwen 3 72B',              'mammouth', 'qwen-3-72b',               'https://api.mammouth.ai/v1', 'qwen',    true,  false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt'),
+  ('llama-3-3-70b',            'Llama 3.3 70B',           'mammouth', 'llama-3-3-70b',            'https://api.mammouth.ai/v1', 'llama',   true,  false, 'Via Mammouth gateway — aktiveres når MAMMOUTH_API_KEY er satt')
 on conflict (provider, provider_model) do nothing;

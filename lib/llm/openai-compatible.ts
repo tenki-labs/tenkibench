@@ -89,19 +89,32 @@ export function makeOpenAICompatibleClient(model: ModelRow): LLMClient {
 function resolveApiKey(provider: string): string {
   switch (provider) {
     case "mammouth":
-      return required("MAMMOUTH_API_KEY");
+      return requiredFor("MAMMOUTH_API_KEY", "mammouth");
     case "openai":
-      return required("OPENAI_API_KEY");
+      return requiredFor("OPENAI_API_KEY", "openai");
+    case "anthropic":
+      return requiredFor("ANTHROPIC_API_KEY", "anthropic");
+    case "google":
+      return requiredFor("GOOGLE_API_KEY", "google");
     case "local":
       return process.env.LOCAL_LLM_API_KEY ?? "no-key";
     default:
-      // Fallback: try a $UPPER_PROVIDER_API_KEY env var
       return process.env[`${provider.toUpperCase()}_API_KEY`] ?? "no-key";
   }
 }
 
-function required(name: string): string {
+/**
+ * Bare påkrevd når modellen faktisk kalles. Manglende nøkkel gir tydelig
+ * feilmelding i UI heller enn boot-failure for hele appen — slik at admin
+ * kan kjøre den lokale modellen uten å ha alle eksterne nøkler oppe.
+ */
+function requiredFor(name: string, provider: string): string {
   const v = process.env[name];
-  if (!v) throw new Error(`Missing env var: ${name}`);
+  if (!v) {
+    throw new Error(
+      `Cannot run ${provider} model: ${name} is not set. ` +
+      `Add it to /opt/tenkibench/env/.env.production and recreate the web container.`,
+    );
+  }
   return v;
 }

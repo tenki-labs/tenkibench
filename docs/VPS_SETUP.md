@@ -113,7 +113,7 @@ Lag fila med riktig modus:
 
 ```bash
 cat > /opt/tenkibench/env/.env.production <<'EOF'
-# Database — egen DB i delt supabase-db-instans
+# Database
 DATABASE_URL=postgres://postgres:DIN_POSTGRES_PASSWORD@supabase-db:5432/tenkibench
 POSTGRES_PASSWORD=DIN_POSTGRES_PASSWORD
 
@@ -121,23 +121,26 @@ POSTGRES_PASSWORD=DIN_POSTGRES_PASSWORD
 NEXT_PUBLIC_SITE_URL=https://bench.tenki.no
 NEXT_PUBLIC_SITE_NAME=TenkiBench
 
-# Mammouth.ai — primær LLM-gateway
-MAMMOUTH_API_KEY=DIN_MAMMOUTH_NØKKEL
-MAMMOUTH_BASE_URL=https://api.mammouth.ai/v1
-
-# Lokal LLM (Mac Mini)
+# Lokal LLM (Mac Mini) — eneste aktive modell ved første deploy
 LOCAL_LLM_BASE_URL=https://mlx.tenki.no/v1
 LOCAL_LLM_API_KEY=DIN_LOCAL_LLM_BEARER
 
-# Admin auth
+# Admin + cron
 ADMIN_TOKEN=GENERER_OVENFOR
-
-# Cron auth
 CRON_TOKEN=GENERER_OVENFOR
 
-# Judge
-JUDGE_MODEL=claude-opus-4-7
-JUDGE_PROVIDER=mammouth
+# Judge — bruker lokal Gemma først (gratis), oppgrader når eksterne nøkler er på plass
+JUDGE_MODEL=gemma-3-4b-local
+JUDGE_PROVIDER=local
+
+# Eksterne providere — la stå tom inntil du er klar.
+# Modeller for disse er seedet i databasen som inactive=false; du aktiverer
+# fra /admin/modeller når nøkkelen er der.
+MAMMOUTH_API_KEY=
+MAMMOUTH_BASE_URL=https://api.mammouth.ai/v1
+OPENAI_API_KEY=
+ANTHROPIC_API_KEY=
+GOOGLE_API_KEY=
 EOF
 
 chmod 600 /opt/tenkibench/env/.env.production
