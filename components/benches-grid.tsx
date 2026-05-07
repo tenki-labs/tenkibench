@@ -37,25 +37,25 @@ export function BenchesGrid({ benches }: { benches: Bench[] }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Søk bench..."
-          className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white flex-1 min-w-[200px]"
+          className="tenki-input tenki-input-sm flex-1 min-w-[220px]"
         />
-        <div className="flex gap-2">
+        <div className="inline-flex rounded-lg border border-tenki-subtle bg-white p-0.5">
           {(["all", "live", "planlagt"] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={
-                "border hairline px-3 py-2 text-sm " +
+                "rounded-md px-3 py-1.5 text-xs font-medium transition-colors " +
                 (filter === f
-                  ? "border-[var(--tenki-ink)] bg-white"
-                  : "border-[var(--tenki-subtle)] text-[var(--tenki-muted)]")
+                  ? "bg-tenki-ink text-tenki-bg"
+                  : "text-tenki-muted hover:text-tenki-ink")
               }
             >
               {f === "all" ? "Alle" : f === "live" ? "Live" : "Planlagt"}
             </button>
           ))}
         </div>
-        <span className="eyebrow text-[var(--tenki-muted)]">
+        <span className="font-mono text-[10px] uppercase tracking-eyebrow text-tenki-muted ml-auto">
           {filtered.length} av {benches.length}
         </span>
       </div>

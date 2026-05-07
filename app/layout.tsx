@@ -35,7 +35,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="nb" className={`${sans.variable} ${mono.variable}`}>
-      <body className="font-sans">{children}</body>
+      {/*
+        flex/min-h-screen-mønster: <body> er en kolonne som er minst høyt som
+        viewporten. Innholdet (med <main>) får flex-grow så det dytter footeren
+        helt ned på korte sider. Hver side må selv legge `flex-1` på sitt
+        <main>-element — eller via wrapperen vi bruker over hele siden.
+      */}
+      <body className="font-sans min-h-screen flex flex-col">{children}</body>
     </html>
   );
 }

@@ -37,18 +37,18 @@ export function TasksTable({ tasks }: { tasks: TaskRow[] }) {
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+      <div className="mb-5 flex flex-wrap items-center gap-3 text-sm">
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Søk oppgave..."
-          className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white flex-1 min-w-[200px]"
+          className="tenki-input tenki-input-sm flex-1 min-w-[220px]"
         />
         <select
           value={bench}
           onChange={(e) => setBench(e.target.value)}
-          className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white"
+          className="tenki-input tenki-input-sm w-auto"
         >
           <option value="all">Alle benches</option>
           {benches.map((b) => (
@@ -58,7 +58,7 @@ export function TasksTable({ tasks }: { tasks: TaskRow[] }) {
         <select
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
-          className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white"
+          className="tenki-input tenki-input-sm w-auto"
         >
           <option value="all">Alle vansklighet</option>
           <option value="easy">Easy</option>
@@ -66,7 +66,7 @@ export function TasksTable({ tasks }: { tasks: TaskRow[] }) {
           <option value="hard">Hard</option>
           <option value="expert">Expert</option>
         </select>
-        <span className="eyebrow text-[var(--tenki-muted)]">
+        <span className="font-mono text-[10px] uppercase tracking-eyebrow text-tenki-muted ml-auto">
           {filtered.length} av {tasks.length}
         </span>
       </div>

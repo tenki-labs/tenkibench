@@ -106,14 +106,16 @@ export default async function ComparePage({
           Velg opp til 4 modeller for å se hvordan de skiller seg per kategori.
         </p>
 
-        <form className="grid sm:grid-cols-4 gap-3 mb-10">
+        <form className="grid sm:grid-cols-4 gap-4 mb-10">
           {(["a", "b", "c", "d"] as const).map((k, i) => (
             <div key={k}>
-              <label className="eyebrow block mb-1">Modell {i + 1}</label>
+              <label className="block mb-2 font-mono text-[10px] md:text-[11px] font-medium uppercase tracking-eyebrow text-tenki-muted">
+                Modell {i + 1}
+              </label>
               <select
                 name={k}
                 defaultValue={params[k] ?? ""}
-                className="w-full border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white text-sm"
+                className="tenki-input"
               >
                 <option value="">—</option>
                 {models.map((m) => (
@@ -123,7 +125,10 @@ export default async function ComparePage({
             </div>
           ))}
           <div className="sm:col-span-4">
-            <button type="submit" className="border hairline border-[var(--tenki-ink)] px-4 py-2 text-sm">
+            <button
+              type="submit"
+              className="inline-flex items-center justify-center bg-tenki-ink text-tenki-bg px-7 py-[14px] font-mono text-[11px] font-medium uppercase tracking-eyebrow hover:opacity-90 transition-opacity"
+            >
               Sammenlign
             </button>
           </div>

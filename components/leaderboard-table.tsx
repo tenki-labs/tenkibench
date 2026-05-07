@@ -46,33 +46,34 @@ export function LeaderboardTable({
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+      <div className="mb-5 flex flex-wrap items-center gap-3 text-sm">
         <input
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Søk modell..."
-          className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white flex-1 min-w-[200px]"
+          className="tenki-input tenki-input-sm flex-1 min-w-[220px]"
         />
         <select
           value={familyFilter}
           onChange={(e) => setFamilyFilter(e.target.value)}
-          className="border hairline border-[var(--tenki-subtle)] px-3 py-2 bg-white"
+          className="tenki-input tenki-input-sm w-auto"
         >
           <option value="all">Alle familier</option>
           {families.map((f) => (
             <option key={f} value={f}>{f}</option>
           ))}
         </select>
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex items-center gap-2 cursor-pointer text-tenki-ink">
           <input
             type="checkbox"
             checked={openOnly}
             onChange={(e) => setOpenOnly(e.target.checked)}
+            className="h-4 w-4 rounded border-tenki-subtle accent-tenki-accent"
           />
           Kun åpne vekter
         </label>
-        <span className="eyebrow text-[var(--tenki-muted)]">
+        <span className="font-mono text-[10px] uppercase tracking-eyebrow text-tenki-muted ml-auto">
           {filtered.length} av {rows.length}
         </span>
       </div>

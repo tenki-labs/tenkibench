@@ -88,6 +88,45 @@ html, body {
   box-shadow: inset 3px 0 0 #1A4DFF;
 }
 
+/* Footer-til-bunn: <main> tar opp all gjenværende vertikal plass slik at
+   footeren alltid trykkes ned på korte sider. Body er flex column med
+   min-h-screen (satt i app/layout.tsx). */
+body > main {
+  flex: 1 0 auto;
+}
+
+/* Standard input/select/textarea — speiler tenki.no sin ContactForm-stil.
+   rounded-xl, hvit bg, hairline som blir accent på focus. */
+.tenki-input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #E2E2E2;
+  background: #FFFFFF;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: #0F0F12;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+  font-family: inherit;
+}
+.tenki-input::placeholder { color: #6E6E76; opacity: 0.7; }
+.tenki-input:focus, .tenki-input:focus-visible {
+  border-color: #1A4DFF;
+  box-shadow: 0 0 0 3px rgba(26, 77, 255, 0.1);
+}
+.tenki-input:disabled {
+  background: #F0F0F0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Kompakt variant for filter-felt i tabeller */
+.tenki-input-sm {
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
 /* D. CTA shine sweep — neutralized i flat refresh */
 .cta-shine { position: relative; }
 
