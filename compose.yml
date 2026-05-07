@@ -11,6 +11,7 @@ services:
     networks:
       - tenkibench
       - edge_net
+      - tenki    # for å nå supabase-db som ligger her
     env_file:
       - /opt/tenkibench/env/.env.production
     healthcheck:
@@ -21,9 +22,23 @@ services:
       start_period: 30s
     expose:
       - "3000"
+    # Resurs-grenser: beskytter tenki-marketing-siden på samme VPS hvis bench-runs
+    # spiker. Bench er typisk network-bound (venter på Mammouth) og lett på CPU/RAM,
+    # men en sikkerhets-tak holder oss ærlige.
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: "1.0"
+    # Koble til delt supabase-db over docker-bridge.
+    # `tenki`-nettet eksisterer fra tenki-stacken og deler supabase-db.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   tenkibench:
     name: tenkibench
   edge_net:
+    external: true
+  tenki:
     external: true

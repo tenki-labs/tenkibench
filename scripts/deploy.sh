@@ -19,6 +19,10 @@ EDGE_DIR=/opt/edge
 
 cd "$REPO_DIR"
 
+# Allow apply-without-edge-bootstrap when run on a VPS where /opt/edge isn't
+# writable by this user. Set SKIP_EDGE_SYNC=1 in that case.
+SKIP_EDGE_SYNC=${SKIP_EDGE_SYNC:-0}
+
 echo "▸ Loading secrets"
 # tenkibench uses .env.production at runtime; deploy.sh reads it once to source
 # values needed for build args + DB-bootstrap. Same file must contain at least:
@@ -46,7 +50,9 @@ docker exec -e PGPASSWORD="$POSTGRES_PASSWORD" supabase-db psql -U postgres -d p
     -c "create database tenkibench"
 
 echo "▸ Applying migrations"
-for migration in 0001_init.sql; do
+# Idempotent migrasjoner — alle re-kjøres på hver deploy.
+# Legg nye migrasjoner her for at de skal auto-anvendes.
+for migration in 0001_init.sql 0002_benches.sql 0003_all_benches.sql; do
   if [ -f "migrations/$migration" ]; then
     docker exec -i -e PGPASSWORD="$POSTGRES_PASSWORD" supabase-db \
       psql -U postgres -d tenkibench -v ON_ERROR_STOP=1 < "migrations/$migration"
@@ -60,9 +66,13 @@ docker compose -f compose.yml up -d --force-recreate web
 echo "▸ Attaching tenkibench network to shared edge Caddy"
 docker network connect tenkibench edge-caddy-1 2>/dev/null || true
 
-echo "▸ Syncing Caddy site fragment"
-sudo cp docker/edge/bench.tenki.no.caddy "$EDGE_DIR/sites/bench.tenki.no.caddy"
-sudo docker exec edge-caddy-1 caddy reload --config /etc/caddy/Caddyfile
+if [ "$SKIP_EDGE_SYNC" != "1" ]; then
+  echo "▸ Syncing Caddy site fragment"
+  sudo cp docker/edge/bench.tenki.no.caddy "$EDGE_DIR/sites/bench.tenki.no.caddy"
+  sudo docker exec edge-caddy-1 caddy reload --config /etc/caddy/Caddyfile
+else
+  echo "▸ Skipping edge sync (SKIP_EDGE_SYNC=1)"
+fi
 
 echo "▸ Health check"
 for i in 1 2 3 4 5 6; do

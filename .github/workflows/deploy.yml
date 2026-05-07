@@ -10,46 +10,71 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm tasks:validate
+      - run: pnpm typecheck
+
   deploy:
+    needs: validate
     runs-on: ubuntu-latest
     environment: production
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      # Tailscale joins the runner to your tailnet so we can SSH the VPS
+      # via its tailnet IP (100.x). VPS is unreachable from public internet.
+      # See docs/PARTNERS.md → setup section for OAuth-client setup.
+      - name: Setup Tailscale
+        uses: tailscale/github-action@v2
         with:
-          version: 9
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          version: latest
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Install
-        run: pnpm install --frozen-lockfile=false
-
-      - name: Validate tasks
-        run: pnpm tasks:validate
-
-      - name: Typecheck
-        run: pnpm typecheck
-
-      - name: Setup SSH
+      - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
 
-      - name: Add VPS to known_hosts
+      - name: Trust VPS host key
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
 
       - name: Sync source to VPS
         run: |
-          rsync -az --delete --exclude=node_modules --exclude=.next --exclude=.git \
-            ./ deploy@${{ secrets.DEPLOY_HOST }}:/opt/tenkibench/repo/
+          rsync -az --delete \
+            --exclude=node_modules \
+            --exclude=.next \
+            --exclude=.git \
+            --exclude=tasks-holdout \
+            ./ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/tenkibench/repo/
 
       - name: Run deploy.sh on VPS
         run: |
-          ssh deploy@${{ secrets.DEPLOY_HOST }} 'cd /opt/tenkibench/repo && bash scripts/deploy.sh'
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            'cd /opt/tenkibench/repo && bash scripts/deploy.sh'
+
+      - name: Smoke test public endpoint
+        run: |
+          for i in 1 2 3 4 5; do
+            if curl -sf -o /dev/null https://bench.tenki.no/api/healthz; then
+              echo "✓ bench.tenki.no healthy"
+              exit 0
+            fi
+            echo "  attempt $i — waiting 10s"
+            sleep 10
+          done
+          echo "✗ Health check failed"
+          exit 1
