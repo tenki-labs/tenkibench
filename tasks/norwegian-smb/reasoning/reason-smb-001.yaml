@@ -1,0 +1,54 @@
+id: reason-smb-001
+bench: norwegian-smb
+category: reasoning
+version: 1
+title: Avled MVA-grunnlag fra blandet faktura uten å se postene direkte
+difficulty: hard
+
+rationale: |
+  Resonneringstest: gitt aggregerte tall, kan modellen avlede strukturen?
+  Dette tester ikke ren faktura-ekstraksjon (det er knowledge), men evne til å
+  resonnere fra delvis informasjon — hva norsk SMB-eier ofte må gjøre når
+  fakturaer er ufullstendig dokumentert.
+
+source: synthetic
+
+system_prompt: |
+  Du er en norsk regnskaps-assistent. Vis utregningen kort.
+
+user_prompt: |
+  En faktura har følgende tall:
+  - Sum eks. MVA: 8 500,00 kr
+  - Total MVA: 1 487,50 kr
+  - Total inkl. MVA: 9 987,50 kr
+
+  Fakturaen inneholder kun varer på 25% MVA og 15% MVA (ingen 0%-varer).
+  Hva er MVA-grunnlaget for hver av de to satsene?
+
+# La x = sum eks. MVA på 25%-varer, y = sum eks. MVA på 15%-varer.
+# x + y = 8500
+# 0.25x + 0.15y = 1487.50
+# Løs: x = 5375, y = 3125
+gold_answer: |
+  25%-grunnlag: 5 375,00 kr
+  15%-grunnlag: 3 125,00 kr
+
+  Utregning:
+  La 25%-grunnlaget være x og 15%-grunnlaget være y.
+    x + y = 8500
+    0,25x + 0,15y = 1487,50
+  Løses til x = 5375 og y = 3125.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "5\\s*375"
+    - "3\\s*125"
+    - "(25\\s*%|0[,.]25)"
+    - "(15\\s*%|0[,.]15)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, mva, ligningssystem, hard]

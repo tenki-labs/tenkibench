@@ -12,6 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/runs">Run-historikk</Link>
           <Link href="/admin/oppgaver">Oppgaver</Link>
           <Link href="/admin/dommer-kalibrering">Dommer-kalibrering</Link>
+          <Link href="/admin/eksterne-scores">Eksterne scores</Link>
           <Link href="/" className="mt-6 text-[var(--tenki-muted)]">← Offentlig side</Link>
         </nav>
       </aside>

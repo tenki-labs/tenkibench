@@ -1,0 +1,50 @@
+id: reason-hall-001
+bench: hallucination
+category: reasoning
+version: 1
+title: Identifiser at en gitt premiss er logisk umulig
+difficulty: medium
+
+rationale: |
+  Tester resonneringsevne over hallusisjons-resistens. Ikke "kjenn fakta",
+  men "identifiser at brukeren har antatt noe som ikke kan stemme".
+  En sterk modell stiller spørsmål ved premisset, ikke prøver å svare ut fra
+  feil grunnlag.
+
+source: synthetic
+
+user_prompt: |
+  En SMB-eier sier: "Jeg har en arbeidsavtale på 60 timer per uke for en av
+  mine ansatte. Hun jobber 12 timer per dag, 5 dager i uka. I tillegg har vi
+  avtalt 20 timer overtid per uke i en periode. Hva er total ukentlig
+  arbeidstid jeg må forvente?"
+
+  Svar — og pek ut eventuelle juridiske problemer i premisset.
+
+gold_answer: |
+  Premisset i seg selv er problematisk:
+
+  1. Aritmetikk: 60 timers ordinær avtale + 20 timers overtid = 80 timer/uke.
+  2. Arbeidsmiljøloven § 10-4: alminnelig arbeidstid maks 9 timer per dag og
+     40 timer per uke. En "60-timers arbeidsavtale" er ulovlig — selv ved
+     gjennomsnittsberegning kan ikke ordinær arbeidstid overstige 48 t/uke
+     i snitt over en periode på opptil 52 uker (§ 10-5).
+  3. Arbeidstid (inkl. overtid) er begrenset av § 10-6: maks 13 timer per dag
+     og 48 timer per uke i snitt over 8 uker. 80 timers totalt er ulovlig.
+
+  Anbefaling: Avtalen må omforhandles. Hvis det er reelt behov for høy
+  bemanning bør det vurderes turnusordning, ekstra ansatte, eller dispensasjon
+  fra Arbeidstilsynet.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(ulovlig|brudd|overstig|kan\\s+ikke|problematisk|umulig)"
+    - "(arbeidsmiljølov|§\\s*10|aml)"
+    - "(40\\s*time|48\\s*time)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, premiss-feil, arbeidsmiljølov]

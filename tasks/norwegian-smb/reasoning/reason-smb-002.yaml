@@ -1,0 +1,39 @@
+id: reason-smb-002
+bench: norwegian-smb
+category: reasoning
+version: 1
+title: Kausal kjede — endre rente, hva skjer med totalkostnad
+difficulty: medium
+
+rationale: |
+  Test på kausalt resonnement i SMB-finans. Ikke en faktagjenkjenning
+  (forsinkelsesrenten), men flertrinns konsekvens-kjede. Gir innsikt i om
+  modellen kan tenke i sekvenser.
+
+source: synthetic
+
+user_prompt: |
+  Et selskap har 100 forfalte fakturaer hver på 50 000 kr i snitt 60 dager
+  forfalte. Forsinkelsesrenten er 12,75% p.a. (faktisk dager / 365).
+
+  Forsinkelsesrenten økes til 14% p.a. fra 1. juli. Hvor mye mer i
+  forsinkelsesrente vil selskapet kreve totalt under den nye satsen
+  vs den gamle, gitt samme situasjon?
+
+# Forskjell per faktura:
+# 50 000 × 60 / 365 × (0.14 - 0.1275) = 50 000 × 60 / 365 × 0.0125
+# = 102.74 per faktura
+# × 100 fakturaer = 10 274 kr
+gold_answer: |
+  Forskjell per faktura: 50 000 × (60/365) × (0,14 − 0,1275) = ca. 102,74 kr
+  100 fakturaer: ca. 10 274 kr i økt rente totalt.
+
+eval:
+  method: numeric_exact
+  tolerance: 50
+  extract_pattern: "(\\d{1,3}[\\s.]?\\d{3}|\\d{3,5})"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, kausal, dato-aritmetikk, forsinkelsesrente]

@@ -17,10 +17,23 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
     id: number; slug: string; display_name: string; provider: string;
     family: string | null; parameter_count: string | null; is_open_weights: boolean;
     notes: string | null;
-  }>(`select id, slug, display_name, provider, family, parameter_count, is_open_weights, notes
+    external_scores: {
+      artificial_analysis?: {
+        intelligence_index?: number;
+        coding_index?: number;
+        math_index?: number;
+        scores?: Record<string, number>;
+        pricing?: Record<string, number>;
+        performance?: Record<string, number>;
+      };
+    } | null;
+    external_scores_updated_at: string | null;
+  }>(`select id, slug, display_name, provider, family, parameter_count, is_open_weights,
+              notes, external_scores, external_scores_updated_at
        from models where slug = $1`, [slug]);
   const model = models[0];
   if (!model) notFound();
+  const aa = model.external_scores?.artificial_analysis;
 
   const { rows: latestRun } = await query<{
     run_id: number; finished_at: string; total_score: string;
@@ -92,6 +105,72 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
           <div className="mb-10 border hairline border-[var(--tenki-subtle)] bg-white p-6">
             <div className="eyebrow mb-2">Score per kategori (nyeste kjøring)</div>
             <ModelRadarChart data={radarData} modelName={model.display_name} />
+          </div>
+        )}
+
+        {aa && (
+          <div className="mb-10 border hairline border-[var(--tenki-subtle)] bg-white p-6">
+            <div className="flex items-baseline justify-between mb-4">
+              <div>
+                <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted mb-1">
+                  Generell intelligens — eksterne benchmarks
+                </div>
+                <h2 className="font-sans text-xl font-medium tracking-tight">
+                  Artificial Analysis
+                </h2>
+              </div>
+              <a
+                href="https://artificialanalysis.ai/documentation"
+                target="_blank"
+                rel="noopener"
+                className="font-mono text-[10px] uppercase tracking-eyebrow text-tenki-accent hover:underline"
+              >
+                Kilde ↗
+              </a>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+              {[
+                { label: "Intelligence", val: aa.intelligence_index, sfx: "" },
+                { label: "Coding",       val: aa.coding_index,       sfx: "" },
+                { label: "Math",         val: aa.math_index,         sfx: "" },
+              ].filter(s => s.val !== undefined).map(s => (
+                <div key={s.label} className="rounded-xl bg-tenki-surface p-4">
+                  <div className="font-mono text-[10px] uppercase tracking-eyebrow text-tenki-muted">
+                    {s.label}
+                  </div>
+                  <div className="font-mono text-2xl font-medium mt-1">
+                    {s.val}{s.sfx}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {aa.scores && Object.keys(aa.scores).filter(k => aa.scores![k] !== undefined).length > 0 && (
+              <>
+                <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted mb-2">
+                  Per benchmark
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {Object.entries(aa.scores).filter(([, v]) => v !== undefined).map(([k, v]) => (
+                    <div key={k} className="rounded-lg border border-tenki-subtle p-3">
+                      <div className="font-mono text-[10px] uppercase tracking-eyebrow text-tenki-muted">
+                        {k.replace(/_/g, "-")}
+                      </div>
+                      <div className="font-mono text-lg mt-1">
+                        {(Number(v) * 100).toFixed(1)}%
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {model.external_scores_updated_at && (
+              <p className="mt-4 text-xs text-tenki-muted">
+                Sist oppdatert {formatDate(model.external_scores_updated_at)}
+              </p>
+            )}
           </div>
         )}
 

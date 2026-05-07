@@ -1,0 +1,67 @@
+id: reason-aiact-001
+bench: eu-ai-act
+category: reasoning
+version: 1
+title: Anvend Annex III-prinsippene på et nytt edge-case
+difficulty: hard
+
+rationale: |
+  Reasoning-test: nye scenarier krever at modellen anvender lov-prinsipper
+  utover å gjenkjenne kjente eksempler. CV-screening er listet eksplisitt;
+  modellen må vurdere om en lignende-men-distinkt operasjon faller inn under
+  samme kategori.
+
+source: synthetic
+
+user_prompt: |
+  Et HR-system bruker KI til å analysere ansattes Slack-meldinger og automatisk
+  generere månedlige "team-helse"-rapporter til ledelsen. Rapportene inneholder
+  individnavn med vurderinger som "engasjert", "tilbaketrukket", "potensielt
+  utbrent".
+
+  Faller dette under EU AI Act som høy-risiko? Resonner gjennom Annex III og
+  Article 5.
+
+gold_answer: |
+  Trolig høy-risiko, og potensielt forbudt på flere måter.
+
+  Argumentasjon:
+  1. Annex III pkt 4 dekker "AI for monitoring and evaluation of performance
+     and behaviour of persons in employment relationships". Slack-analyse for
+     ledelse-rapportering passer dette beskrivelsen → høy-risiko.
+
+  2. Article 5(1)(f) forbyr KI som utleder følelser fra arbeidstakere på
+     arbeidsplassen, unntatt for sikkerhets- eller medisinske formål.
+     "Engasjert", "tilbaketrukket", "utbrent" er emosjonelle inferenser →
+     denne praksisen er sannsynligvis FORBUDT, ikke bare høy-risiko.
+
+  3. Hvis ikke forbudt, krever høy-risiko-status: DPIA, FRIA (Fundamental
+     Rights Impact Assessment), Art. 13-transparens overfor ansatte,
+     samtykke (selv om samtykke i ansettelsesforhold er problematisk under
+     GDPR), Annex IV-dokumentasjon.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-art-5f-forbud
+      weight: 0.4
+      description: |
+        Påpeker at Article 5(1)(f) forbyr emosjons-inferens på arbeidsplass.
+    - criterion: identifiserer-annex-iii-4
+      weight: 0.25
+      description: |
+        Identifiserer Annex III pkt 4 som relevant (sysselsetting/overvåking).
+    - criterion: nevner-flere-konsekvenser
+      weight: 0.2
+      description: |
+        Nevner DPIA / Art-13 / dokumentasjons-krav som høy-risiko-konsekvens.
+    - criterion: korrekt-konklusjon
+      weight: 0.15
+      description: |
+        Konkluderer at praksisen er forbudt eller minst høy-risiko (ikke
+        "begrenset risiko" eller "minimum risiko").
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, art-5f, annex-iii, edge-case, llm-judge]
