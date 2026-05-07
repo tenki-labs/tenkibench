@@ -2,7 +2,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { query } from "@/lib/db";
 import Link from "next/link";
-import { formatScore, formatCost, formatDate } from "@/lib/utils";
+import { LeaderboardTable } from "@/components/leaderboard-table";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -54,53 +54,7 @@ export default async function LeaderboardPage() {
           <Link href="/metodikk" className="underline">metodikken</Link>.
         </p>
 
-        <div className="border hairline border-[var(--tenki-subtle)] bg-white">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">
-                <th className="px-4 py-3 eyebrow">#</th>
-                <th className="px-4 py-3 eyebrow">Modell</th>
-                <th className="px-4 py-3 eyebrow">Familie</th>
-                <th className="px-4 py-3 eyebrow">Vekter</th>
-                <th className="px-4 py-3 eyebrow text-right">Score</th>
-                <th className="px-4 py-3 eyebrow text-right">Kostnad</th>
-                <th className="px-4 py-3 eyebrow text-right">Kjørt</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-[var(--tenki-muted)]">
-                    Ingen ferdige kjøringer ennå.
-                  </td>
-                </tr>
-              ) : (
-                rows.map((r, i) => (
-                  <tr
-                    key={r.model_id}
-                    className="border-b hairline border-b-[var(--tenki-subtle)] last:border-0"
-                  >
-                    <td className="px-4 py-3 font-mono text-[var(--tenki-muted)]">{i + 1}</td>
-                    <td className="px-4 py-3">
-                      <Link href={`/modell/${r.model_slug}`} className="font-medium">
-                        {r.display_name}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-[var(--tenki-muted)]">{r.family ?? "—"}</td>
-                    <td className="px-4 py-3 text-[var(--tenki-muted)]">
-                      {r.is_open_weights ? "Åpen" : "Lukket"}
-                    </td>
-                    <td className="px-4 py-3 text-right font-mono">{formatScore(r.total_score)}</td>
-                    <td className="px-4 py-3 text-right text-[var(--tenki-muted)]">{formatCost(r.total_cost_usd)}</td>
-                    <td className="px-4 py-3 text-right text-[var(--tenki-muted)] text-xs">
-                      {formatDate(r.finished_at)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <LeaderboardTable rows={rows} />
       </main>
       <SiteFooter />
     </>
