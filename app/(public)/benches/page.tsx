@@ -31,7 +31,7 @@ export default async function BenchesIndex() {
   return (
     <>
       <SiteHeader />
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
         <div className="eyebrow mb-3">Benches</div>
         <h1 className="h1 mb-2">Hele katalogen</h1>
         <p className="text-[var(--tenki-muted)] mb-10 max-w-2xl">

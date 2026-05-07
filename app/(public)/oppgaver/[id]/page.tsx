@@ -15,7 +15,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
   return (
     <>
       <SiteHeader />
-      <main className="max-w-3xl mx-auto px-6 py-16">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
         <div className="eyebrow mb-3">{task.category} · {task.difficulty} · v{task.version}</div>
         <h1 className="h1 mb-2">{task.title}</h1>
         <p className="text-xs text-[var(--tenki-muted)] mb-10 font-mono">{task.id}</p>

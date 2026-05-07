@@ -30,7 +30,7 @@ export default async function TasksPage({
   return (
     <>
       <SiteHeader />
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
         <div className="eyebrow mb-3">Oppgaver</div>
         <h1 className="h1 mb-2">
           {bench ?? kategori ? `${bench ?? ""}${bench && kategori ? " · " : ""}${kategori ?? ""}` : "Alle"}

@@ -29,12 +29,12 @@ interface PillButtonProps extends PillBaseProps {
 type PillProps = PillLinkProps | PillButtonProps;
 
 const base =
-  "inline-flex items-center gap-2 px-7 py-[14px] font-mono text-[11px] font-medium uppercase " +
-  "tracking-[0.16em] transition-colors duration-150 " +
+  "inline-flex items-center gap-2 rounded-full px-6 sm:px-7 py-3 sm:py-[14px] font-mono text-[11px] font-medium uppercase " +
+  "tracking-[0.16em] transition-all duration-150 " +
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-tenki-accent focus-visible:outline-offset-2";
 
 const styles: Record<Variant, string> = {
-  primary: "bg-tenki-ink text-tenki-bg hover:opacity-90",
+  primary: "bg-tenki-ink text-tenki-bg hover:opacity-90 hover:scale-[1.02]",
   ghost:   "border border-tenki-subtle text-tenki-ink hover:border-tenki-ink",
 };
 

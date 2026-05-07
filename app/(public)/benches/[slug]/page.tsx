@@ -36,7 +36,7 @@ export default async function BenchPage({ params }: { params: Promise<{ slug: st
   return (
     <>
       <SiteHeader />
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
         <div className="eyebrow mb-3">Bench</div>
         <h1 className="h1 mb-2">{bench[0].name}</h1>
         <p className="text-[var(--tenki-muted)] mb-10 max-w-2xl">{bench[0].description}</p>

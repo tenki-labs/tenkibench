@@ -8,7 +8,7 @@ export default function MetodikkPage() {
   return (
     <>
       <SiteHeader />
-      <main className="max-w-3xl mx-auto px-6 py-16 prose prose-neutral">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16 prose prose-neutral">
         <div className="eyebrow mb-3">Metodikk</div>
         <h1 className="h1 mb-8">Hvordan TenkiBench fungerer</h1>
 

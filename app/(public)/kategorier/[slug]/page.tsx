@@ -60,7 +60,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   return (
     <>
       <SiteHeader />
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
         <div className="eyebrow mb-3">Kategori</div>
         <h1 className="h1 mb-2">{category.name}</h1>
         <p className="text-[var(--tenki-muted)] mb-2 max-w-2xl">{category.description}</p>

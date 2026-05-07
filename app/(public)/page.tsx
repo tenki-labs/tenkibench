@@ -65,29 +65,29 @@ export default async function HomePage() {
       <SiteHeader />
 
       {/* HERO */}
-      <section className="container max-w-7xl mx-auto px-6 md:px-10 pt-16 pb-24 md:pt-24 md:pb-36">
-        <p className="mb-6 font-mono text-[11px] md:text-xs font-medium uppercase tracking-eyebrow text-tenki-accent hero-animate">
+      <section className="container max-w-7xl mx-auto px-4 sm:px-6 md:px-10 pt-12 pb-20 sm:pt-16 sm:pb-24 md:pt-24 md:pb-36">
+        <p className="mb-5 sm:mb-6 font-mono text-[10px] sm:text-[11px] md:text-xs font-medium uppercase tracking-eyebrow text-tenki-accent hero-animate">
           [ Norsk · SMB · GDPR · AI Act ]
         </p>
-        <h1 className="font-mono font-medium leading-[0.95] tracking-tighter text-tenki-ink text-[2.5rem] sm:text-[3.5rem] md:text-[5rem] lg:text-[6rem] max-w-5xl hero-animate">
+        <h1 className="font-mono font-medium leading-[0.95] tracking-tighter text-tenki-ink text-[2rem] xs:text-[2.5rem] sm:text-[3.5rem] md:text-[5rem] lg:text-[6rem] max-w-5xl hero-animate break-words">
           Vi tester om kunstig intelligens
           <br className="hidden md:inline" />
           {" "}forstår Norge
           <span className="text-tenki-accent">.</span>
         </h1>
-        <p className="mt-10 text-base md:text-lg text-tenki-muted max-w-2xl leading-relaxed">
+        <p className="mt-8 sm:mt-10 text-base md:text-lg text-tenki-muted max-w-2xl leading-relaxed">
           Åpen, uavhengig benchmark for hvor godt språkmodeller fungerer på
           norske SMB-oppgaver: faktura, kontrakter, MVA, lov-referanse,
           Brønnøysund-data, HR/lønn, kundeservice og Bokmål↔Nynorsk.
           Alle oppgavene, evalueringen og resultatene er offentlige.
           Modell-leverandører betaler ikke for å bli evaluert.
         </p>
-        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
           <Pill href="/leaderboard" variant="primary">Se leaderboard</Pill>
           <Pill href="/metodikk" variant="ghost">Les metodikken</Pill>
           <Link
             href="/api/public/leaderboard"
-            className="inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-eyebrow text-tenki-muted hover:text-tenki-accent transition-colors"
+            className="inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-eyebrow text-tenki-muted hover:text-tenki-accent transition-colors px-2 py-1"
           >
             JSON-API <span aria-hidden>↗</span>
           </Link>
@@ -119,8 +119,8 @@ export default async function HomePage() {
             </p>
           </div>
         ) : (
-          <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="rounded-xl border border-tenki-subtle bg-white overflow-x-auto">
+            <table className="w-full text-sm min-w-[600px]">
               <thead>
                 <tr className="border-b border-tenki-subtle text-left">
                   <th className="px-4 py-3 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">#</th>

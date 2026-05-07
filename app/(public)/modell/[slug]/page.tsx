@@ -73,7 +73,7 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
   return (
     <>
       <SiteHeader />
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
         <div className="eyebrow mb-3">{model.provider} · {model.family ?? "—"}</div>
         <h1 className="h1 mb-2">{model.display_name}</h1>
         <p className="text-sm text-[var(--tenki-muted)] mb-10">

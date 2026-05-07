@@ -8,7 +8,7 @@ export default function OmPage() {
   return (
     <>
       <SiteHeader />
-      <main className="max-w-3xl mx-auto px-6 py-16">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 md:px-10 py-12 sm:py-16">
         <div className="eyebrow mb-3">Om</div>
         <h1 className="h1 mb-8">TenkiBench</h1>
 
