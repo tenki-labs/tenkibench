@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { Pill } from "@/components/ui/pill";
 import { query } from "@/lib/db";
 import { formatScore, formatDate } from "@/lib/utils";
 
@@ -77,19 +78,9 @@ export default async function HomePage() {
           Alle oppgavene, evalueringen og resultatene er offentlig.
           Vi tar aldri penger fra modell-leverandører for å bli evaluert.
         </p>
-        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <Link
-            href="/leaderboard"
-            className="inline-flex items-center justify-center bg-tenki-ink text-tenki-bg px-7 py-[14px] font-mono text-[11px] font-medium uppercase tracking-eyebrow hover:opacity-90 transition-opacity"
-          >
-            Se leaderboard
-          </Link>
-          <Link
-            href="/metodikk"
-            className="inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-eyebrow text-tenki-accent hover:underline underline-offset-4"
-          >
-            Les metodikken <span aria-hidden>›</span>
-          </Link>
+        <div className="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+          <Pill href="/leaderboard" variant="primary">Se leaderboard</Pill>
+          <Pill href="/metodikk" variant="ghost">Les metodikken</Pill>
           <Link
             href="/api/public/leaderboard"
             className="inline-flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-eyebrow text-tenki-muted hover:text-tenki-accent transition-colors"
