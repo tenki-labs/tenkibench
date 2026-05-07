@@ -23,7 +23,7 @@ export default async function RunsList() {
       <div className="eyebrow mb-3">Run-historikk</div>
       <h1 className="h1 mb-8">Siste 50 kjøringer</h1>
 
-      <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+      <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">

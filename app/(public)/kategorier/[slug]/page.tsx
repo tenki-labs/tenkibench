@@ -69,7 +69,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </p>
 
         {leaderboard.length > 0 && (
-          <div className="mb-10 border hairline border-[var(--tenki-subtle)] bg-white p-6">
+          <div className="mb-10 rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
             <CategoryBarChart
               data={leaderboard.map((r) => ({
                 name: r.display_name,
@@ -79,7 +79,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           </div>
         )}
 
-        <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+        <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">

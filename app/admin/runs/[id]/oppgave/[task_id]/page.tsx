@@ -64,13 +64,13 @@ export default async function TaskResultDetail({
       <div className="grid lg:grid-cols-2 gap-8">
         <section>
           <div className="eyebrow mb-2">Modell-svar</div>
-          <pre className="border hairline border-[var(--tenki-subtle)] bg-white p-4 text-sm whitespace-pre-wrap font-sans max-h-[600px] overflow-auto">
+          <pre className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4 text-sm whitespace-pre-wrap font-sans max-h-[600px] overflow-auto">
 {result.raw_output ?? "—"}
           </pre>
           {result.parsed_answer && result.parsed_answer !== result.raw_output && (
             <>
               <div className="eyebrow mb-2 mt-4">Etter parsing</div>
-              <pre className="border hairline border-[var(--tenki-subtle)] bg-white p-4 text-sm whitespace-pre-wrap font-mono">
+              <pre className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4 text-sm whitespace-pre-wrap font-mono">
 {result.parsed_answer}
               </pre>
             </>
@@ -79,14 +79,14 @@ export default async function TaskResultDetail({
 
         <section>
           <div className="eyebrow mb-2">Gull-standard</div>
-          <pre className="border hairline border-[var(--tenki-subtle)] bg-white p-4 text-sm whitespace-pre-wrap font-mono">
+          <pre className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4 text-sm whitespace-pre-wrap font-mono">
 {result.gold_answer ?? "—"}
           </pre>
 
           {task && (
             <>
               <div className="eyebrow mb-2 mt-4">Oppgave</div>
-              <pre className="border hairline border-[var(--tenki-subtle)] bg-white p-4 text-sm whitespace-pre-wrap font-sans">
+              <pre className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4 text-sm whitespace-pre-wrap font-sans">
 {task.user_prompt}
               </pre>
             </>
@@ -95,7 +95,7 @@ export default async function TaskResultDetail({
           {result.judge_rubric && Array.isArray(result.judge_rubric) && (
             <>
               <div className="eyebrow mb-2 mt-4">Dommer-rubrikk</div>
-              <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+              <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">

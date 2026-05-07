@@ -96,7 +96,7 @@ export default async function ModelDetail({ params }: { params: Promise<{ id: st
 
         <section>
           <div className="eyebrow mb-3">Run-historikk</div>
-          <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+          <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">

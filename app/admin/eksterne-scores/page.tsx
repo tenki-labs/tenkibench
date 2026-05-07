@@ -2,14 +2,34 @@ import { query } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
-import { refreshArtificialAnalysisScores } from "@/lib/external-scores/refresh";
+import {
+  refreshArtificialAnalysis,
+  refreshLmArena,
+  refreshOpenLlmLeaderboard,
+  refreshAll,
+} from "@/lib/external-scores/refresh";
 
 export const dynamic = "force-dynamic";
 
-async function refreshNow() {
+async function runAA() {
   "use server";
-  await refreshArtificialAnalysisScores();
-  redirect("/admin/eksterne-scores?ok=1");
+  try { await refreshArtificialAnalysis(); redirect("/admin/eksterne-scores?ok=aa"); }
+  catch (e) { redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
+}
+async function runLmArena() {
+  "use server";
+  try { await refreshLmArena(); redirect("/admin/eksterne-scores?ok=lmarena"); }
+  catch (e) { redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
+}
+async function runOpenLlm() {
+  "use server";
+  try { await refreshOpenLlmLeaderboard(); redirect("/admin/eksterne-scores?ok=open_llm"); }
+  catch (e) { redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
+}
+async function runAllSources() {
+  "use server";
+  try { await refreshAll(); redirect("/admin/eksterne-scores?ok=all"); }
+  catch (e) { redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
 }
 
 interface RefreshLog {
@@ -99,15 +119,73 @@ export default async function ExternalScoresAdmin({
         </div>
       )}
 
-      <form action={refreshNow} className="mb-12">
-        <button
-          type="submit"
-          disabled={!apiKeySet}
-          className="inline-flex items-center justify-center bg-tenki-ink text-tenki-bg px-7 py-[14px] font-mono text-[11px] font-medium uppercase tracking-eyebrow hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          Hent fra Artificial Analysis nå
-        </button>
-      </form>
+      <div className="mb-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <form action={runAA}>
+          <button
+            type="submit"
+            disabled={!apiKeySet}
+            className="w-full rounded-xl border border-tenki-subtle bg-white p-4 text-left card-lift disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent mb-1">
+              Artificial Analysis
+            </div>
+            <div className="font-sans text-sm font-medium">
+              GPT, Claude, Gemini, Mistral, ...
+            </div>
+            <div className="text-xs text-tenki-muted mt-2">
+              {apiKeySet ? "Krever API-nøkkel ✓" : "API-nøkkel mangler"}
+            </div>
+          </button>
+        </form>
+        <form action={runLmArena}>
+          <button
+            type="submit"
+            className="w-full rounded-xl border border-tenki-subtle bg-white p-4 text-left card-lift"
+          >
+            <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent mb-1">
+              LMArena (Chatbot Arena)
+            </div>
+            <div className="font-sans text-sm font-medium">
+              Elo-rating fra mennesker
+            </div>
+            <div className="text-xs text-tenki-muted mt-2">
+              Via HuggingFace · Ingen nøkkel
+            </div>
+          </button>
+        </form>
+        <form action={runOpenLlm}>
+          <button
+            type="submit"
+            className="w-full rounded-xl border border-tenki-subtle bg-white p-4 text-left card-lift"
+          >
+            <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent mb-1">
+              Open LLM Leaderboard
+            </div>
+            <div className="font-sans text-sm font-medium">
+              Llama, Qwen, DeepSeek, Mistral
+            </div>
+            <div className="text-xs text-tenki-muted mt-2">
+              Via HuggingFace · Ingen nøkkel · Kun åpne vekter
+            </div>
+          </button>
+        </form>
+        <form action={runAllSources}>
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-tenki-ink text-tenki-bg p-4 text-left hover:opacity-90 transition-opacity"
+          >
+            <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent mb-1">
+              Alle kilder
+            </div>
+            <div className="font-sans text-sm font-medium">
+              Refresh hele settet
+            </div>
+            <div className="text-xs text-tenki-muted mt-2">
+              ~2 min
+            </div>
+          </button>
+        </form>
+      </div>
 
       <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted mb-3">
         Status per modell

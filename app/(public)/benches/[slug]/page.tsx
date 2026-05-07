@@ -48,7 +48,7 @@ export default async function BenchPage({ params }: { params: Promise<{ slug: st
         </div>
 
         <div className="eyebrow mb-2">Kategorier</div>
-        <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+        <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">
@@ -92,7 +92,7 @@ export default async function BenchPage({ params }: { params: Promise<{ slug: st
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border hairline border-[var(--tenki-subtle)] bg-white p-4">
+    <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4">
       <div className="eyebrow mb-1">{label}</div>
       <div className="font-mono text-xl">{value}</div>
     </div>

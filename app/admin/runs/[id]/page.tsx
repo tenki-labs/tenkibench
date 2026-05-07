@@ -76,7 +76,7 @@ export default async function RunDetail({ params }: { params: Promise<{ id: stri
       </div>
 
       <div className="eyebrow mb-2">Per oppgave ({results.length})</div>
-      <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+      <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">
@@ -110,7 +110,7 @@ export default async function RunDetail({ params }: { params: Promise<{ id: stri
 
 function Stat({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="border hairline border-[var(--tenki-subtle)] bg-white p-4">
+    <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4">
       <div className="eyebrow mb-1">{label}</div>
       <div className={mono ? "font-mono text-lg" : "text-lg"}>{value}</div>
     </div>

@@ -1,0 +1,90 @@
+id: reason-lang-001
+bench: norwegian-language
+category: lang-reasoning
+version: 1
+title: Identifiser logiske inkonsistenser i en norsk avtale-tekst
+difficulty: medium
+
+rationale: |
+  Reasoning over norsk språk: ikke ren forståelse, men evne til å avdekke
+  logiske selvmotsigelser. Tester at modellen leser nøyaktig nok til å
+  oppdage at to klausuler i samme tekst gjør motstridende krav.
+
+source: synthetic
+
+user_prompt: |
+  Identifiser logiske inkonsistenser eller motsigelser i denne avtale-teksten:
+
+  ---
+  § 3 Levering
+  Leverandøren skal levere varene innen 14 dager etter bestilling.
+
+  § 4 Betaling
+  Kjøper betaler senest 30 dager etter levering.
+
+  § 8 Forsinkelse
+  Hvis levering forsinkes, kan kjøper trekke 5% per påbegynt uke etter
+  avtalt leveringsdato. Maksimal trekk er 10%.
+
+  § 12 Bortfall av krav
+  Alle krav faller bort hvis ikke skriftlig fremsatt innen 21 dager etter
+  fakturadato.
+
+gold_answer: |
+  Inkonsistenser identifisert:
+
+  1) § 8 vs § 8 selv (intern selvmotsigelse):
+     - "5% per påbegynt uke" + "Maksimal trekk er 10%"
+     - 10% / 5% = 2 uker. Etter 2 uker forsinkelse er taket nådd.
+     - Hvis forsinkelsen er 3+ uker, gir teksten ingen ekstra konsekvens.
+     - Dette er ikke nødvendigvis en feil, men formuleringen "per påbegynt
+       uke" antyder kontinuerlig opptjening, mens "maksimal 10%" stopper
+       det. Bør formuleres tydeligere.
+
+  2) § 12 vs § 4 (mulig logisk konflikt):
+     - § 4: betaling 30 dager etter levering
+     - § 12: krav faller bort 21 dager etter fakturadato
+     - Fakturadato er typisk = levering eller kort etter
+     - Hvis kjøper får mangelfull leveranse og betaler senest 30 dager
+       senere, er reklamasjons-fristen (21 dager) UTLØPT før betaling.
+     - Praktisk problem: kjøper må reklamere før betaling, hvilket gir
+       leverandøren makt til å forhale. Inkonsistens med god avtale-praksis
+       og potensielt urimelig under avtaleloven § 36.
+
+  3) § 8 vs § 12 (tidsfrist-forhold):
+     - § 8 om forsinkelse skal trolig kunne påberopes også etter levering
+     - § 12 sier alle krav bortfaller 21 dager etter fakturadato
+     - Hvis leverandøren leverer 30 dager forsinket, går § 8-trekket på 10%
+       — men hvis fakturadato er ved bestilling, er § 12-fristen utløpt
+       lenge før levering skjer.
+
+  Konklusjon: § 12 er for kort sett opp mot § 4 og § 8. Anbefales endret til
+  "30 dager etter at kjøper ble eller burde blitt klar over forholdet."
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-12-vs-4
+      weight: 0.35
+      description: |
+        Påpeker at § 12 (21-dagers-frist) er kortere enn § 4
+        (30 dagers betaling) — hvilket er logisk problematisk.
+    - criterion: identifiserer-12-vs-8
+      weight: 0.25
+      description: |
+        Påpeker at § 12-fristen kan utløpe før forsinket levering
+        i det hele tatt har skjedd (hvis fakturadato er ved bestilling).
+    - criterion: nyansert-vurdering-av-8
+      weight: 0.2
+      description: |
+        Vurderer "5% per uke / max 10%"-strukturen i § 8 — om det er
+        problematisk eller bare uklart.
+    - criterion: konstruktivt-forslag
+      weight: 0.2
+      description: |
+        Foreslår konkret omformulering eller harmonisering av fristene.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, logisk-konsistens, avtale-tekst, llm-judge]

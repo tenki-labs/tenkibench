@@ -27,7 +27,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
 
         <section className="mb-8">
           <div className="eyebrow mb-2">Spørsmål til modellen</div>
-          <pre className="border hairline border-[var(--tenki-subtle)] bg-white p-4 text-sm whitespace-pre-wrap font-sans">
+          <pre className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4 text-sm whitespace-pre-wrap font-sans">
 {task.user_prompt}
           </pre>
         </section>
@@ -35,7 +35,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
         {task.system_prompt && (
           <section className="mb-8">
             <div className="eyebrow mb-2">System-prompt</div>
-            <pre className="border hairline border-[var(--tenki-subtle)] bg-white p-4 text-sm whitespace-pre-wrap font-sans">
+            <pre className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4 text-sm whitespace-pre-wrap font-sans">
 {task.system_prompt}
             </pre>
           </section>
@@ -43,7 +43,7 @@ export default async function TaskPage({ params }: { params: Promise<{ id: strin
 
         <section className="mb-8">
           <div className="eyebrow mb-2">Gull-standard</div>
-          <pre className="border hairline border-[var(--tenki-subtle)] bg-white p-4 text-sm whitespace-pre-wrap font-mono">
+          <pre className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-4 text-sm whitespace-pre-wrap font-mono">
 {task.gold_answer}
           </pre>
         </section>

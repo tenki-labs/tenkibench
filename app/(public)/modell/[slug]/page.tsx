@@ -84,15 +84,15 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
 
         {latestRun[0] ? (
           <div className="grid sm:grid-cols-3 gap-4 mb-10">
-            <div className="border hairline border-[var(--tenki-subtle)] bg-white p-6">
+            <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
               <div className="eyebrow mb-1">Total-score</div>
               <div className="font-mono text-2xl">{formatScore(latestRun[0].total_score)}</div>
             </div>
-            <div className="border hairline border-[var(--tenki-subtle)] bg-white p-6">
+            <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
               <div className="eyebrow mb-1">Sist kjørt</div>
               <div className="font-mono text-lg">{formatDate(latestRun[0].finished_at)}</div>
             </div>
-            <div className="border hairline border-[var(--tenki-subtle)] bg-white p-6">
+            <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
               <div className="eyebrow mb-1">Kostnad denne kjøringen</div>
               <div className="font-mono text-lg">{formatCost(latestRun[0].total_cost_usd)}</div>
             </div>
@@ -102,14 +102,14 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
         )}
 
         {radarData.length > 0 && (
-          <div className="mb-10 border hairline border-[var(--tenki-subtle)] bg-white p-6">
+          <div className="mb-10 rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
             <div className="eyebrow mb-2">Score per kategori (nyeste kjøring)</div>
             <ModelRadarChart data={radarData} modelName={model.display_name} />
           </div>
         )}
 
         {aa && (
-          <div className="mb-10 border hairline border-[var(--tenki-subtle)] bg-white p-6">
+          <div className="mb-10 rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
             <div className="flex items-baseline justify-between mb-4">
               <div>
                 <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted mb-1">
@@ -175,7 +175,7 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
         )}
 
         {tsData.length > 1 && (
-          <div className="mb-10 border hairline border-[var(--tenki-subtle)] bg-white p-6">
+          <div className="mb-10 rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
             <div className="eyebrow mb-2">Total-score over tid</div>
             <TimeseriesChart data={tsData} modelKeys={[model.slug]} />
           </div>
@@ -183,7 +183,7 @@ export default async function ModelPage({ params }: { params: Promise<{ slug: st
 
         <div className="mb-10">
           <div className="eyebrow mb-2">Per kategori</div>
-          <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+          <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
             <table className="w-full text-sm">
               <tbody>
                 {categoryScores.map((c) => (

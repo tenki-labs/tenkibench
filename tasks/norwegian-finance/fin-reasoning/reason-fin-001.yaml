@@ -1,0 +1,68 @@
+id: reason-fin-001
+bench: norwegian-finance
+category: fin-reasoning
+version: 1
+title: Vurder kausal-kjede i kreditt-eksponering
+difficulty: hard
+
+rationale: |
+  Finansiell reasoning: forstå hvordan ulike risiko-faktorer slår sammen
+  i en helhetlig kreditt-eksponering. Ikke regelanvendelse, men flertrinns
+  årsak-og-effekt.
+
+source: synthetic
+
+user_prompt: |
+  En SMB søker om driftskreditt på 5 millioner. Forhold:
+  - Egenkapital: 12 mill
+  - Sysselsatt kapital: 28 mill (gjeld 16 mill, hvorav 6 mill i obligasjoner
+    med covenant om EBITDA/rente > 4)
+  - Siste års EBITDA: 3,5 mill
+  - Renter på eksisterende gjeld: 0,8 mill årlig
+  - Nye 5 mill driftskreditt på 9% gir ekstra rente 0,45 mill/år
+
+  Resonner gjennom: vil ny kreditt utløse covenant-brudd, og hva er
+  konsekvensen hvis EBITDA faller 20% neste år?
+
+gold_answer: |
+  Resonnement:
+
+  1) Nåværende EBITDA/rente: 3,5 / 0,8 = 4,375 → klart over covenant (>4).
+
+  2) Med ny kreditt: total rente 0,8 + 0,45 = 1,25 mill.
+     EBITDA/rente: 3,5 / 1,25 = 2,8 → UNDER covenant-grensa (4).
+
+  3) Konklusjon: ny kreditt utløser umiddelbart covenant-brudd allerede
+     ved dagens EBITDA. Banken bør flagge dette og enten avslå, kreve
+     refinansiering av obligasjonene først, eller forhandle om dispensasjon.
+
+  4) Hvis EBITDA faller 20% neste år (til 2,8 mill):
+     - Uten ny kreditt: 2,8 / 0,8 = 3,5 → covenant brutt (under 4)
+     - Med ny kreditt: 2,8 / 1,25 = 2,24 → grovere covenant-brudd
+
+     Selv UTEN ny kreditt bryter de covenanten ved 20% EBITDA-fall.
+     Dette er informasjon som må tas med i kreditt-vurderingen — eksisterende
+     gjeld er allerede risikoutsatt.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-naavarende-forhold
+      weight: 0.2
+      description: Beregner riktig EBITDA/rente i nåværende tilstand (3,5 / 0,8 = 4,375).
+    - criterion: korrekt-etter-ny-kreditt
+      weight: 0.3
+      description: Beregner EBITDA/rente etter ny kreditt og finner det under covenant.
+    - criterion: identifiserer-covenant-brudd
+      weight: 0.25
+      description: Konkluderer at covenant brytes umiddelbart med ny kreditt.
+    - criterion: stresstest-20-prosent-fall
+      weight: 0.25
+      description: |
+        Vurderer 20% EBITDA-fall, identifiserer at covenant brytes selv uten
+        ny kreditt, og kobler det til kreditt-beslutningen.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, covenant, ebitda, kausal-kjede, llm-judge, hard]

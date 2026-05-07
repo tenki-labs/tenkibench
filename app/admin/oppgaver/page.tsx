@@ -44,7 +44,7 @@ export default async function AdminTasksPage({
         <button type="submit" className="border hairline border-[var(--tenki-ink)] px-4 py-2 text-sm">Filtrer</button>
       </form>
 
-      <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+      <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">

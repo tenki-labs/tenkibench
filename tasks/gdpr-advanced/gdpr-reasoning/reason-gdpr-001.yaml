@@ -1,0 +1,85 @@
+id: reason-gdpr-001
+bench: gdpr-advanced
+category: gdpr-reasoning
+version: 1
+title: Anvend berettiget interesse-balansetest på edge-case
+difficulty: hard
+
+rationale: |
+  Reasoning over GDPR-anvendelse på et nytt scenario. Krever vekting av
+  motstridende interesser, ikke bare regelgjenkjenning. Edge-case: AI-trening
+  på offentlig tilgjengelig informasjon.
+
+source: synthetic
+
+user_prompt: |
+  En norsk SMB vil trene en intern språkmodell på offentlig publiserte
+  artikler fra norske blogger og nyhetssider (innhold uten betalingsmur).
+  De vil unngå å hente personnavn og fødselsnummer.
+
+  Vurder berettiget interesse (Article 6(1)(f) GDPR) som behandlings-grunnlag
+  via tre-trinns-balansetest.
+
+gold_answer: |
+  Tre-trinns-balansetest:
+
+  Trinn 1: Berettiget interesse?
+  - SMB-en har en kommersiell interesse i å bygge en intern språkmodell.
+  - Kommersiell interesse er anerkjent som berettiget under Recital 47.
+  - JA — interessen finnes.
+
+  Trinn 2: Nødvendig?
+  - Kunne modellen trenes på syntetiske data eller eksisterende åpne datasett
+    (Common Crawl-derivater) i stedet?
+  - Hvis ja, er ikke scraping nødvendig.
+  - Hvis krevende norsk-spesifikk dekning kun finnes via direkte scraping,
+    nødvendighet kan stå.
+  - DELVIS — krever begrunnelse i hvert konkrete tilfelle.
+
+  Trinn 3: Veies opp mot de registrerte sine rettigheter og friheter?
+  - Risiko-faktorer:
+    * Selv "offentlig" innhold kan inneholde indirekte personidentifiserbar
+      informasjon (forfatter-stilometri, blogg-håndteringer).
+    * Forventning: forfattere publiserte for å bli lest, ikke brukt som
+      AI-treningsdata. EDPB Opinion 28/2024 om AI-trening understreker at
+      data-subjektenes rimelige forventninger må vurderes.
+    * Risiko for memorization: modellen kan gjengi unik tekst, hvilket vil
+      være re-utgivelse.
+  - Avbøtende tiltak: opt-out-mekanisme (sjekk robots.txt + ai.txt),
+    differential privacy, ingen videre-deling av modellen.
+
+  Konklusjon: Berettiget interesse KAN være holdbar grunnlag, men krever:
+  (a) DPIA, (b) opt-out-mekanisme, (c) personnavn/fødselsnummer-filtre, (d)
+  vurdering av modellen for memorization. Anbefaling: konsulter Datatilsynet
+  eller advokat med GDPR-AI-fokus før oppstart.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: tre-trinns-struktur
+      weight: 0.25
+      description: |
+        Strukturer svaret som tre-trinns-test (interesse, nødvendighet,
+        balanse).
+    - criterion: artikkel-6-1-f
+      weight: 0.15
+      description: Refererer til Article 6(1)(f) eller Recital 47 eksplisitt.
+    - criterion: avbøtende-tiltak
+      weight: 0.25
+      description: |
+        Foreslår konkrete avbøtende tiltak (opt-out, DPIA, memorization-test).
+    - criterion: rimelig-forventning
+      weight: 0.2
+      description: |
+        Diskuterer at "offentlig publisert" ikke automatisk betyr "rimelig
+        forventet brukt for AI-trening".
+    - criterion: konklusjon-nyansert
+      weight: 0.15
+      description: |
+        Konkluderer ikke kategorisk ja/nei — anerkjenner at det er
+        kontekstavhengig og krever DPIA/rådgivning.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, gdpr-art-6f, ai-trening, llm-judge, hard]

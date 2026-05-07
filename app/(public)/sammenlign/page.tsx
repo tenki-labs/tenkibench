@@ -140,7 +140,7 @@ export default async function ComparePage({
           <>
             <div className="grid sm:grid-cols-2 gap-4 mb-10">
               {compare.map((r) => (
-                <div key={r.model_slug} className="border hairline border-[var(--tenki-subtle)] bg-white p-6">
+                <div key={r.model_slug} className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
                   <div className="eyebrow mb-1">{r.family ?? "—"}</div>
                   <div className="font-medium">{r.display_name}</div>
                   <div className="font-mono text-2xl mt-2">{formatScore(r.total_score)}</div>
@@ -152,7 +152,7 @@ export default async function ComparePage({
             </div>
 
             {radarData.length > 0 && (
-              <div className="mb-10 border hairline border-[var(--tenki-subtle)] bg-white p-6">
+              <div className="mb-10 rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6">
                 <div className="eyebrow mb-2">Radar — score per kategori</div>
                 <CompareRadarChart
                   data={radarData}
@@ -161,7 +161,7 @@ export default async function ComparePage({
               </div>
             )}
 
-            <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+            <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">

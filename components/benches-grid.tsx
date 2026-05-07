@@ -61,7 +61,7 @@ export function BenchesGrid({ benches }: { benches: Bench[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="border hairline border-[var(--tenki-subtle)] bg-white p-6 text-center text-sm text-[var(--tenki-muted)]">
+        <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden p-6 text-center text-sm text-[var(--tenki-muted)]">
           Ingen treff.
         </div>
       ) : (

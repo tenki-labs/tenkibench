@@ -62,7 +62,7 @@ export default async function CalibrationPage() {
 
       <section className="mb-10">
         <div className="eyebrow mb-3">Aggregert per dommer-modell</div>
-        <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+        <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">
@@ -140,7 +140,7 @@ export default async function CalibrationPage() {
 
       <section>
         <div className="eyebrow mb-3">Siste 30 ratings</div>
-        <div className="border hairline border-[var(--tenki-subtle)] bg-white">
+        <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b hairline border-b-[var(--tenki-subtle)] text-left">

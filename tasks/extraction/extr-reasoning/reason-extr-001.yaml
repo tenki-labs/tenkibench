@@ -1,0 +1,57 @@
+id: reason-extr-001
+bench: extraction
+category: extr-reasoning
+version: 1
+title: Inferens fra delvis faktura — utled manglende KID-felt
+difficulty: medium
+
+rationale: |
+  Reasoning: ikke bare ekstraksjon, men inferens. Modellen må forstå at
+  KID følger et spesifikt mønster (sjekksiffer på siste posisjon) og
+  rekonstruere én siffer fra de andre.
+
+source: synthetic
+
+system_prompt: |
+  Du svarer kun med tallet (uten andre tegn).
+
+user_prompt: |
+  Et KID-nummer er oppgitt som "55600000202601A8" der A er ett siffer som
+  ikke leses tydelig på fakturaen. Resten av KID er korrekt.
+
+  KID-formatet bruker MOD10-sjekksum: hvert siffer ganges alternerende med
+  2 og 1 fra høyre, sifre over 9 deles i siffer-summen, og total skal være
+  delbar på 10.
+
+  Hva må A være for at KID-en er gyldig?
+
+# KID uten A: 5 5 6 0 0 0 0 0 2 0 2 6 0 1 A 8 (16 sifre)
+# Fra høyre med multipliers 2,1,2,1,...
+# pos 16 (8): 8 × 2 = 16 → 1+6 = 7
+# pos 15 (A): A × 1 = A
+# pos 14 (1): 1 × 2 = 2
+# pos 13 (0): 0
+# pos 12 (6): 6 × 1 = 6
+# pos 11 (2): 2 × 2 = 4
+# pos 10 (0): 0
+# pos 9  (2): 2 × 2 = 4
+# pos 8  (0): 0
+# pos 7  (0): 0
+# pos 6  (0): 0
+# pos 5  (0): 0
+# pos 4  (0): 0
+# pos 3  (6): 6 × 2 = 12 → 3
+# pos 2  (5): 5
+# pos 1  (5): 5 × 2 = 10 → 1
+# Sum uten A: 7+2+6+4+4+3+5+1 = 32
+# Trenger total delbar på 10 → A = 8 (32+8=40 ✓)
+gold_answer: "8"
+
+eval:
+  method: regex
+  pattern: "^\\s*8\\s*$"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, kid, mod10, hard]

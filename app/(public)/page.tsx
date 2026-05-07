@@ -109,14 +109,14 @@ export default async function HomePage() {
         </div>
 
         {leaderboard.length === 0 ? (
-          <div className="border border-tenki-subtle bg-white p-8">
+          <div className="rounded-xl border border-tenki-subtle bg-white p-8">
             <Eyebrow brackets dot={false}>Ingen kjøringer ennå</Eyebrow>
             <p className="mt-3 text-tenki-muted">
               Benchmark er under oppstart. Første kjøring igangsettes fra <code className="font-mono">/admin/kjor</code>.
             </p>
           </div>
         ) : (
-          <div className="border border-tenki-subtle bg-white">
+          <div className="rounded-xl border border-tenki-subtle bg-white overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-tenki-subtle text-left">
@@ -165,18 +165,25 @@ export default async function HomePage() {
           </h2>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-tenki-subtle border border-tenki-subtle">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {benchCards.map((cat) => (
-            <Link key={cat.href} href={cat.href} className="group bg-tenki-bg card-lift p-6 relative border-0">
-              <span className="absolute left-0 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-tenki-accent transition-colors" />
+            <Link
+              key={cat.href}
+              href={cat.href}
+              className="group rounded-xl border border-tenki-subtle bg-white p-6 card-lift relative overflow-hidden"
+            >
+              <span
+                aria-hidden
+                className="absolute left-0 top-0 bottom-0 w-[3px] bg-transparent group-hover:bg-tenki-accent transition-colors duration-200"
+              />
               <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">
                 {cat.eyebrow}
               </div>
               <div className="mt-2 font-sans text-lg font-medium tracking-tight">
                 {cat.title}
               </div>
-              <div className="mt-4 font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent">
-                Se →
+              <div className="mt-6 font-mono text-[10px] uppercase tracking-eyebrow text-tenki-accent inline-flex items-center gap-1.5">
+                Se kategori <span aria-hidden>→</span>
               </div>
             </Link>
           ))}
