@@ -27,6 +27,26 @@ Alle oppgaver, evalueringskode og resultater er åpne. Modell-leverandører beta
 - Recharts for grafer, TanStack Table for tabeller
 - Caddy (delt edge på `/opt/edge/`) for TLS
 
+## Datasett
+
+Den åpne delen av oppgavesettet er publisert på HuggingFace:
+<https://huggingface.co/datasets/tenki-labs/tenkibench>
+
+```python
+from datasets import load_dataset
+
+# Hele datasettet (alle benches samlet)
+ds = load_dataset("tenki-labs/tenkibench", "all")
+
+# Bare norsk SMB-bench
+smb = load_dataset("tenki-labs/tenkibench", "norwegian-smb")
+```
+
+Hold-out-settet er ikke med — det blir aldri publisert. Lokalt kan du
+generere HF-eksporten med `pnpm export:hf` (skriver til
+`dist/tenkibench-hf/`). Republisering skjer via GitHub Actions-jobben
+`publish-hf.yml` (manuell trigger).
+
 ## Lokalt oppsett
 
 ```bash
@@ -61,9 +81,31 @@ pnpm bench:run --model=claude-opus-4-7 --category=faktura
 
 ## Lisens
 
-- Kode: MIT
-- Oppgaver: CC BY 4.0 (sitering kreves)
-- Hold-out-set: ikke offentlig
+- **Kode:** MIT — se `LICENSE`.
+- **Oppgaver, prompts, fasit, eval-resultater:** CC BY 4.0 — fri bruk, krever sitering.
+- **Hold-out-set:** ikke offentlig. Brukes til å oppdage modeller trent på testen.
+- **Modell-vekter:** vi distribuerer ingen. Modellene tilhører sine respektive eiere
+  (OpenAI, Anthropic, Mistral, Meta, Alibaba, …) og er underlagt deres lisenser.
+  TenkiBench rapporterer kun målte score.
+
+## Sitering
+
+Sitater-side med BibTeX, APA, MLA, lisens-detaljer og dataset-nedlasting:
+[bench.tenki.no/sitere](https://bench.tenki.no/sitere).
+
+```bibtex
+@misc{tenkibench2026,
+  title={TenkiBench: A Norwegian SMB Benchmark for Language Models},
+  author={Holt, Einar and contributors},
+  year={2026},
+  url={https://bench.tenki.no},
+  version={v0.6},
+  note={CC-BY 4.0}
+}
+```
+
+Hele datasettet kan lastes ned via `GET /api/public/dataset?format=json|jsonl|csv`.
+Leaderboardet i samme formater: `GET /api/public/leaderboard?format=json|jsonl|csv`.
 
 ## Eier
 

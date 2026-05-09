@@ -1,0 +1,90 @@
+id: reason-smb-006
+bench: norwegian-smb
+category: smb-reasoning
+version: 1
+title: Periodisering ved valutasvingning over årsskifte
+difficulty: expert
+
+rationale: |
+  Krever sammensatt regnskapsmessig resonering: skille mellom realisert og
+  urealisert valutakurs-effekt, korrekt anvendelse av regnskapsloven § 5-9
+  (laveste verdis prinsipp på pengeposter) og periodiseringsplikten over
+  årsskifte. Tester reell norsk regnskapspraksis i SMB.
+
+source: synthetic
+
+user_prompt: |
+  En norsk SMB har en utestående fordring i USD:
+  - 1. november 2025: solgt for 100 000 USD, kurs ved fakturering 10,40
+    NOK/USD → bokført fordring 1 040 000 kr.
+  - 31. desember 2025: balansedato. USD-kurs 11,20 NOK/USD.
+  - 15. februar 2026: kunden betaler. USD-kurs 10,80 NOK/USD.
+
+  Vis hvordan valutakurs-effektene skal periodiseres mellom 2025 og 2026.
+  Hva er resultateffekten i hvert år, og hvilken hjemmel styrer dette?
+
+gold_answer: |
+  Hjemler:
+  - Regnskapsloven § 4-1 (1) nr 3: sammenstillingsprinsippet — gevinster og
+    tap periodiseres når de oppstår.
+  - Regnskapsloven § 5-9: pengeposter i utenlandsk valuta skal vurderes til
+    kursen på balansedagen (omregningsplikt).
+  - NRS 20 / IFRS-praksis: urealisert valutakurs-gevinst skal resultatføres
+    årlig på pengeposter (ikke utsettes som ved varige driftsmidler).
+
+  Beregning:
+
+  År 2025:
+  - 1.11: bokfør fordring 100 000 USD × 10,40 = 1 040 000 kr (ingen kurs-effekt)
+  - 31.12: omregne fordring til 100 000 × 11,20 = 1 120 000 kr
+  - Urealisert valutakurs-gevinst i 2025: 1 120 000 − 1 040 000 = 80 000 kr
+    → resultatføres 2025 (kreditpost finansinntekt).
+  - Bokført fordring per 31.12.25: 1 120 000 kr.
+
+  År 2026:
+  - 15.2: kunden betaler 100 000 USD × 10,80 = 1 080 000 kr.
+  - Realisert valutakurs-tap mot inngående saldo:
+    1 120 000 − 1 080 000 = 40 000 kr → resultatføres 2026 som
+    finanskostnad.
+  - Netto kassestrøm: 1 080 000 inn, fordring fjernes.
+
+  Sjekk netto: 80 000 (2025) − 40 000 (2026) = 40 000 kr netto valuta-gevinst.
+  Dette stemmer mot total realisert effekt: salg priset til 10,40 NOK/USD,
+  oppgjort til 10,80 NOK/USD → 100 000 × (10,80 − 10,40) = 40 000 kr.
+
+  Konklusjon:
+  - 2025: +80 000 kr finansinntekt (urealisert gevinst).
+  - 2026: −40 000 kr finanskostnad (realisert tap mot oppjustert saldo).
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-omregning-balansedato
+      weight: 0.25
+      description: |
+        Beregner riktig fordringsverdi per 31.12.25 (1 120 000 kr) basert
+        på balansedags-kursen 11,20.
+    - criterion: korrekt-2025-effekt
+      weight: 0.2
+      description: |
+        Identifiserer +80 000 kr urealisert gevinst i 2025-resultatet.
+    - criterion: korrekt-2026-effekt
+      weight: 0.25
+      description: |
+        Identifiserer −40 000 kr som realisert tap mot oppjustert saldo
+        (ikke +40 000 totalt mot opprinnelig kostpris).
+    - criterion: korrekt-hjemmel
+      weight: 0.2
+      description: |
+        Refererer regnskapsloven § 5-9 (omregning av pengeposter)
+        og/eller § 4-1 sammenstillingsprinsippet.
+    - criterion: netto-konsistens
+      weight: 0.1
+      description: |
+        Viser at netto resultateffekt over begge år (40 000 kr) er
+        konsistent med den realiserte kurs-differansen.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, periodisering, valuta, regnskapsloven, expert, llm-judge]

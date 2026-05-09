@@ -1,0 +1,80 @@
+id: reason-tool-003
+bench: tool-use
+category: tool-reasoning
+version: 1
+title: Velg minste tilstrekkelige verktøy-sett
+difficulty: hard
+
+rationale: |
+  Reasoning om verktøys-økonomi: ofte fristes modeller til å bruke flere
+  verktøy enn nødvendig. Den smarte løsningen er å avlede svaret med færrest
+  mulige verktøy-kall. Tester at modellen vurderer hva den allerede kan
+  utlede vs hva som krever oppslag.
+
+source: synthetic
+
+system_prompt: |
+  Du har tilgang til disse verktøyene (alle koster 1 kreditt per kall):
+    - kalender_lookup(dato): henter kalenderdata for gitt dato (fridager, ukenavn)
+    - dager_mellom(start, slutt): beregner antall kalenderdager mellom to datoer
+    - virkedager_mellom(start, slutt): beregner antall virkedager (eks. helger og helligdager)
+    - postnummer_til_kommune(postnr): slår opp kommune
+    - mva_kalk(beløp, sats): beregner mva
+    - lovdata_search(query): søker i Lovdata
+    - kalkulator(uttrykk): løser et matematisk uttrykk
+
+  Returner JSON med:
+    - tool_calls: liste over verktøy-kall (kun de som virkelig trengs)
+    - reasoning: kort begrunnelse for hvorfor andre ikke trengs
+    - final_answer: forventet svar etter at verktøys-resultatene er kombinert
+
+user_prompt: |
+  En SMB sender faktura 15. mars 2026 med 30 dagers betalingsfrist. Kunden
+  har sin lokasjon i Oslo (postnr 0150).
+
+  Når er forfallsdato, og hvor mange virkedager forsinket regnes det som
+  hvis betaling skjer 4. mai 2026? Bruk minimum antall verktøy.
+
+gold_answer: |
+  {
+    "tool_calls": [
+      {
+        "step": 1,
+        "tool": "virkedager_mellom",
+        "args": {"start": "2026-04-14", "slutt": "2026-05-04"},
+        "reason": "Forfallsdato 15. mars + 30 dager = 14. april 2026 (kan jeg utlede uten kalkulator). Trenger virkedager fra forfall til betaling."
+      }
+    ],
+    "reasoning": "Jeg kan utlede forfallsdato selv ved å legge til 30 dager til 15. mars (= 14. april 2026). postnummer_til_kommune trengs ikke — Oslo (0150) gir ingen relevant info for fristberegning. mva_kalk trengs ikke. lovdata_search trengs ikke. dager_mellom (kalenderdager) trengs ikke når oppgaven spør om virkedager. kalender_lookup ville bare gitt informasjon som er innebakt i virkedager_mellom.",
+    "final_answer": "Forfallsdato: 14. april 2026. Virkedager forsinket per 4. mai: ca 14 virkedager (avhengig av helligdager — virkedager_mellom-resultatet trumfer dette estimatet). Påske 2026 er 2.-6. april (utenfor perioden). 1. mai 2026 er fredag (Arbeidernes dag, fri). 17. mai er 17. mai (utenfor). Kristi Himmelfartsdag 14. mai 2026 (utenfor). Pinse 24. mai (utenfor). Eneste fridag i intervallet 14.4-4.5 er 1. mai (fredag). Med 14. april = tirsdag som start (eksklusiv) og 4. mai = mandag som slutt (inklusiv): 21 kalenderdager, 15 helgedager-eks-fridager → 14 virkedager omtrent."
+  }
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: bruker-kun-ett-verktoy
+      weight: 0.4
+      description: |
+        Modellen kaller KUN ett verktøy (virkedager_mellom) eller maks to.
+        Bruker IKKE postnummer_til_kommune, mva_kalk, lovdata_search,
+        eller kalkulator.
+    - criterion: avleder-forfallsdato-selv
+      weight: 0.25
+      description: |
+        Beregner 15. mars + 30 dager = 14. april selv, uten å spørre
+        et verktøy om dette.
+    - criterion: korrekt-bruk-virkedager
+      weight: 0.2
+      description: |
+        Velger virkedager_mellom over dager_mellom siden oppgaven spør
+        om virkedager.
+    - criterion: eksplisitt-begrunnelse
+      weight: 0.15
+      description: |
+        Begrunner eksplisitt hvorfor andre verktøy IKKE trengs (særlig
+        postnummer-oppslaget).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, tool-economy, virkedager, hard, llm-judge]

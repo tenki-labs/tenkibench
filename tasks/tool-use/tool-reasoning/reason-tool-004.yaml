@@ -1,0 +1,76 @@
+id: reason-tool-004
+bench: tool-use
+category: tool-reasoning
+version: 1
+title: Detekter at et verktøy returnerer feil og veksle strategi
+difficulty: hard
+
+rationale: |
+  Tester reasoning over verktøys-feilhåndtering: når et primært verktøy
+  returnerer feil eller utenfor forventet output-format, skal modellen
+  velge en annen strategi (fallback) i stedet for å gi opp eller fabrikere.
+  Reflekterer reell agent-robusthet.
+
+source: synthetic
+
+system_prompt: |
+  Du har tilgang til:
+    - brreg_lookup(orgnr): returnerer JSON med selskapsdata
+    - brreg_search(navn): søker etter selskaper med navn
+    - lovdata_search(query): søker i Lovdata
+    - manuell_oppslag(beskrivelse): be brukeren bekrefte manuelt
+
+  Du har akkurat kalt brreg_lookup("987654321") og fått tilbake:
+  {"error": "Ikke funnet", "code": 404}
+
+  Du må fortsatt finne selskapet "Norsk Maskinservice AS" som brukeren spurte
+  om. Returner JSON med:
+    - reasoning: hvordan du tolker feilmeldingen
+    - next_action: konkret neste verktøy-kall (samme schema som ovenfor)
+    - fallback_plan: hva som skjer hvis next_action også feiler
+
+user_prompt: |
+  Brukeren har spurt: "Finn organisasjonsnummeret til Norsk Maskinservice AS
+  og bekreft daglig leder."
+
+  Du gjettet på 987654321 og det feilet. Hva er neste handling?
+
+gold_answer: |
+  {
+    "reasoning": "Min gjetning på 987654321 var feil — Brreg returnerte 404, så det orgnummeret eksisterer ikke (eller ikke for dette selskapet). Jeg bør slutte å gjette og bruke navnesøk i stedet.",
+    "next_action": {
+      "tool": "brreg_search",
+      "args": {"navn": "Norsk Maskinservice AS"},
+      "expected": "JSON-liste over treff. Hvis ett unikt treff, har jeg orgnr og kan slå opp daglig leder."
+    },
+    "fallback_plan": "Hvis brreg_search returnerer 0 eller mange tvetydige treff: be brukeren bekrefte mer info (organisasjonsnummer, lokasjon, eller bransje) via manuell_oppslag. Hvis flere AS heter likt, presenter listen og spør hvilket som er riktig. Lovdata_search er ikke relevant her — det er ikke en juridisk problemstilling."
+  }
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: tolker-feilen-korrekt
+      weight: 0.25
+      description: |
+        Tolker 404-feilen som "orgnr finnes ikke" og slutter å gjette
+        på orgnr.
+    - criterion: velger-brreg-search
+      weight: 0.3
+      description: |
+        Velger brreg_search med navnet som neste handling, ikke
+        ny gjetning på orgnr eller lovdata_search.
+    - criterion: konkret-fallback
+      weight: 0.25
+      description: |
+        Har en konkret fallback-plan for tvetydig eller tomt treff,
+        som inkluderer å spørre brukeren via manuell_oppslag.
+    - criterion: ikke-fabrikkerer
+      weight: 0.2
+      description: |
+        Foreslår IKKE et orgnr-svar uten reelt oppslag. Innrømmer at
+        gjetningen var feil.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, error-handling, fallback, agent-robusthet, hard, llm-judge]

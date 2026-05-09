@@ -1,0 +1,138 @@
+id: reason-aiact-004
+bench: eu-ai-act
+category: aiact-reasoning
+version: 1
+title: Post-market monitoring forpliktelser etter Art. 72
+difficulty: hard
+
+rationale: |
+  Tester reasoning over hvordan post-market monitoring (Art. 72) henger sammen
+  med serious incident reporting (Art. 73) og oppdateringer av risk management
+  (Art. 9). Krever at modellen skiller mellom rutinemessig overvåking og
+  meldepliktige hendelser, samt fristene.
+
+source: synthetic
+
+user_prompt: |
+  Du er compliance-ansvarlig hos en provider av et høy-risiko-AI-system for
+  CV-screening (Annex III pkt 4a). Systemet ble satt på markedet i januar
+  2026.
+
+  Mai 2026: Du oppdager via post-market monitoring at systemet har
+  skåret kvinnelige søkere ~12 prosentpoeng lavere i snitt for samme
+  kvalifikasjoner sammenlignet med menn på fire av seks deployer-organisasjoner
+  i april. Tre kandidater er allerede avvist på dette grunnlaget.
+
+  Hvilke handlinger kreves under AI Act, hvilke frister gjelder, og når
+  må du varsle hvilke instanser?
+
+gold_answer: |
+  Rettslig vurdering:
+
+  1) Klassifisering av hendelsen:
+     - Art. 3 nr 49 definerer "serious incident": bl.a. krenkelse av
+       grunnleggende rettigheter beskyttet av EU-retten.
+     - Diskriminering på kjønn er en krenkelse av Charter Art. 21 og
+       likestillingsdirektivet → dette er en serious incident.
+     - 12 prosentpoeng systematisk skjevhet på samme kvalifikasjoner kan
+       også være "malfunctioning" som forårsaker krenkelse av
+       grunnleggende rettigheter (Art. 73 nr 1 bokstav b).
+
+  2) Plikter for provider (Art. 73 — serious incident reporting):
+     - § 1: rapportere til markedstilsyns-myndigheten i medlemsstatet der
+       hendelsen skjedde. I Norge: Digitaliseringsdirektoratet eller
+       sektor-spesifikk tilsynsmyndighet (avhenger av endelig
+       implementering i norsk rett).
+     - § 2: frist — uten unødig opphold, og senest 15 dager etter at
+       provider eller deployer ble klar over hendelsen. For "widespread
+       infringement" eller død/alvorlig helseskade: 2 dager. For
+       diskriminerings-mønstre kan "widespread" treffes hvis flere
+       deployers er rammet → trolig 15 dagers frist, men 2 dager hvis
+       myndighetene anser det som widespread.
+     - Etter rapport: gjennomføre undersøkelse, risk assessment og korrigerende
+       tiltak (Art. 73 § 7).
+
+  3) Plikter under post-market monitoring (Art. 72):
+     - § 1-3: post-market monitoring system må samle, dokumentere og
+       analysere data om systemets ytelse gjennom hele livssyklusen.
+     - § 4: hvis monitoring viser at systemet ikke lenger oppfyller kravene
+       i Chapter III Section 2 (her: Art. 10 om data og Art. 15 om
+       robusthet/accuracy/non-discrimination) → korrigerende tiltak.
+
+  4) Korrigerende tiltak under Art. 20:
+     - Hvis systemet ikke samsvarer med kravene → provider må iverksette
+       nødvendige korrigerende tiltak, trekke systemet fra markedet eller
+       tilbakekalle.
+     - Informere distributører, deployers og berørte aktører.
+     - Hvis høy risiko for rettighetskrenkelse → midlertidig stans av
+       systemet vurderes.
+
+  5) Plikter under risk management (Art. 9):
+     - Risk management skal være kontinuerlig iterativ — denne hendelsen
+       må fôres tilbake til risk-vurderingen og dokumenteres i Annex IV.
+
+  6) GDPR-overlapp:
+     - Diskriminering på grunn av kjønn er også et databeskyttelses-
+       spørsmål (særlig om automatisert avgjørelse, GDPR Art. 22, og
+       likebehandlings-krav). Datatilsynet kan også være relevant
+       myndighet. Se også Likestillings- og diskrimineringsloven.
+
+  7) Kommunikasjon med deployers:
+     - Art. 13 (transparens): deployers må informeres om kjente
+       begrensninger og bias-risiko.
+     - I praksis: send teknisk rådgiving + midlertidig advarsel om bias
+       til berørte deployers umiddelbart, parallelt med myndighets-melding.
+
+  Konkret handlingsplan med frister:
+  - Dag 0: identifiser hendelsen som potensielt serious incident.
+  - Dag 0-2: varsle deployers om midlertidig oppmerksomhets-flagg.
+  - Innen 15 dager: rapportere til markedstilsynsmyndighet (Art. 73).
+  - Innen 30 dager: undersøkelse og foreløpig årsaksanalyse.
+  - Innen 60-90 dager: korrigerende tiltak (retraining, debiasing,
+    eventuelt midlertidig stans).
+  - Oppdatering av Art. 9 risk management, Annex IV teknisk dokumentasjon
+    og Art. 72 monitoring-rapport.
+  - Vurdering om dette utgjør "substantial modification" → ny
+    konformitetsvurdering (Art. 43.4).
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-serious-incident
+      weight: 0.25
+      description: |
+        Klassifiserer hendelsen som serious incident under Art. 73 fordi
+        det er krenkelse av grunnleggende rettigheter (likestilling).
+    - criterion: korrekt-frist-rapportering
+      weight: 0.2
+      description: |
+        Nevner 15-dagers-fristen i Art. 73 (og helst 2-dagers for
+        widespread/kritiske hendelser), og at rapport skal til
+        markedstilsynsmyndighet.
+    - criterion: kobler-til-art-72-monitoring
+      weight: 0.15
+      description: |
+        Påpeker at post-market monitoring (Art. 72) er pliktig kontinuerlig
+        og at funnet må fôres inn i monitoring-systemet.
+    - criterion: korrigerende-tiltak-art-20
+      weight: 0.15
+      description: |
+        Lister konkrete korrigerende tiltak (retraining, midlertidig stans,
+        informering av deployers) under Art. 20.
+    - criterion: kobler-til-deployers
+      weight: 0.1
+      description: |
+        Nevner Art. 13 transparens og at deployers må informeres.
+    - criterion: nevner-art-9-risk-management
+      weight: 0.1
+      description: |
+        Påpeker at risk management må oppdateres iterativt iht. Art. 9.
+    - criterion: gdpr-overlapp
+      weight: 0.05
+      description: |
+        Bonus: nevner overlapp med GDPR Art. 22 og likestillingslov.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, art-72, art-73, post-market, serious-incident, hard, llm-judge]

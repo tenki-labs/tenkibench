@@ -1,0 +1,140 @@
+id: reason-lang-004
+bench: norwegian-language
+category: lang-reasoning
+version: 1
+title: Tolk implisitt mening i klagebrev og prioriter respons-elementer
+difficulty: hard
+
+rationale: |
+  Reasoning over pragmatikk: norske kunder uttrykker ofte alvor og
+  emosjonell tilstand indirekte. Modellen må lese mellom linjene, identifisere
+  faktiske krav vs uutalte forventninger, og prioritere hvilke elementer en
+  god kundeservice-respons må adressere.
+
+source: synthetic
+
+user_prompt: |
+  En kunde sender denne meldingen til kundeservice:
+
+  ---
+  Hei,
+
+  Jeg har vært kunde hos dere i 14 år. Aldri klaget før. Men nå må jeg
+  bare si fra.
+
+  Bestilte varen 12. mars. Lovet leveranse innen en uke. Mottok den
+  9. april — fire uker forsinket. Ingen melding underveis. Da varen
+  endelig kom, var emballasjen åpnet og en av delene manglet.
+
+  Forstår at dere har mye å gjøre, men jeg har et arrangement neste uke
+  hvor varen skulle brukes. Var dette virkelig vanskelig å håndtere?
+
+  Hva tenker dere å gjøre?
+
+  Mvh
+  Anne
+  ---
+
+  Identifiser:
+  1. Hvilke konkrete fakta som krever bekreftelse eller respons
+  2. Hvilke uutalte forventninger / emosjonelle behov kunden har
+  3. Prioritert respons-strategi (rekkefølge på elementer)
+  4. Hva som ville vært FEIL å fokusere på først
+
+gold_answer: |
+  Analyse:
+
+  1) Konkrete fakta som krever respons:
+     - Bestillingsdato: 12. mars
+     - Lovet leveranse: innen uke (~19. mars)
+     - Faktisk leveranse: 9. april (3 uker forsinket fra lovet, ikke 4
+       som kunden sier — verdt å verifisere uten å konfrontere)
+     - Manglende kommunikasjon underveis
+     - Skadet/åpnet emballasje
+     - Manglende del
+     - Kunde har arrangement "neste uke" — vurder: er det mulig å erstatte
+       i tide?
+
+  2) Uutalte forventninger / emosjonelle behov:
+     - "14 år, aldri klaget før" → forventer å bli behandlet som
+       en lojal kunde med tyngde, ikke som tilfeldig klage. Lojalitet
+       er kjernen i emosjonsbildet.
+     - "Forstår at dere har mye å gjøre, men..." → kunde signaliserer
+       at de er rimelige, men også at unnskyldninger ikke holder.
+     - "Var dette virkelig vanskelig å håndtere?" → ironi; kunden
+       opplever fundamental respektløshet, ikke bare praktisk problem.
+     - "Hva tenker dere å gjøre?" → eksplisitt spørsmål om
+       kompensasjon/løsning, men ikke krav om noe spesifikt — gir
+       bedriften rom til å vise initiativ.
+     - Underliggende: kunden vurderer å avslutte forholdet etter 14 år.
+       Det handler ikke bare om denne ordren, men om hva slags relasjon
+       bedriften har til lojale kunder.
+
+  3) Prioritert respons-strategi:
+     a. ANERKJENNELSE først: bekreft mottatt klage, anerkjenn
+        opplevelsen som uakseptabel, ikke unnskyldninger eller
+        forklaringer.
+     b. EIERSKAP: ta personlig ansvar. "Jeg" eller "vi", ikke "systemet".
+     c. KONKRET HANDLING for det tidskritiske: verifiser om manglende
+        del kan ekspressleveres FØR arrangementet neste uke. Dette er
+        det operative som må løses først.
+     d. KOMPENSASJON: tilby konkret kompensasjon (f.eks. full retur av
+        kjøpesum, gavekort, gratis frakt på neste ordre, eller
+        fremrykket levering av ny del). Ikke spør "hva ønsker du?" som
+        første tilbud — det legger ansvar tilbake på kunden.
+     e. RELASJONS-ANERKJENNELSE: anerkjenn 14 års lojalitet eksplisitt.
+        Forskyv samtalen fra transaksjon til relasjon.
+     f. INTERN HANDLING: forklar konkret hva som vil endres for å hindre
+        gjentagelse (kort, ikke prosess-eufemismer).
+     g. OPPFØLGING: forplikt deg til konkret oppfølging når det er løst.
+
+  4) FEIL å fokusere på først:
+     - Forklare HVORFOR det tok 4 uker (interne unnskyldninger). Kunden
+       bryr seg ikke om årsaken før de er anerkjent.
+     - Be kunden fylle ut RMA-skjema før varen er erstattet. Det
+       overskriver lojalitet med byråkrati.
+     - Pirke i fakta-presisjon ("egentlig kun 3 uker forsinket"). Det
+       er teknisk korrekt men relasjons-katastrofalt.
+     - Henvise til vilkår eller lovens minimum. Lojal kunde forventer
+       OVER lovens minimum.
+     - Gi standard-tekst eller mal-svar. Lengden på relasjonen krever
+       individuell tilnærming.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-lojalitet-som-kjerne
+      weight: 0.2
+      description: |
+        Identifiserer 14-år-lojaliteten som kjerne i emosjonsbildet,
+        ikke bare den enkelte hendelsen.
+    - criterion: leser-implisitt-ironi
+      weight: 0.15
+      description: |
+        Tolker "Var dette virkelig vanskelig å håndtere?" som ironi
+        og frustrasjon, ikke et faktisk spørsmål.
+    - criterion: prioriterer-tidskritisk
+      weight: 0.2
+      description: |
+        Identifiserer at arrangementet neste uke er tidskritisk og
+        prioriterer konkret handling for å rekke det først.
+    - criterion: anerkjenner-foer-forklarer
+      weight: 0.2
+      description: |
+        Foreslår "anerkjennelse først, forklaring senere"-strategi
+        og advarer mot å fokusere på årsakene før kunden er anerkjent.
+    - criterion: konkret-kompensasjon
+      weight: 0.15
+      description: |
+        Foreslår konkret kompensasjon i stedet for å spørre kunden
+        hva de vil ha.
+    - criterion: identifiserer-feil-tilnaerminger
+      weight: 0.1
+      description: |
+        Lister konkrete feilgrep (mal-svar, fakta-pirking,
+        lovens-minimum-henvisning).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, pragmatikk, kundeservice, lojalitet, hard, llm-judge]

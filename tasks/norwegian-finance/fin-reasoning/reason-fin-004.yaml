@@ -1,0 +1,174 @@
+id: reason-fin-004
+bench: norwegian-finance
+category: fin-reasoning
+version: 1
+title: Vurder om lån fra eier til AS gir skattemessige konsekvenser
+difficulty: hard
+
+rationale: |
+  Tester reasoning over skatte- og selskapsrett ved lån mellom eier og AS.
+  Krever forståelse av aksjelovens regler om lån (§ 8-7 ff.), skatteloven
+  § 13-1 om interessefelleskap, og praktisk anvendelse på et konkret
+  rentespørsmål.
+
+source: synthetic
+
+user_prompt: |
+  En 100%-eier av et AS låner ut 2 000 000 kr til selskapet med følgende
+  vilkår:
+  - Rente: 0% (rentefritt)
+  - Tilbakebetaling: ved selskapets økonomiske evne
+  - Ingen sikkerhet
+  - Ikke skriftlig låneavtale
+
+  Selskapet har positivt resultat. Markedsrenten for sammenlignbart
+  selskaps-lån er ~7%.
+
+  Vurder:
+  1. Skatte- og selskapsrettslige konsekvenser for selskap og eier
+  2. Hva må gjøres for å rette opp / formalisere
+  3. Hvis selskapet senere går konkurs, kan eieren få lånet tilbake?
+
+gold_answer: |
+  Vurdering:
+
+  1) Skattemessig vurdering — armlengde-prinsippet:
+
+     - Skatteloven § 13-1: ved interessefellesskap (eier-AS) kan
+       skattemyndighetene fastsette inntekten til hva uavhengige parter
+       ville avtalt (armlengde-prinsippet).
+     - 0% rente er klart utenfor armlengde — markedsrente er ~7%.
+     - Konsekvenser:
+       (a) Selskapet anses å ha mottatt en "skjult fordel" fra eier
+           tilsvarende rente-differansen → kan beskattes som
+           kapital-tilskudd (men typisk ikke skattepliktig dersom det
+           regnes som egenkapital).
+       (b) Eier anses å ha gitt avkall på inntekt → ingen direkte
+           personlig skattepliktig fordel siden vedkommende ikke har
+           "fått" noe, men reduserer skattegrunnlaget for eier hvis
+           lånet skulle vært rentebelastet.
+
+     - Tilsvarende motsatt: hvis selskapet hadde lånt UT til eier
+       rentefritt, ville eier hatt skattepliktig inntekt
+       tilsvarende sjablongrente (utlån fra arbeidsgiver) — men her
+       er det motsatt vei.
+
+     - I praksis: skatteetaten kan rekarakterisere lånet eller pålegge
+       fiktive renter — særlig hvis transaksjonen mangler forretnings-
+       messig grunn.
+
+  2) Selskapsrettslig vurdering — aksjeloven kap. 8:
+
+     - Aksjeloven § 8-7: nærstående-lån fra selskapet til aksjonær er
+       regulert med strenge vilkår. MEN her er retningen MOTSATT
+       (aksjonær til selskap), så § 8-7 gjelder ikke direkte.
+     - Det er ingen forbud mot at aksjonær låner til AS — tvert imot
+       er dette vanlig egenkapital-erstatning.
+     - Imidlertid: hvis selskapet er økonomisk presset, kan et "lån"
+       uten skriftlig avtale, uten rente, uten sikkerhet anses som
+       reelt egenkapital-tilskudd ved konkurs (se pkt 3).
+
+     - Aksjeloven § 5-15: avtaler mellom selskap og nærstående skal
+       behandles av styret og protokollføres for visse typer.
+
+  3) Bokføringsloven og dokumentasjonskrav:
+
+     - Bokføringsloven § 10 og § 11: selskapets bokføringsplikt krever
+       at lån fra eier dokumenteres tilstrekkelig.
+     - Manglende skriftlig låneavtale er et brudd på god regnskapsskikk
+       og potensielt bokføringsloven.
+     - Kreves: skriftlig låneavtale med vilkår, regnskapsføring som
+       langsiktig gjeld, rente bokført løpende.
+
+  4) Hva må gjøres for å rette opp:
+
+     a) Skriftlig låneavtale med:
+        - Lånebeløp (2 000 000 kr)
+        - Rente (markedsrente 7% eller dokumentert lavere markedsrente
+          for tilsvarende usikrede lån)
+        - Forfallsdato eller tilbakebetalings-betingelser
+        - Eventuell sikkerhet (eller eksplisitt at det er usikret)
+        - Mislighetsbestemmelser
+
+     b) Renteberegning fra inngåelsesdato (eller alternativt
+        formalisere ny avtale fra dags dato med null-rente kun hvis
+        selskapet er reelt insolvent).
+
+     c) Bokføring:
+        - Selskapet: føre 2 000 000 som langsiktig gjeld, rente som
+          finanskostnad.
+        - Eier: føre lånet som finansaktiva, rente som finansinntekt
+          (skattepliktig kapitalinntekt 22%).
+
+     d) Dokumentere armlengde i skattemeldingen — eventuelt med
+        anførsel om at lånet er gitt på markedsmessige vilkår.
+
+  5) Konkurs-scenario:
+
+     - Aksjeloven § 8-3: hvis selskapet er insolvent, har
+       aksjonærs lån sannsynligvis lavere prioritet (lex specialis i
+       konkursloven).
+     - Konkursloven § 97-99: nærstående-krav (aksjonær med ≥ 20% eier-
+       andel) regnes som etterstilte krav. Aksjonæren får oppgjør
+       sist, etter alminnelige kreditorer.
+     - I praksis: 100%-eier med usikret lån uten skriftlig avtale i et
+       konkursrammet selskap → svært liten sannsynlighet for å få
+       tilbake lånet.
+     - Det rentefrie og udokumenterte forholdet kan også føre til at
+       lånet rekarakteriseres som egenkapital → null prioritet.
+     - Eier som har vært daglig leder/styremedlem kan også få
+       PERSONLIG ANSVAR etter aksjeloven § 17-1 hvis mishandling av
+       selskapets økonomi har bidratt til insolvens.
+
+  6) Konkret anbefaling:
+     - Inngå skriftlig låneavtale UMIDDELBART med markedsmessige
+       vilkår.
+     - Bokfør riktig fra fremtidig dato; det er for sent å rette
+       fortiden, men dokumenter at avtalen er formalisert nå.
+     - Hvis selskapet er økonomisk presset: vurdere om lånet skal
+       konverteres til egenkapital (kapitalforhøyelse) i stedet —
+       dette gir bedre signaleffekt og fjerner skattemessig
+       armlengde-problemstilling.
+     - Hvis lånet er ment som permanent kapital, er konvertering ofte
+       riktig løsning.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-armlengde-§-13-1
+      weight: 0.25
+      description: |
+        Refererer skatteloven § 13-1 og forklarer at 0% rente kan bli
+        rekarakterisert til markedsrente av skatteetaten.
+    - criterion: konkurs-prioritet
+      weight: 0.25
+      description: |
+        Identifiserer at aksjonær med ≥ 20% er etterstilt kreditor
+        (konkursloven § 97 mfl.) og at sjansen for tilbakebetaling i
+        konkurs er liten — særlig uten skriftlig avtale.
+    - criterion: dokumentasjonskrav
+      weight: 0.2
+      description: |
+        Lister konkrete krav til formalisering: skriftlig låneavtale,
+        rente, sikkerhet, bokføring iht. bokføringsloven.
+    - criterion: vurderer-konvertering-til-ek
+      weight: 0.15
+      description: |
+        Vurderer om lånet bør konverteres til egenkapital i stedet for
+        å rette på som lån — særlig hvis det er ment som permanent
+        kapital.
+    - criterion: korrekt-§-8-7-distinksjon
+      weight: 0.1
+      description: |
+        Påpeker at aksjeloven § 8-7 (lån FRA selskap TIL aksjonær)
+        ikke gjelder her fordi retningen er motsatt.
+    - criterion: nyansert-personlig-ansvar
+      weight: 0.05
+      description: |
+        Bonus: nevner mulig personlig ansvar etter aksjeloven § 17-1
+        ved mishandling av selskapets økonomi.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, eier-laan, armlengde, aksjeloven, konkurs, hard, llm-judge]

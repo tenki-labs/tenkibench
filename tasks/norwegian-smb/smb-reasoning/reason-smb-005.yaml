@@ -1,0 +1,68 @@
+id: reason-smb-005
+bench: norwegian-smb
+category: smb-reasoning
+version: 1
+title: Forsinkelsesrente og påslag — full kausal-kjede
+difficulty: hard
+
+rationale: |
+  Krever at modellen kombinerer forsinkelsesrenteloven, gjeldende rentesats fra
+  Finansdepartementet og standardkompensasjon for inndrivelseskostnader til en
+  helhetlig beregning. Tester reasoning over flere lovhjemler, ikke ren regelanvendelse.
+
+source: synthetic
+source_notes: |
+  Forsinkelsesrentesats H1 2026 antas 12,50% (basis Norges Banks styringsrente
+  + 8 prosentpoeng iht. forsinkelsesrenteloven § 3). Sats publiseres halvårlig
+  av Finansdepartementet.
+
+user_prompt: |
+  En SMB sendte faktura på 250 000 kr inkl. mva til en næringsdrivende kunde
+  med 30 dagers betalingsfrist. Fakturadato 1. desember 2025. Ingen betaling
+  er mottatt per 1. mai 2026.
+
+  Forutsetninger:
+  - Forsinkelsesrentesats er 12,50% per år for hele perioden.
+  - Påkrav er sendt 15. januar 2026.
+  - Ingen kontraktsmessig avvikende rentesats er avtalt.
+
+  Beregn totalt utestående krav per 1. mai 2026 inkludert forsinkelsesrente og
+  standardkompensasjon. Vis hjemmel og delberegninger.
+
+gold_answer: |
+  Hjemler:
+  - Forsinkelsesrenteloven § 2: forsinkelsesrente løper fra forfallsdag
+    (her: 31. desember 2025, dvs. 30 dager etter fakturadato).
+  - Forsinkelsesrenteloven § 3: rentesatsen fastsettes halvårlig av
+    Finansdepartementet (her oppgitt til 12,50% p.a.).
+  - Forsinkelsesrenteloven § 3a: ved forsinket betaling i næring → kreditor
+    har krav på standardkompensasjon på 40 EUR (i NOK fastsatt av
+    Finansdepartementet, p.t. 410 kr).
+
+  Beregning:
+  - Forfallsdag: 31. desember 2025 (1. desember + 30 dager)
+  - Antall dager forsinket pr. 1. mai 2026: 31 (jan) + 28 (feb) + 31 (mar) +
+    30 (apr) = 120 dager
+  - Forsinkelsesrente: 250 000 × 0,1250 × 120/365 = 10 273,97 kr
+  - Standardkompensasjon (§ 3a): 410 kr
+
+  Totalt utestående: 250 000 + 10 274 + 410 = 260 684 kr (avrundet).
+
+  Merknad: Hovedstolen er allerede inkl. mva, så renten beregnes av brutto­beløpet.
+  Påkravet 15. januar er ikke nødvendig for at forsinkelsesrente skal påløpe i
+  næringsforhold (§ 2 første ledd), men dokumenterer kravet.
+
+eval:
+  method: regex_all
+  flags: i
+  patterns:
+    - "(forsinkelsesrenteloven|forsinkelsesrente|forsrl)"
+    - "(§\\s*3a?|standardkompensasjon|410)"
+    - "120\\s*dag"
+    - "(10\\s*27[34]|10\\s*274|10\\s*273)"
+    - "(260\\s*68[34]|260\\s*684)"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, forsinkelsesrente, kausal-kjede, naeringsforhold, hard]

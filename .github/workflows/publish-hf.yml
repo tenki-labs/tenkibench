@@ -1,0 +1,79 @@
+name: Publish HuggingFace dataset
+
+# Manual-only on purpose — we don't want every push to main to bump the public
+# dataset. Trigger from the Actions tab when a new release of tasks is ready.
+#
+# Prerequisites (one-time setup):
+#   1. Create the dataset repo on HuggingFace:
+#         https://huggingface.co/new-dataset
+#         Owner: tenki-labs   Name: tenkibench   Visibility: public
+#   2. Generate a write-token at https://huggingface.co/settings/tokens
+#      (role: write, scope: limited to the tenki-labs/tenkibench repo).
+#   3. Add it to this repo's GitHub Actions secrets as `HF_TOKEN`.
+#
+# After that, run this workflow from the Actions tab whenever you want to
+# publish an updated cut. The job exports a fresh dist/tenkibench-hf/ from
+# the current main and uploads it to HuggingFace.
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        description: "Commit message for the HF dataset upload"
+        required: false
+        default: "Update TenkiBench dataset"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Validate tasks
+        run: pnpm tasks:validate
+
+      - name: Export HF dataset
+        run: pnpm export:hf
+
+      - name: Verify export looks right
+        run: |
+          test -f dist/tenkibench-hf/README.md
+          test -f dist/tenkibench-hf/dataset_info.json
+          test -f dist/tenkibench-hf/data/all/train.jsonl
+          echo "Total rows in 'all' config: $(wc -l < dist/tenkibench-hf/data/all/train.jsonl)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install huggingface_hub
+        run: pip install --upgrade huggingface_hub
+
+      - name: Upload to HuggingFace
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          COMMIT_MESSAGE: ${{ github.event.inputs.commit_message }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then
+            echo "::error::HF_TOKEN secret is not set. See workflow header for setup."
+            exit 1
+          fi
+          huggingface-cli upload \
+            tenki-labs/tenkibench \
+            dist/tenkibench-hf/ \
+            . \
+            --repo-type dataset \
+            --commit-message "$COMMIT_MESSAGE" \
+            --token "$HF_TOKEN"

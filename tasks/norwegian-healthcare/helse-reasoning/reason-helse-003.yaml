@@ -1,0 +1,162 @@
+id: reason-helse-003
+bench: norwegian-healthcare
+category: helse-reasoning
+version: 1
+title: Avveie samtykkekompetanse hos pasient med kognitiv svekkelse
+difficulty: expert
+
+rationale: |
+  Tester kompleks reasoning rundt vurdering av samtykkekompetanse etter
+  pasient- og brukerrettighetsloven § 4-3. Krever forståelse av at
+  samtykkekompetansen er beslutnings-spesifikk, ikke pasient-spesifikk, og at
+  helsepersonell må gjøre en konkret vurdering for hver beslutning.
+
+source: synthetic
+
+user_prompt: |
+  En 78 år gammel pasient med begynnende demens (MMSE-skår 21/30) trenger
+  beslutning om to ulike behandlinger samme dag:
+
+  Beslutning A: Vaksinering mot influensa (rutine-tiltak, lav risiko, klar
+                nytte).
+  Beslutning B: Hjerteoperasjon med 4% mortalitetsrisiko og krevende
+                rehabilitering.
+
+  Pasienten kan svare ja/nei på direkte spørsmål, men husker ikke alltid
+  hva som ble sagt for 5 minutter siden. Pårørende ønsker å beslutte for
+  pasienten.
+
+  Vurder:
+  1. Har pasienten samtykkekompetanse for hver beslutning?
+  2. Hvis ikke, hvem kan beslutte?
+  3. Hvis pasienten motsetter seg, hva da?
+
+gold_answer: |
+  Vurdering:
+
+  1) Hjemmelsgrunnlag:
+     - Pasient- og brukerrettighetsloven (pbrl) § 4-3 første ledd:
+       hovedregel er at pasienten selv har samtykkekompetanse.
+     - § 4-3 andre ledd: samtykkekompetansen kan bortfalle helt eller
+       delvis dersom pasienten på grunn av fysisk eller psykisk
+       forstyrrelse, demens eller psykisk utviklingshemming åpenbart
+       ikke er i stand til å forstå hva samtykket omfatter.
+     - § 4-3 fjerde ledd: vurderingen tas av den helsepersonell som er
+       ansvarlig for beslutningen, så langt mulig sammen med pårørende
+       eller andre med god kjennskap til pasienten.
+     - § 4-3 femte ledd: avgjørelsen skal være skriftlig og begrunnet,
+       og pasient og pårørende skal informeres.
+
+  2) Beslutnings-spesifisitet (sentral nyanse):
+     - Samtykkekompetansen vurderes konkret PER BESLUTNING. Dette er
+       fordi forståelsesgraden som kreves varierer med beslutningens
+       kompleksitet og konsekvenser.
+     - En pasient kan ha kompetanse til å velge mellom kjøtt og fisk
+       til middag, men ikke til å samtykke i kompleks kirurgi.
+
+  3) Beslutning A — influensa-vaksinering:
+     - Lav kompleksitet: pasienten må forstå "vaksine for å unngå
+       influensa, lite ubehag, beskytter".
+     - MMSE 21/30 indikerer mild demens, som typisk bevarer evnen til å
+       forstå enkle tiltak.
+     - Hvis pasienten kan svare informert ja/nei på "vil du ha
+       vaksinen som beskytter mot influensa?" → kompetanse trolig
+       BEVART.
+     - Anbefaling: gjennomfør samtykkesamtale, dokumenter forståelsen,
+       respekter pasientens valg. Pårørende kan være til stede som
+       støtte.
+
+  4) Beslutning B — hjerteoperasjon med 4% mortalitet:
+     - Høy kompleksitet: pasienten må forstå risiko (4% dødsrisiko),
+       rehabilitering, alternativer (medisinsk behandling), konsekvens
+       av ikke å operere.
+     - Risiko-veiing krever evnen til å oppholde og sammenligne
+       informasjon over tid — direkte påvirket av MMSE 21 (særlig
+       husks-svikt etter 5 minutter).
+     - Konkret vurdering: pasienten klarer trolig IKKE å holde fast på
+       informasjonen lenge nok til å gjøre informert risiko-veiing →
+       samtykkekompetanse trolig BORTFALT for denne beslutningen.
+     - § 4-3 andre ledd kan komme til anvendelse → pasienten anses
+       ikke å ha samtykkekompetanse for B.
+
+  5) Hvem kan beslutte når kompetansen mangler?
+     - Pårørende har IKKE rett til å beslutte FOR pasienten i Norge
+       (i motsetning til USA/UK med "next of kin").
+     - Pbrl § 4-6 første ledd: helsehjelp uten samtykke kan gis hvis
+       pasienten mangler samtykkekompetanse OG ikke har avtalt
+       helsehjelpen i forhåndssamtykke.
+     - Beslutningen tas av helsepersonell etter "antatte
+       pasientpreferanser":
+       - § 4-6 andre ledd: helsehjelpen skal være "i pasientens
+         interesse" og "sannsynlig at pasienten ville ha gitt
+         tillatelse".
+       - Pårørende skal HØRES (ikke beslutte) der det er mulig — § 4-6
+         andre ledd.
+     - For inngripende tiltak (her: hjerteoperasjon med 4% mortalitet)
+       kan det kreves at pasientens nærmeste pårørende samtykker etter
+       § 4-6 andre ledd.
+     - Hvis betydelig motstand fra pårørende, eller hvis tiltaket er
+       svært inngripende, vurder Fylkesmannens involvering.
+
+  6) Hvis pasienten MOTSETTER seg:
+     - Pbrl § 4A regulerer somatisk helsehjelp ved motstand fra pasient
+       som mangler samtykkekompetanse:
+       - § 4A-3 første ledd: hovedvilkår — tillit til at hjelpen er
+         nødvendig, og at unnlatelse ville føre til vesentlig
+         helseskade.
+       - § 4A-3 andre ledd: tiltaket må stå i forhold til behov og
+         være i pasientens interesse.
+     - Det skal gjøres et formelt vedtak av "den som er ansvarlig
+       for helsehjelpen" og det skal sendes til Statens
+       helsetilsyn / Statsforvalter for klage.
+     - Inngripende tiltak (kirurgi) der pasienten motsetter seg er
+       svært høyterskel. Sannsynlig at hjerteoperasjonen IKKE kan
+       gjennomføres mot pasientens vilje, selv om kompetansen mangler
+       — terskel for tvang er høy, særlig ved livstrussel-vurdering.
+
+  Sammendrag:
+  - A: pasient har trolig samtykkekompetanse → respektér valget.
+  - B: trolig manglende kompetanse → § 4-6 helsehjelp uten samtykke,
+    pårørende høres, inngripende vurdering.
+  - Motsettelse: § 4A med strenge vilkår; for kirurgi praktisk talt
+    sjelden gjennomførbart.
+  - Skriftlig begrunnet vurdering kreves uansett (§ 4-3 femte ledd).
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-beslutnings-spesifisitet
+      weight: 0.3
+      description: |
+        Påpeker at samtykkekompetansen vurderes per beslutning, ikke
+        per pasient — og kommer derfor til ulik konklusjon for A og B.
+    - criterion: korrekt-hjemmel-§-4-3
+      weight: 0.15
+      description: |
+        Refererer pbrl § 4-3 (samtykkekompetanse), særlig andre ledd
+        om hvordan kompetansen kan bortfalle.
+    - criterion: korrekt-§-4-6-vurdering
+      weight: 0.2
+      description: |
+        Identifiserer pbrl § 4-6 som hjemmel for helsehjelp uten
+        samtykke, og påpeker at pårørende SKAL HØRES, men ikke
+        beslutter.
+    - criterion: korrekt-§-4a-motstand
+      weight: 0.15
+      description: |
+        Henviser til pbrl § 4A-3 ved motstand fra pasienten og påpeker
+        høy terskel, særlig for inngripende tiltak.
+    - criterion: konkret-vurdering-A-vs-B
+      weight: 0.15
+      description: |
+        Konkluderer eksplisitt: A → kompetanse bevart, B → kompetanse
+        trolig bortfalt.
+    - criterion: dokumentasjonskrav
+      weight: 0.05
+      description: |
+        Nevner skriftlig begrunnelse-kravet (§ 4-3 femte ledd).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, samtykkekompetanse, pbrl, demens, expert, llm-judge]

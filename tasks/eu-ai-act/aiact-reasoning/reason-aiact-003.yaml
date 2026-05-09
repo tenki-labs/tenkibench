@@ -1,0 +1,115 @@
+id: reason-aiact-003
+bench: eu-ai-act
+category: aiact-reasoning
+version: 1
+title: Konformitetsvurdering for finetuned modell
+difficulty: expert
+
+rationale: |
+  Tester sammensatt resonering om når en finetuning utløser ny
+  konformitetsvurdering under Art. 43, og distinksjonen mellom "substantial
+  modification" (Art. 3 nr 23 + Art. 25) som krever ny vurdering, og mindre
+  endringer som kun krever oppdatert teknisk dokumentasjon.
+
+source: synthetic
+
+user_prompt: |
+  En norsk SaaS-leverandør har et eksisterende godkjent høy-risiko-AI-system
+  for screening av forsikringskrav (Annex III pkt 5b — vurdering av
+  kredittverdighet/forsikring). Konformitetsvurdering er gjennomført med
+  utstedt CE-merking i 2025.
+
+  De ønsker nå å:
+  Variant A: Finetune samme modell på 200 000 nye norske skadesaker for
+             å forbedre presisjon med ~2%, men beholde samme funksjonelle
+             omfang.
+  Variant B: Utvide modellen til også å vurdere helseforsikrings-saker (ny
+             type produkt), uten å endre kjernearkitektur.
+  Variant C: Bytte ut modellen med en større, men beholde samme grensesnitt.
+
+  Vurder for hver variant: utløses krav om ny konformitetsvurdering etter
+  Art. 43? Begrunn.
+
+gold_answer: |
+  Rettslig rammeverk:
+  - Art. 25 + Art. 3 nr 23 definerer "substantial modification": en endring
+    som ikke var forutsett i den opprinnelige konformitetsvurderingen og som
+    påvirker kompatibiliteten med kravene i Chapter III Section 2 (Art. 8-15),
+    eller endrer det tiltenkte formålet.
+  - Art. 43 nr 4: ved "substantial modification" må konformitetsvurdering
+    gjennomføres på nytt.
+  - Tilsvarende: hvis modifikasjonen endrer det "intended purpose", regnes
+    den alltid som substantial.
+
+  Variant A — Finetune på flere norske skadesaker, samme formål:
+  - Samme intended purpose (screening av forsikringskrav).
+  - Hvis finetuning-prosessen var FORUTSETT i opprinnelig
+    konformitetsvurdering (typisk dokumentert i Annex IV-dokumentasjon som
+    "continuous learning" eller "retraining cadence"), er det IKKE
+    substantial modification.
+  - Hvis ikke forutsett: må vurderes konkret. 2% presisjons-forbedring er
+    sannsynligvis ikke "påvirker kompatibiliteten med kravene", men endring
+    i bias/feilprofil kan være det.
+  - Konklusjon: trolig IKKE krav om ny full konformitetsvurdering, men
+    krever oppdatert teknisk dokumentasjon (Art. 11) og potensielt
+    re-validering av Art. 9 risk management og Art. 15 robusthet/nøyaktighet.
+    Post-market monitoring (Art. 72) er essensielt.
+
+  Variant B — Utvidelse til helseforsikring:
+  - Helseforsikrings-vurdering kan involvere helsedata og treffer dermed
+    også potensielt Annex III pkt 5(b) i en ny dimensjon, og særlig pkt
+    5(c) (vital helsetjenester) avhengig av kontekst.
+  - Endring av "intended purpose" (fra generell skadeforsikring til
+    helseforsikring) → per Art. 3 nr 23 alltid substantial modification.
+  - Konklusjon: KREVER ny konformitetsvurdering. Spesielt fordi data-
+    sensitivitet endres (helsedata = særskilt kategori under GDPR Art. 9).
+    Også ny FRIA (Art. 27) hvis deployer er offentlig.
+
+  Variant C — Bytte modell-arkitektur, samme grensesnitt:
+  - Ny modell = ny komponent. Selv om grensesnittet er det samme, endres
+    underliggende teknisk dokumentasjon (Annex IV), risk management
+    (Art. 9), robusthet og sikkerhet (Art. 15), eventuelt accuracy.
+  - Påvirker kompatibilitet med Chapter III Section 2-krav.
+  - Konklusjon: KREVER ny konformitetsvurdering. CE-merket fra forrige
+    modell kan ikke overføres til ny modell.
+
+  Sammendrag:
+  - A: trolig ikke krav om ny vurdering, men dokumentasjon og
+    re-validering.
+  - B: krav om ny konformitetsvurdering (intended purpose endret).
+  - C: krav om ny konformitetsvurdering (substantial modification).
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-art-3-23-og-25
+      weight: 0.2
+      description: |
+        Refererer Art. 3 nr 23 (definisjonen av substantial modification)
+        og/eller Art. 25 om endringer.
+    - criterion: korrekt-variant-a
+      weight: 0.2
+      description: |
+        Konkluderer at variant A typisk IKKE er substantial modification
+        hvis finetuning var forutsett, men krever doku/re-validering.
+    - criterion: korrekt-variant-b
+      weight: 0.25
+      description: |
+        Identifiserer at endring av intended purpose (skadeforsikring →
+        helseforsikring) ALLTID er substantial → krever ny vurdering.
+    - criterion: korrekt-variant-c
+      weight: 0.2
+      description: |
+        Konkluderer at modell-bytte krever ny konformitetsvurdering selv
+        med samme grensesnitt.
+    - criterion: nyansert-resonement
+      weight: 0.15
+      description: |
+        Nevner forutsetning om at fortsatt læring/retraining kan være
+        "forutsett" i opprinnelig vurdering, og kobler til post-market
+        monitoring (Art. 72).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, art-43, substantial-modification, ce-merking, expert, llm-judge]

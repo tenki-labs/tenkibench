@@ -1,0 +1,120 @@
+id: reason-smb-008
+bench: norwegian-smb
+category: smb-reasoning
+version: 1
+title: Reklamasjon mellom næringsdrivende — frist og rekkevidde
+difficulty: hard
+
+rationale: |
+  Reasoning over flere lag av kjøpsloven: skille mellom relativ og absolutt
+  reklamasjons-frist, vurdere hva som er "rimelig tid", og identifisere
+  konsekvensen for hevingsadgang. Tester at modellen ikke blander
+  forbrukerkjøpsloven (gjelder ikke her) med kjøpsloven.
+
+source: synthetic
+
+user_prompt: |
+  En kafé-kjede kjøpte en industriovn fra en B2B-leverandør 1. mars 2024 for
+  180 000 kr. Ovnen ble installert og brukt daglig fra 1. april 2024.
+
+  Kjøperen oppdager 15. mars 2026 at termostaten er feilkalibrert, og at
+  feilen har gjort at ovnen brukte ~20% mer strøm enn spesifisert hele
+  perioden. Strømekstra er beregnet til 65 000 kr.
+
+  Kjøper varsler leverandøren første gang 1. april 2026.
+
+  Vurder:
+  1. Er reklamasjonen i tide?
+  2. Hvilke krav kan kjøper fremme?
+  3. Hva ville svaret vært under forbrukerkjøpsloven, og hvorfor er det
+     ikke relevant her?
+
+gold_answer: |
+  Vurdering:
+
+  1) Reklamasjonsfrister i kjøpsloven (B2B):
+     - § 32 første ledd: relativ frist — kjøper må reklamere "innen rimelig
+       tid" etter at mangelen ble eller burde blitt oppdaget. Mellom
+       næringsdrivende er "rimelig tid" som regel kort — typisk dager til
+       få uker, særlig ved skjulte mangler oppdaget under bruk.
+     - § 32 andre ledd: absolutt frist — reklamasjon må uansett skje
+       innen 2 år etter overtakelse, med mindre selger har gitt lengre
+       garanti eller mangelen er knyttet til ting som er ment å vare
+       vesentlig lenger.
+
+     Tidslinje:
+     - Overtakelse 1. mars 2024.
+     - Mangel oppdaget 15. mars 2026 → over 2 år etter overtakelse.
+     - Kjøper varsler 1. april 2026.
+
+     Industriovn er normalt ment å vare vesentlig lenger enn 2 år. Dermed
+     kan kjøper påberope unntaket i § 32 andre ledd siste del — den
+     absolutte fristen er IKKE utløpt.
+
+     Den relative fristen (§ 32 første ledd) er imidlertid kritisk:
+     mangelen ble oppdaget 15. mars og varslet 1. april — 17 dager. I
+     B2B-forhold ligger dette i grenseland og krever konkret vurdering,
+     men er sannsynligvis akseptabelt.
+
+  2) Mulige krav (kjøpsloven §§ 30 flg.):
+     - Retting / omlevering (§ 34 og § 36) — leverandøren kan kreve retting,
+       men kjøper kan velge omlevering hvis mangelen er vesentlig.
+     - Prisavslag (§ 38) — proporsjonalt med verdireduksjon.
+     - Heving (§ 39) — forutsetter at mangelen utgjør "vesentlig
+       kontraktsbrudd". 20% strømekstra over 2 år er betydelig, men ovnen
+       fungerer fortsatt — heving er tvilsomt.
+     - Erstatning (§ 40) — kjøper kan kreve erstattet de 65 000 kr i
+       direkte tap (overforbruk er typisk direkte tap). Indirekte tap
+       (f.eks. tapt fortjeneste) krever uaktsomhet eller garanti.
+
+  3) Forbrukerkjøpsloven gjelder IKKE her fordi begge parter er
+     næringsdrivende (forbrukerkjøpsloven § 1 første ledd). Hvis det HADDE
+     vært en forbruker:
+     - Reklamasjons-fristen ville vært 5 år (forbrukerkjøpsloven § 27 andre
+       ledd), siden ovnen er ment å vare vesentlig lenger enn 2 år.
+     - Forbrukeren ville hatt en mer fleksibel "rimelig tid"-vurdering
+       (§ 27 første ledd, "i alle fall ikke kortere enn to måneder").
+
+     Forbrukerregelverket er skarpere i forbrukerens favør, men kommer
+     altså ikke til anvendelse mellom to næringsdrivende.
+
+  Konklusjon:
+  - Reklamasjonen er sannsynligvis i tide (industri-ovn → §-32-2-unntak).
+  - Hovedkrav: prisavslag eller erstatning for 65 000 kr i strømekstra.
+  - Heving lite sannsynlig.
+  - Forbrukerkjøpsloven irrelevant pga partsforholdet.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-kjopsloven-ikke-fkjl
+      weight: 0.2
+      description: |
+        Påpeker at det er kjøpsloven (1988) som gjelder fordi begge er
+        næringsdrivende, og at forbrukerkjøpsloven IKKE gjelder.
+    - criterion: korrekt-§-32-skille
+      weight: 0.25
+      description: |
+        Skiller mellom relativ frist (§ 32 første ledd) og absolutt frist
+        (§ 32 andre ledd) og bruker industriovn-unntaket (ment å vare lenger).
+    - criterion: korrekt-vurdering-rimelig-tid
+      weight: 0.15
+      description: |
+        Vurderer 17 dager som "rimelig tid" — gjerne med forbehold om at
+        i B2B er dette stramt men antagelig akseptabelt.
+    - criterion: identifiserer-mulige-krav
+      weight: 0.2
+      description: |
+        Lister relevante krav (prisavslag, erstatning, evt. heving) og
+        konkluderer at heving er tvilsomt mens prisavslag/erstatning er
+        nærliggende.
+    - criterion: hypotetisk-fkjl-svar
+      weight: 0.2
+      description: |
+        Svarer korrekt på det hypotetiske forbrukerkjøps-spørsmålet:
+        5-års-frist i § 27 andre ledd og 2-måneders-minimum.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, kjopsloven, reklamasjon, b2b, hard, llm-judge]

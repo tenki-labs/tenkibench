@@ -1,0 +1,89 @@
+id: reason-smb-004
+bench: norwegian-smb
+category: smb-reasoning
+version: 1
+title: Sammensatt MVA-fradragsvurdering ved blandet bruk
+difficulty: hard
+
+rationale: |
+  Tester flertrinns-resonering om MVA-fradragsrett ved blandet privat/forretningsbruk
+  og delt bruk mellom avgiftspliktig og ikke-avgiftspliktig virksomhet — krever at
+  modellen kombinerer mva-loven §§ 8-1 og 8-2 med konkret prosentvis fordeling.
+
+source: synthetic
+
+user_prompt: |
+  En enkeltpersonsforetak (registrert i mva-registeret) kjøper en varebil til
+  480 000 kr inkl. 25% mva. Bilen brukes:
+  - 60% til avgiftspliktig konsulentvirksomhet
+  - 25% til kjøring for et undervisnings-oppdrag som er unntatt mva
+    (mva-loven § 3-5)
+  - 15% privat
+
+  I tillegg kjøpes drivstoff for 12 000 kr inkl. mva i året, fordelt likt
+  per kjørt km.
+
+  Hvor mye av inngående mva på bilen og drivstoffet kan trekkes fra?
+  Resonner gjennom hjemmelen.
+
+gold_answer: |
+  Inngående mva totalt:
+  - Bil: 480 000 / 1,25 × 0,25 = 96 000 kr
+  - Drivstoff: 12 000 / 1,25 × 0,25 = 2 400 kr
+
+  Hjemmel:
+  - Mva-loven § 8-1: fradragsrett for varer og tjenester til bruk i den
+    avgiftspliktige virksomheten.
+  - Mva-loven § 8-2 første ledd: ved bruk i både avgiftspliktig og ikke-
+    avgiftspliktig virksomhet, kan inngående mva fradragsføres forholdsmessig.
+  - Mva-loven § 8-3 (1) bokstav c: ingen fradragsrett for varer/tjenester til
+    privat bruk eller naturalavlønning.
+
+  Privat bruk (15%) gir aldri fradrag.
+  Bruken til mva-unntatt virksomhet (25%) gir heller ikke fradrag (§ 8-2).
+  Kun den avgiftspliktige andelen (60%) gir fradrag.
+
+  Beregning:
+  - Bil: 96 000 × 0,60 = 57 600 kr
+  - Drivstoff: 2 400 × 0,60 = 1 440 kr
+  - Totalt fradrag: 59 040 kr
+
+  Merknad: For personbiler vil § 8-4 dessuten begrense eller utelukke fradrag
+  helt. Her er det varebil (klasse 2), så § 8-4 kommer ikke til anvendelse —
+  forutsatt at bilen oppfyller kjennetegnene (lasterom, vekt, bygget for transport
+  av gods).
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-totalberegning
+      weight: 0.25
+      description: |
+        Beregner riktig totalt fradrag (~59 040 kr) eller bryter det ned
+        korrekt i bil-andel (57 600) og drivstoff-andel (1 440).
+    - criterion: identifiserer-tre-bruksformer
+      weight: 0.2
+      description: |
+        Skiller eksplisitt mellom avgiftspliktig (fradrag), unntatt
+        (ikke fradrag) og privat (ikke fradrag).
+    - criterion: korrekt-hjemmel
+      weight: 0.25
+      description: |
+        Refererer til mva-loven § 8-1 og § 8-2 (forholdsmessig fradrag)
+        og/eller § 8-3 om privat bruk.
+    - criterion: vurderer-varebil-vs-personbil
+      weight: 0.15
+      description: |
+        Påpeker at fradragsbegrensningen for personbiler (§ 8-4) ikke
+        gjelder her fordi det er varebil — eller advarer eksplisitt om
+        klassifikasjons-spørsmålet.
+    - criterion: korrekt-utgangspunkt
+      weight: 0.15
+      description: |
+        Beregner inngående mva korrekt ut fra bruttotallene (96 000 og
+        2 400 kr).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, mva, forholdsmessig-fradrag, mva-loven, hard, llm-judge]

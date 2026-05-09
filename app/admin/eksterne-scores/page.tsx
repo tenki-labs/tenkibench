@@ -8,6 +8,11 @@ import {
   refreshOpenLlmLeaderboard,
   refreshAll,
 } from "@/lib/external-scores/refresh";
+import {
+  isAutoRefreshEnabled,
+  setSetting,
+} from "@/lib/system-settings";
+import { requireStaff } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +35,25 @@ async function runAllSources() {
   "use server";
   try { await refreshAll(); redirect("/admin/eksterne-scores?ok=all"); }
   catch (e) { redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
+}
+
+async function toggleAutoRefresh() {
+  "use server";
+  let nextStateOn = false;
+  try {
+    const claims = await requireStaff();
+    const current = await isAutoRefreshEnabled();
+    nextStateOn = !current;
+    const updatedBy = claims.email ?? "ukjent";
+    await setSetting(
+      "external_scores_auto_refresh_enabled",
+      nextStateOn,
+      updatedBy,
+    );
+  } catch (e) {
+    redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`);
+  }
+  redirect(`/admin/eksterne-scores?ok=toggle_${nextStateOn ? "on" : "off"}`);
 }
 
 interface RefreshLog {
@@ -67,6 +91,17 @@ export default async function ExternalScoresAdmin({
      from external_score_refreshes order by started_at desc limit 20`,
   );
 
+  const { rows: autoLogs } = await query<RefreshLog>(
+    `select id, source, started_at, finished_at, status,
+            models_updated, models_skipped, error
+     from external_score_refreshes
+     where source = 'cron_auto'
+     order by started_at desc
+     limit 5`,
+  );
+
+  const autoEnabled = await isAutoRefreshEnabled();
+
   const { rows: models } = await query<ModelWithScores>(
     `select id, slug, display_name, external_scores_updated_at,
             (external_scores #>> '{artificial_analysis,intelligence_index}')::numeric as intelligence_index,
@@ -101,6 +136,60 @@ export default async function ExternalScoresAdmin({
           {err}
         </div>
       )}
+
+      <div className="mb-8 rounded-xl border border-tenki-subtle bg-white p-4 max-w-2xl">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted mb-1">
+              Auto-refresh (24-timers cron)
+            </div>
+            <div className="font-sans text-sm font-medium mb-1">
+              {autoEnabled ? "Påslått" : "Avslått"}
+            </div>
+            <p className="text-xs text-tenki-muted max-w-md">
+              Når påslått: cron-jobben kjører <code>refreshAll()</code> hver
+              natt. Når avslått: cron-kall uten <code>?source</code> hopper over
+              og logger en <code>skipped</code>-rad. Manuelle knapper under
+              fungerer uansett.
+            </p>
+          </div>
+          <form action={toggleAutoRefresh}>
+            <button
+              type="submit"
+              className={
+                autoEnabled
+                  ? "rounded-xl border border-tenki-subtle bg-white px-4 py-2 text-sm font-medium hover:bg-tenki-surface transition-colors"
+                  : "rounded-xl bg-tenki-ink text-tenki-bg px-4 py-2 text-sm font-medium hover:opacity-90 transition-opacity"
+              }
+            >
+              {autoEnabled ? "Skru av" : "Skru på"}
+            </button>
+          </form>
+        </div>
+
+        {autoLogs.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-tenki-subtle">
+            <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted mb-2">
+              Siste 5 auto-kjøringer
+            </div>
+            <ul className="space-y-1 text-xs">
+              {autoLogs.map((l) => (
+                <li key={l.id} className="flex justify-between gap-3 font-mono">
+                  <span className="text-tenki-muted">{formatDate(l.started_at)}</span>
+                  <span className={
+                    l.status === "finished" ? "text-tenki-good" :
+                    l.status === "failed"   ? "text-tenki-bad"  :
+                    "text-tenki-muted"
+                  }>
+                    {l.status}
+                    {l.status === "skipped" && l.error ? ` (${l.error})` : ""}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
 
       {!apiKeySet && (
         <div className="mb-8 rounded-xl border border-tenki-warn bg-orange-50 p-4 max-w-2xl">
@@ -268,6 +357,27 @@ export default async function ExternalScoresAdmin({
           </tbody>
         </table>
       </div>
+
+      <details className="mt-8 max-w-2xl rounded-xl border border-tenki-subtle bg-white p-4">
+        <summary className="cursor-pointer font-mono text-[11px] uppercase tracking-eyebrow text-tenki-muted">
+          Slik konfigurerer du cron
+        </summary>
+        <div className="mt-3 space-y-2 text-sm">
+          <p className="text-tenki-muted">
+            Legg denne linja i crontab på serveren — den kjører hver natt
+            kl. 04:00 og treffer ruta uten <code>?source</code>, slik at
+            kill-switchen over kan skru den av/på.
+          </p>
+          <pre className="overflow-x-auto rounded-lg bg-tenki-surface p-3 font-mono text-xs">
+{`0 4 * * *  curl -fsS -H "Authorization: Bearer $CRON_TOKEN" https://bench.tenki.no/api/cron/refresh-external-scores`}
+          </pre>
+          <p className="text-xs text-tenki-muted">
+            <code>$CRON_TOKEN</code> må eksporteres i shell-en som eier
+            crontab-en (f.eks. via <code>/etc/cron.d/tenkibench</code> eller
+            en wrapper som leser <code>.env.production</code>).
+          </p>
+        </div>
+      </details>
     </>
   );
 }

@@ -13,7 +13,9 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "tasks:validate": "tsx scripts/validate-tasks.ts",
     "bench:run": "tsx scripts/bench-run.ts",
-    "bench:run-all": "tsx scripts/bench-run-all.ts"
+    "bench:run-all": "tsx scripts/bench-run-all.ts",
+    "holdout:manifest": "tsx scripts/build-holdout-manifest.ts",
+    "export:hf": "tsx scripts/export-hf.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.0",

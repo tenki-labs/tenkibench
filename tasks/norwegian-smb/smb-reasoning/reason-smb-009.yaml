@@ -1,0 +1,115 @@
+id: reason-smb-009
+bench: norwegian-smb
+category: smb-reasoning
+version: 1
+title: Konsekvenser av innleie kontra fast ansettelse — bemanningsforetak
+difficulty: expert
+
+rationale: |
+  Krever flertrinns-resonering om arbeidsmiljølovens regler for innleie etter
+  endringene fra 2023, med spesielt fokus på § 14-12 som er strammet inn.
+  Tester at modellen forstår konsekvensene av at vilkårene for innleie er endret
+  fra "midlertidig behov" til mer restriktive grunner.
+
+source: synthetic
+
+user_prompt: |
+  En SMB i bygg/anlegg i Oslo trenger to håndverkere i 8 måneder for et
+  spesifikt prosjekt. De vurderer:
+  - A: Leie inn fra et bemanningsforetak
+  - B: Midlertidig ansettelse direkte (jf. aml § 14-9)
+  - C: Fast ansettelse med oppsigelse ved prosjektets slutt
+
+  Vurder lovligheten og praktiske konsekvenser av hvert alternativ etter
+  endringene i arbeidsmiljøloven fra 1. april 2023. Hva er anbefalt sti og
+  hvorfor?
+
+gold_answer: |
+  Rettslig utgangspunkt:
+  Aml § 14-12 første ledd ble endret fra 1. april 2023: hovedregelen er at
+  innleie fra bemanningsforetak kun er tillatt når arbeidet er av
+  "midlertidig karakter" på samme grunnlag som § 14-9 andre ledd. Dessuten
+  ble innleie til byggebransjen i Oslo, Viken og tidligere Akershus
+  forbudt fra samme dato (forskrift om forbud mot innleie i Oslo-området).
+
+  Vurdering av alternativene:
+
+  A — Innleie fra bemanningsforetak:
+  - Geografisk forbud: bygg/anlegg i Oslo er omfattet av Oslo-forbudet
+    (forskrift av 1. april 2023, hjemlet i aml § 14-12 syvende ledd).
+    Innleie er IKKE LOVLIG her, uansett varighet og begrunnelse.
+  - Sanksjoner: gebyr fra Arbeidstilsynet, mulig krav om fast ansettelse
+    fra arbeidstakeren etter aml § 14-12 fjerde ledd ("rett til fast
+    ansettelse").
+  - Konklusjon: ulovlig.
+
+  B — Midlertidig ansettelse direkte (§ 14-9):
+  - § 14-9 andre ledd bokstav a: lovlig hvis arbeidet er av midlertidig
+    karakter (prosjekt med fastsatt sluttdato kan kvalifisere, men
+    "midlertidig" er strengere enn "tidsbegrenset").
+  - 8-måneders prosjekt med klar avgrensning kan oppfylle vilkåret hvis
+    arbeidet er reelt prosjekt-spesifikt og bedriften ikke har varig
+    behov for tilsvarende kompetanse. For en SMB i bygg/anlegg som
+    løpende kjører prosjekter, kan dette være tvilsomt — løpende
+    prosjekter regnes som "varig behov".
+  - § 14-9 syvende ledd: rett til fast ansettelse etter 3 år (ikke 4 som
+    før — endret 1.7.2022).
+  - Konklusjon: trolig lovlig, men risiko for at Arbeidstilsynet eller
+    domstolene anser arbeidet som varig.
+
+  C — Fast ansettelse med oppsigelse ved prosjektets slutt:
+  - Aml § 15-7: oppsigelse må være saklig begrunnet i virksomhetens,
+    arbeidsgivers eller arbeidstakers forhold.
+  - Mangel på arbeid kan være saklig grunn, men det forutsetter reell
+    nedbemannings-vurdering: utvalgskrets, ansiennitet, omplassering.
+  - Praktisk: en arbeidstaker fast ansatt med klar avgrensning til ett
+    prosjekt kan oppfattes som en omgåelse av reglene. Men det er ikke
+    ulovlig per se hvis bedriften gjør reell saklighetsvurdering ved
+    prosjektslutt.
+
+  Anbefalt sti: Alternativ B (midlertidig ansettelse) hvis bedriften ikke
+  har varig behov, ellers C (fast ansettelse) som er den minst risikable.
+  A er utelukket på grunn av geografisk forbud.
+
+  Tilleggsmomenter:
+  - Tariffavtale kan modifisere innleieregelen (§ 14-12 andre ledd, om
+    avtale med tillitsvalgte i virksomhet bundet av tariffavtale).
+  - Likebehandlingsprinsippet (§ 14-12a): ved lovlig innleie skal
+    innleid arbeidstaker ha samme lønns- og arbeidsvilkår som om
+    vedkommende var ansatt direkte.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-oslo-forbud
+      weight: 0.3
+      description: |
+        Påpeker at innleie til bygg/anlegg i Oslo er forbudt fra
+        1. april 2023 (forskrift hjemlet i aml § 14-12). Dette er
+        kjernen — uten dette er svaret feil.
+    - criterion: korrekt-§-14-12-status
+      weight: 0.2
+      description: |
+        Refererer aml § 14-12 og kobler det til innstrammingen fra
+        2023, ikke "midlertidig behov" som tidligere.
+    - criterion: vurderer-§-14-9-grenser
+      weight: 0.2
+      description: |
+        Diskuterer om midlertidig ansettelse er lovlig — særlig
+        risikoen for at "varig behov" gjør det ulovlig, og
+        3-årsgrensen for fast ansettelse.
+    - criterion: vurderer-fast-ansettelse-c
+      weight: 0.15
+      description: |
+        Påpeker at fast ansettelse med oppsigelse er mulig, men
+        krever reell saklighetsvurdering etter § 15-7.
+    - criterion: korrekt-anbefaling
+      weight: 0.15
+      description: |
+        Konkluderer at A er ulovlig, og anbefaler B eller C som
+        praktisk vei videre.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, arbeidsmiljolov, innleie, oslo-forbud, expert, llm-judge]

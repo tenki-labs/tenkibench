@@ -1,0 +1,119 @@
+id: reason-bygg-003
+bench: norwegian-construction
+category: bygg-reasoning
+version: 1
+title: Dagmulkt-tak vs erstatning for forsinkelse
+difficulty: hard
+
+rationale: |
+  Reasoning over hvordan dagmulkts-tak (NS 8407 punkt 40 / NS 8405 punkt 34)
+  begrenser standard erstatning for forsinkelse, men ikke utelukker erstatning
+  ved grov uaktsomhet eller forsett. Tester forståelsen av at fastsatte
+  sanksjoner og erstatning utenfor mulkten har ulike grunnlag.
+
+source: synthetic
+source_notes: NS 8405:2008 punkt 34, NS 8407:2011 punkt 40.
+
+user_prompt: |
+  En entreprenør har under en NS 8405-utførelsesentreprise overskredet
+  sluttdato med 60 dager. Dagmulkten er fastsatt i kontrakten til 0,1% av
+  kontraktssum (15 mill kr) per dag, med standard tak på 10% av
+  kontraktssummen.
+
+  Byggherren oppdager senere at forsinkelsen i hovedsak skyldes at
+  entreprenøren bevisst forsinket arbeidet for å overta et mer lønnsomt
+  prosjekt for en annen kunde. Byggherren har dokumenterte tap utover
+  dagmulkten på 4 mill kr (leie av midlertidig lokale, tapte leieinntekter).
+
+  Hvor mye kan byggherren kreve, og på hvilket grunnlag? Vurder mulig
+  konflikt mellom NS 8405 og bakgrunnsretten.
+
+gold_answer: |
+  Vurdering:
+
+  1) Standard dagmulkt under NS 8405 punkt 34:
+     - Daglig sats: 0,1% × 15 000 000 = 15 000 kr/dag.
+     - 60 dager × 15 000 = 900 000 kr.
+     - Tak: 10% × 15 000 000 = 1 500 000 kr.
+     - Det totale beløp under dagmulkten: 900 000 kr (under taket).
+
+  2) Hovedregel i NS 8405 punkt 34.5:
+     - Dagmulkt er en uttømmende regulering av byggherrens rett til
+       erstatning for FORSINKELSESKOSTNADER. Erstatning utover dagmulkten
+       kan IKKE kreves for forsinkelsen som sådan.
+     - Dette gjelder selv om byggherren har dokumentert høyere tap.
+
+  3) UNNTAK fra punkt 34.5 — grov uaktsomhet eller forsett:
+     - NS 8405 punkt 36.6 (analogi) og bakgrunnsretten (kjøpsloven § 27,
+       avtaleloven § 36, samt rettspraksis): erstatningsbegrensninger
+       i standardkontrakter gjelder ikke for grov uaktsomhet eller
+       forsett.
+     - Bevisst forsinkelse for å betjene annen kunde er forsett. Selv
+       hvis det ikke er forsettlig kontraktsbrudd i streng forstand, er
+       det grov uaktsomhet med tanke på risikoallokeringen.
+
+  4) Konsekvens:
+     - Dagmulkts-taket suspenderes for grov uaktsomhet/forsett.
+     - Byggherren kan kreve full erstatning for det dokumenterte tapet
+       (4 mill kr) i tillegg til eller i stedet for dagmulkten.
+     - I praksis: byggherren krever det største av (a) dagmulkten
+       (900 000 kr) og (b) full erstatning av dokumentert tap (4 mill
+       kr). Hvis (b) er mer enn (a), trer (b) inn — totalt 4 mill kr.
+     - Noen rettsteoretikere mener at dagmulkten kan løpe parallelt
+       med erstatning for grov uaktsomhet, men dette er omstridt.
+       Trygg løsning: kreve det høyere av de to.
+
+  5) Bevisbyrde:
+     - Byggherren må sannsynliggjøre at forsinkelsen i hovedsak skyldes
+       det andre prosjektet — ikke andre faktorer som
+       leverandørproblemer, vær, eller forsinkelse fra byggherrens
+       side.
+     - Dokumentasjon: e-post, vitneutsagn, oppstart-datoer på
+       konkurrerende prosjekt, ressursallokering.
+
+  6) Tilleggsmomenter:
+     - Heving av kontrakten (NS 8405 punkt 39) kan også vurderes hvis
+       forsinkelsen utgjør "vesentlig kontraktsbrudd". Forsettlig
+       prioritering av annen kunde er klart vesentlig.
+     - Erstatning kan også tenkes etter alminnelige
+       erstatningsregler (skadeerstatningsloven), men kontrakts-
+       rettslig grunnlag står sterkest.
+
+  Konklusjon: Byggherren bør kreve 4 mill kr i erstatning på grunnlag av
+  grov uaktsomhet/forsett som suspenderer dagmulkts-taket. Subsidiært
+  900 000 kr i dagmulkt. Dokumentere bevis grundig før krav fremsettes.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-dagmulkts-beregning
+      weight: 0.15
+      description: |
+        Beregner dagmulkten korrekt: 60 dager × 15 000 = 900 000 kr,
+        under taket på 1 500 000 kr.
+    - criterion: identifiserer-uttommende-regulering
+      weight: 0.2
+      description: |
+        Påpeker at dagmulkten i utgangspunktet er uttømmende
+        (NS 8405 punkt 34.5) og utelukker tilleggserstatning.
+    - criterion: identifiserer-grov-uaktsomhet-unntak
+      weight: 0.3
+      description: |
+        Identifiserer at grov uaktsomhet/forsett (her: bevisst
+        prioritering av annen kunde) suspenderer
+        erstatningsbegrensningen.
+    - criterion: konkret-erstatningsutregning
+      weight: 0.2
+      description: |
+        Konkluderer at byggherren kan kreve det høyere av dagmulkt
+        (900 000) eller full erstatning (4 mill).
+    - criterion: bevisbyrde-resonement
+      weight: 0.15
+      description: |
+        Påpeker at byggherren må bevise grov uaktsomhet/forsett
+        og foreslår konkret dokumentasjon.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, ns-8405, dagmulkt, grov-uaktsomhet, hard, llm-judge]

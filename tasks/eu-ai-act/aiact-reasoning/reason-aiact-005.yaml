@@ -1,0 +1,142 @@
+id: reason-aiact-005
+bench: eu-ai-act
+category: aiact-reasoning
+version: 1
+title: Transparens vs forretningshemmelighet under Art. 13
+difficulty: hard
+
+rationale: |
+  Tester evnen til å balansere konkurrerende krav: Art. 13 krever transparens
+  overfor deployer, mens forretningshemmeligheter har eget vern under EU-direktiv
+  2016/943. Recital 71 i AI Act anerkjenner spenningen. Krever flerdimensjonal
+  juridisk avveining.
+
+source: synthetic
+
+user_prompt: |
+  En provider av et høy-risiko AI-system for kreditt-scoring (Annex III pkt
+  5b) får følgende krav fra en deployer-bank:
+
+  "Vi krever full innsikt i alle features, vekter og treningsdata for å
+  oppfylle våre tilsynsforpliktelser etter finanstilsynsloven § 2-2 og for
+  å verifisere at modellen ikke diskriminerer."
+
+  Provider har patenterte feature-engineering-teknikker og trenings-
+  algoritmer som regnes som forretningshemmeligheter (verdt ~50 mill).
+
+  Hvor mye må provider dele under AI Act, hvor mye kan holdes tilbake, og
+  hva er kompromissmekanismene?
+
+gold_answer: |
+  Vurdering:
+
+  1) Hva Art. 13 KREVER:
+     - Art. 13 § 1: høy-risiko-systemet skal være designet og utviklet slik
+       at det er "sufficiently transparent" for deployere til å tolke
+       output og bruke det riktig.
+     - § 2: følges av instruksjoner som inneholder relevant, tilgjengelig,
+       og forståelig informasjon for deployere.
+     - § 3 lister bl.a.:
+       - Identitet av provider
+       - Karakteristika, capabilities og begrensninger ved systemet
+       - Forhold til intended purpose
+       - Nivå av accuracy, robusthet og cybersikkerhet
+       - Forutsigbare omstendigheter som kan føre til risiko
+       - Spesifikasjoner om input-data
+       - Beskrivelse av output
+       - Menneskelig tilsyn-tiltak
+       - Ressurs-bruk
+       - Forventet levetid og vedlikeholds-tiltak
+
+  2) Hva Art. 13 IKKE krever:
+     - Ikke fullt source code eller modell-vekter.
+     - Ikke alle treningsdata (men typer av data og data-styring må
+       beskrives, jf. Annex IV pkt 2).
+     - Forretningshemmeligheter er beskyttet under Recital 71 og Art. 78
+       (confidentiality).
+
+  3) Hva Art. 78 (Confidentiality) presiserer:
+     - Markedstilsynsmyndighet, notified bodies og andre må behandle
+       informasjon de mottar som konfidensiell — særlig kildekode, IP,
+       forretningshemmeligheter under direktiv 2016/943.
+     - Plikten til transparens i Art. 13 må tolkes ikke å forplikte til
+       avsløring av forretningshemmeligheter overfor deployere.
+
+  4) Hva tilsynsmyndighetene kan kreve:
+     - Art. 23: notified body / markedstilsynsmyndighet kan i kraft av
+       deres rolle kreve innsyn i full teknisk dokumentasjon (Annex IV)
+       inkludert trening, validering og design-prosess. Men de må
+       opprettholde konfidensialitet (Art. 78).
+     - Finanstilsynet etter finanstilsynsloven § 2-2: bankene har egen
+       tilsynsplikt. Finanstilsynet kan kreve dokumentasjon — men også
+       under taushetsplikt.
+     - Banken som deployer kan IKKE direkte kreve det samme nivået av
+       innsyn. De må stole på provider's dokumentasjon + uavhengig
+       konformitetsvurdering.
+
+  5) Bias/diskriminerings-vurdering:
+     - Kan ofte verifiseres ved black-box testing — banken kjører
+       parallelle test-cases, måler statistisk paritet, equalized odds,
+       etc. uten å trenge tilgang til vekter.
+     - Provider plikter under Art. 10 og Art. 15 å kunne dokumentere
+       bias-arbeid og non-discrimination, men kan abstrahere over
+       hemmelig teknikk.
+
+  6) Praktisk kompromiss:
+     - Provider deler:
+       (i)   Full Art. 13-dokumentasjon (instructions for use)
+       (ii)  Statistical performance metrics: accuracy, sensitivitet,
+             spesifisitet pr. demografisk segment
+       (iii) Data-typer og data governance-prosess (på høyt nivå)
+       (iv)  Bias-test-resultater på syntetisk og hold-out data
+       (v)   Audit-rights: tredjepart kan få tilgang under NDA
+
+     - Provider holder tilbake:
+       (i)   Modell-vekter
+       (ii)  Konkret feature-engineering-kode
+       (iii) Trenings-algoritmer
+       (iv)  Råd treningsdata
+
+     - Mekanisme for tvist: notified body eller markedstilsynsmyndighet
+       får full tilgang under taushetsplikt og kan attestere at modellen
+       er compliant uten å videreformidle hemmelighetene.
+
+  Konklusjon: Bankens krav er for vidtgående. Provider har plikt til
+  Art. 13-transparens, men ikke til avsløring av forretningshemmeligheter.
+  Bias-bekymring kan adresseres via testing og uavhengig audit. Hvis banken
+  trenger mer, må det gå via Finanstilsynet under Art. 78-konfidensialitet.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-omfang-art-13
+      weight: 0.25
+      description: |
+        Beskriver hva Art. 13 KREVER (instructions for use, performance
+        metrics, intended purpose, etc.) uten å overstrekke til vekter
+        eller treningsdata.
+    - criterion: identifiserer-art-78-konfidensialitet
+      weight: 0.2
+      description: |
+        Refererer Art. 78 om konfidensialitet og at forretningshemmeligheter
+        er beskyttet (også Recital 71).
+    - criterion: skiller-tilsyn-fra-deployer
+      weight: 0.2
+      description: |
+        Skiller klart mellom hva markedstilsynsmyndighet/notified body kan
+        kreve (mer) og hva deployer (banken) kan kreve (mindre).
+    - criterion: konkret-kompromissforslag
+      weight: 0.2
+      description: |
+        Foreslår konkret kompromiss: black-box bias-testing, statistical
+        metrics, audit under NDA, etc.
+    - criterion: avviser-fullt-innsyn
+      weight: 0.15
+      description: |
+        Konkluderer at banken IKKE har rett til vekter, råd treningsdata
+        eller feature-engineering-kode.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, art-13, art-78, forretningshemmelighet, balanseavveining, hard, llm-judge]

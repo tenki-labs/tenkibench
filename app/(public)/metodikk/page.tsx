@@ -60,7 +60,8 @@ export default function MetodikkPage() {
           80% av oppgavene er offentlige (alle vises på <Link href="/oppgaver" className="underline">/oppgaver</Link>).
           20% holdes hemmelig. Den hemmelige settet kjøres kun internt og brukes til
           å oppdage modeller som er trent på testen.
-          Alle prompts og fasit hashes og publiseres.
+          Alle prompts og fasit hashes og publiseres på{" "}
+          <Link href="/holdout" className="underline">/holdout</Link>.
         </p>
 
         <h2 className="h2 mt-10 mb-4">Reproduserbarhet</h2>
@@ -94,6 +95,13 @@ export default function MetodikkPage() {
         <h2 className="h2 mt-10 mb-4">Kildekode</h2>
         <p>
           Alt: oppgaver, eval-engine, leaderboard. <Link href="https://github.com/tenki-labs/tenkibench" className="underline">github.com/tenki-labs/tenkibench</Link>
+        </p>
+
+        <h2 className="h2 mt-10 mb-4">Sitering</h2>
+        <p>
+          TenkiBench er CC-BY 4.0. Bruk gjerne i forskning, anbud eller intern evaluering —
+          krediter oss. BibTeX, APA, MLA og dataset-nedlasting på{" "}
+          <Link href="/sitere" className="underline">/sitere</Link>.
         </p>
       </main>
       <SiteFooter />

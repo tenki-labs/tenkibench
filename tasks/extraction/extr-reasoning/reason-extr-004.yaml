@@ -1,0 +1,60 @@
+id: reason-extr-004
+bench: extraction
+category: extr-reasoning
+version: 1
+title: Inferens av manglende felt fra delvis lønnsslipp
+difficulty: hard
+
+rationale: |
+  Reasoning over delvis informasjon: en lønnsslipp har flere relasjoner mellom
+  brutto, trekk og netto, og modellen må avlede et manglende felt fra de
+  andre. Tester aritmetisk reasoning, ikke ren ekstraksjon.
+
+source: synthetic
+
+system_prompt: |
+  Du svarer som JSON-objekt med feltene: brutto_lonn, skattetrekk,
+  feriepenger_avsetning, oppgi alle som tall (ikke streng).
+
+user_prompt: |
+  Lønnsslippen viser:
+  - Netto utbetalt: 28 740 kr
+  - Skattetrekk: 11 000 kr
+  - Trygdeavgift (8,2%): 2 460 kr
+  - Pensjonstrekk (2%): 600 kr
+  - Feriepenger-avsetning: ikke synlig (skjult i layout)
+
+  Det er kjent at:
+  - Feriepenger avsettes med 12% av brutto månedslønn (sats for ansatt
+    over 60 år, der 14,3% gjelder, men her 12% — under 60).
+  - Brutto månedslønn er beregnet ut fra årslønn / 12.
+  - Feriepenger-avsetning regnes IKKE av i utbetalt lønn — det settes til
+    side og betales ut neste år.
+
+  Avled brutto månedslønn, skattetrekk, og total feriepenger-avsetning
+  for måneden.
+
+  Returner kun JSON.
+
+# Brutto = netto + skattetrekk + trygdeavgift + pensjon (uten ferie-avsetning)
+# Brutto = 28 740 + 11 000 + 2 460 + 600 = 42 800 kr
+# Feriepenger-avsetning = 0,12 × 42 800 = 5 136 kr
+# Skattetrekk er allerede oppgitt: 11 000.
+gold_answer: |
+  {
+    "brutto_lonn": 42800,
+    "skattetrekk": 11000,
+    "feriepenger_avsetning": 5136
+  }
+
+eval:
+  method: regex_all
+  patterns:
+    - "\"brutto_lonn\"\\s*:\\s*42\\s*800"
+    - "\"skattetrekk\"\\s*:\\s*11\\s*000"
+    - "\"feriepenger_avsetning\"\\s*:\\s*5\\s*136"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, lonnsslipp, feriepenger, json, hard]

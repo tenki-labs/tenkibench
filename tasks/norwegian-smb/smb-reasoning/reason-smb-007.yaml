@@ -1,0 +1,133 @@
+id: reason-smb-007
+bench: norwegian-smb
+category: smb-reasoning
+version: 1
+title: Vurder lønn vs utbytte ved varierende inntekt
+difficulty: hard
+
+rationale: |
+  Reasoning over skattekompositt: AS-eier som driver et lite selskap må
+  vurdere optimal mix av lønn og utbytte. Krever forståelse av personlig
+  toppskatt, AGA, eierbeskatning, oppjusteringsfaktor og konsekvenser for
+  trygdeytelser. Reflekterer reell rådgivning til norske SMB-eiere.
+
+source: synthetic
+source_notes: |
+  Skattesatser for inntektsåret 2025: alminnelig inntekt 22%, oppjustering
+  for utbytte 1,72, trinnskatt-trinn fra 208 050 kr (1,7%) opp til 1,57 mill
+  (17,7%), trygdeavgift 7,7% (lønn) / 11% (næring), AGA 14,1% (sone 1).
+
+user_prompt: |
+  En 100%-eier av et AS har følgende situasjon i 2025:
+  - Selskapet har 1 200 000 kr i resultat før eierens kompensasjon.
+  - Eier har ingen annen inntekt.
+  - Selskapet er i AGA-sone 1 (14,1%).
+
+  Eier vurderer:
+  Alternativ A: Ta ut 800 000 kr som lønn, resten som utbytte (etter
+              selskapsskatt).
+  Alternativ B: Ta ut 200 000 kr som lønn, resten som utbytte.
+
+  Hvilket alternativ gir høyest netto til eier i hånda? Vis utregningen
+  trinn for trinn og forklar trade-off-en mellom selskapsskatt + utbytte-
+  oppjustering vs lønnsskatt + AGA.
+
+gold_answer: |
+  Skatte-relevante satser 2025:
+  - Selskapsskatt: 22%
+  - Alminnelig inntekt person: 22%
+  - Utbytte oppjusteres med 1,72 før beskatning på 22% → effektiv 37,84%
+  - Trygdeavgift lønn: 7,7%
+  - AGA sone 1: 14,1%
+  - Trinnskatt: 0% til 208 050, 1,7% til 292 850, 4,0% til 670 000,
+    13,7% til 937 900, 16,7% til 1 573 100, 17,7% over.
+
+  Alternativ A (lønn 800 000):
+  - AGA: 800 000 × 0,141 = 112 800 kr (selskapets kostnad)
+  - Selskapsresultat etter lønn+AGA: 1 200 000 − 800 000 − 112 800 = 287 200
+  - Selskapsskatt 22%: 63 184 kr
+  - Tilgjengelig for utbytte: 287 200 − 63 184 = 224 016 kr
+  - Utbytte-skatt: 224 016 × 1,72 × 0,22 = 84 767 kr
+  - Netto utbytte: 224 016 − 84 767 = 139 249 kr
+
+  Lønnsskatt på 800 000:
+  - Alminnelig inntekt 22%: ~158 928 kr (etter minstefradrag/personfradrag,
+    grovt: (800 000 − 92 000 − 108 550) × 0,22 ≈ 131 800)
+  - Trygdeavgift 7,7%: 61 600
+  - Trinnskatt: 1,7%(84 800) + 4%(377 150) + 13,7%(130 000) ≈ 1 442 + 15 086
+    + 17 810 ≈ 34 338
+  - Estimat samlet lønnsskatt: ca 227 700 kr
+  - Netto lønn: 800 000 − 227 700 = 572 300 kr
+
+  Total netto A: 572 300 + 139 249 ≈ 711 500 kr
+
+  Alternativ B (lønn 200 000):
+  - AGA: 200 000 × 0,141 = 28 200 kr
+  - Selskapsresultat etter lønn+AGA: 1 200 000 − 200 000 − 28 200 = 971 800
+  - Selskapsskatt 22%: 213 796 kr
+  - Tilgjengelig for utbytte: 971 800 − 213 796 = 758 004 kr
+  - Utbytte-skatt: 758 004 × 1,72 × 0,22 = 286 829 kr
+  - Netto utbytte: 758 004 − 286 829 = 471 175 kr
+
+  Lønnsskatt på 200 000:
+  - Alminnelig inntekt: (200 000 − 92 000 − 108 550) × 0,22 = ~0 kr
+    (under personfradrag, så reelt nær null)
+  - Trygdeavgift: 200 000 × 0,077 = 15 400 kr (over fribeløp 99 650)
+  - Trinnskatt: under terskel for trinn 2 (208 050) → 0 kr
+  - Estimat samlet: ca 15 400 kr
+  - Netto lønn: 200 000 − 15 400 = 184 600 kr
+
+  Total netto B: 184 600 + 471 175 ≈ 655 800 kr
+
+  Konklusjon: Alternativ A gir høyere netto i hånda (~711 500 vs 655 800,
+  forskjell ~55 700 kr) selv om AGA og høy lønnsskatt later å trekke ned.
+  Grunnen: utbytte-oppjusteringen på 1,72 gjør at marginal utbytte-skatt
+  (37,84%) overstiger marginal lønnsskatt for alminnelig inntekt + trygd
+  (29,7%) for de første lønns-trinnene.
+
+  Viktige forbehold:
+  - Trygdeytelser (sykepenger, pensjon, dagpenger) baseres på lønn, ikke
+    utbytte → høy lønn gir bedre trygderettigheter.
+  - Pensjonssparing (OTP) regnes av lønn.
+  - For inntekter over ca 1 mill blir trinnskatten dominerende og utbytte
+    blir relativt mer attraktivt.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-utbytte-oppjustering
+      weight: 0.2
+      description: |
+        Bruker oppjusteringsfaktor 1,72 (eller tilnærmet) på utbytte før
+        skatt — dette er kjernen i hvorfor utbytte ofte er DYRERE enn lønn
+        ved lave inntekter.
+    - criterion: regner-aga-i-selskapsledd
+      weight: 0.15
+      description: |
+        Trekker AGA fra selskapsresultatet før selskapsskatt beregnes.
+    - criterion: korrekt-konklusjon
+      weight: 0.25
+      description: |
+        Konkluderer at høy lønn (alternativ A) gir mer netto i hånda enn
+        høy utbytte-andel (alternativ B), eller viser at differansen er
+        ~50–60 tusen.
+    - criterion: nevner-trygdeytelser
+      weight: 0.15
+      description: |
+        Påpeker at lønn gir trygderettigheter (sykepenger, pensjon) mens
+        utbytte ikke gjør det.
+    - criterion: marginalskatt-resonering
+      weight: 0.15
+      description: |
+        Sammenligner marginalskatt for lønn vs utbytte og forklarer hvorfor
+        utbytte-skatten kommer ut høyere.
+    - criterion: koherens-av-tall
+      weight: 0.1
+      description: |
+        Tallene henger sammen — selskapsskatt 22%, AGA 14,1%, og delberegningene
+        avstemmer i sluttsummen.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, lonn-vs-utbytte, skatt, oppjusteringsfaktor, hard, llm-judge]

@@ -1,0 +1,195 @@
+id: reason-gdpr-003
+bench: gdpr-advanced
+category: gdpr-reasoning
+version: 1
+title: DPIA for AI-drevet kandidat-vurdering
+difficulty: expert
+
+rationale: |
+  Tester sammensatt resonering om når DPIA er obligatorisk (Art. 35),
+  innholdet (Art. 35.7), rollen til DPO, og når Datatilsynet skal konsulteres
+  (Art. 36). Også overlapp med EU AI Act og likestillingsloven. Realistisk
+  scenario for norske SMB som tar i bruk AI-verktøy.
+
+source: synthetic
+
+user_prompt: |
+  En SMB med 80 ansatte vil ta i bruk et AI-verktøy som:
+  - Analyserer søknader (CV, søknadsbrev) automatisk
+  - Skår-rangerer kandidater basert på "match" mot stillingsbeskrivelse
+  - Foreslår topp 10% til intervju, men HR tar endelig beslutning
+  - Lagrer søkeropplysninger i 24 måneder for "fremtidige stillinger"
+
+  Vurder:
+  1. Er DPIA obligatorisk? Hvilke kriterier?
+  2. Hva må DPIA-en inneholde minimum?
+  3. Når må Datatilsynet konsulteres?
+  4. Er det noen samspill med EU AI Act?
+  5. Er noe av dette automatisk-avgjørelse under Art. 22?
+
+gold_answer: |
+  Vurdering:
+
+  1) Er DPIA obligatorisk?
+
+     - GDPR Art. 35.1: DPIA påkrevd ved "høy risiko for de registrertes
+       rettigheter og friheter".
+     - Art. 35.3 lister situasjoner som ALLTID krever DPIA, bl.a.:
+       (a) Systematisk og omfattende vurdering basert på automatisert
+           behandling, inkludert profilering, som danner grunnlag for
+           beslutninger som har rettsvirkning eller som tilsvarende
+           vesentlig påvirker den registrerte.
+     - Datatilsynets liste over behandlinger som krever DPIA inkluderer
+       eksplisitt automatisert vurdering av søkere/ansatte.
+
+     Konklusjon: DPIA er OBLIGATORISK her — både via Art. 35.3.a og
+     Datatilsynets liste.
+
+  2) Innholdet i DPIA-en (Art. 35.7):
+
+     a) Beskrivelse av behandlingen:
+        - Formål: kandidat-rangering for å effektivisere rekruttering.
+        - Datakategorier: navn, kontaktinfo, CV-innhold (utdanning,
+          erfaring, fritekst), demografisk informasjon (kjønn, alder
+          hvis oppgitt).
+        - Mulig SENSITIVE data (Art. 9): hvis CV inneholder helse,
+          religion, fagforening, etnisitet — dette krever særskilt
+          grunnlag.
+        - Datakilder: søknadssystem, tredjeparts AI-leverandør,
+          eventuell webscraping av offentlige profiler.
+        - Mottakere: HR-team, AI-leverandør (databehandler).
+
+     b) Vurdering av nødvendighet og proporsjonalitet:
+        - Er målet (effektiv rekruttering) tilstrekkelig viktig?
+        - Finnes det mindre inngripende alternativer (manuell
+          screening, mindre data)?
+        - Er 24 måneders lagring proporsjonal?
+
+     c) Risikovurdering for de registrerte:
+        - Risiko for diskriminerings-bias (mest kritisk):
+          - Modellen kan reprodusere historisk bias (kjønn, alder,
+            etnisk navn).
+          - Konsekvenser: individuell unfairness, brudd på
+            likestillings- og diskrimineringsloven.
+        - Risiko for "ugjennomsiktig avslag":
+          - Søker forstår ikke hvorfor de ble avvist.
+        - Risiko for excessive lagring:
+          - Søkere som aldri blir ansatt holdes i database.
+
+     d) Tiltak for å håndtere risiko:
+        - Bias-testing: regelmessig revisjon av modellens utfall
+          fordelt på kjønn, alder, opprinnelse.
+        - Menneskelig tilsyn: HR-beslutning er endelig (allerede
+          implementert, men dokumenter at den er reell, ikke rubber-stamp).
+        - Transparens: informere søkere om at AI brukes, hvilken
+          rolle den har, og deres rettigheter.
+        - Innsyn-rett: søkere skal kunne be om manuell vurdering
+          (Art. 22.3).
+        - Sletting: 24 måneder kan være for lenge — vurder å redusere
+          til 6-12 måneder, eller krev aktivt samtykke for "fremtidige
+          stillinger"-lagring.
+
+  3) Datatilsynet-konsultasjon (Art. 36):
+
+     - Art. 36.1: forhåndskonsultasjon kreves hvis DPIA viser at
+       behandlingen vil føre til høy risiko som ikke kan håndteres med
+       tilstrekkelige tiltak.
+     - I praksis: hvis bias-testing viser systematisk skjevhet som ikke
+       lar seg fikse, må Datatilsynet konsulteres FØR behandling
+       starter.
+     - Hvis DPIA-en konkluderer at risikoene er HÅNDTERTE, er
+       konsultasjon ikke obligatorisk, men SMB kan velge frivillig
+       konsultasjon hvis usikkerhet er stor.
+
+  4) Samspill med EU AI Act:
+
+     - Annex III pkt 4 av AI Act: AI-systemer for rekruttering, særlig
+       for å screen-e/filtrere søknader, er HØY-RISIKO.
+     - Plikter under AI Act for SMB som bruker (deployer):
+       - Art. 26: bruke i henhold til provider's instruksjoner,
+         menneskelig tilsyn, dokumentasjon.
+       - Art. 27: FRIA (Fundamental Rights Impact Assessment) hvis
+         offentlig institusjon eller behandling kategorisk omfattes.
+       - SMB med 80 ansatte er ikke offentlig, så FRIA ikke
+         automatisk pliktig — men sterkt anbefalt.
+     - Plikt for AI-leverandøren (provider):
+       - Konformitetsvurdering, CE-merking, teknisk dokumentasjon.
+     - SMB skal sjekke at leverandøren har CE-merking og full
+       dokumentasjon før implementering.
+
+  5) Art. 22 — automatiserte avgjørelser:
+
+     - Art. 22.1: registrerte har rett til ikke å være underlagt
+       avgjørelse basert utelukkende på automatisert behandling som har
+       rettsvirkning eller tilsvarende vesentlig påvirkning.
+     - I beskrivelsen: HR tar endelig beslutning. Dette betyr ikke
+       automatisk at Art. 22 ikke gjelder — det avhenger av om HRs
+       gjennomgang er REELL eller bare formell.
+     - Kriterier for "reell menneskelig overprøving":
+       - HR har fullmakt til å overstyre AI-rangeringen.
+       - HR vurderer søknader utenfor topp 10% også (i alle fall
+         stikkprøvebasert).
+       - HR har kompetanse og tid til å vurdere.
+     - Hvis HR i praksis bare godkjenner topp 10%-listen → reelt
+       automatisert beslutning → Art. 22 utløses og krever:
+       (a) Eksplisitt grunnlag (samtykke, kontrakt, eller lov).
+       (b) Rett til menneskelig vurdering, til å få utrykk for sitt
+           syn, og bestride beslutningen (Art. 22.3).
+       (c) For særlige kategorier-data: enda strengere vilkår
+           (Art. 22.4).
+
+  6) Anbefaling:
+     - Gjennomfør DPIA før systemet tas i bruk.
+     - Implementer bias-testing før go-live.
+     - Vurder lagrings-tid (24 mnd er trolig for lenge — anbefal 6-12
+       mnd med samtykke for lengre).
+     - Sikre at HR-overprøving er reell, dokumentert.
+     - Informer søkere åpent om AI-bruk.
+     - Sjekk leverandørens AI Act-compliance.
+     - Konsulter Datatilsynet hvis høy restrisiko.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: dpia-obligatorisk-korrekt
+      weight: 0.2
+      description: |
+        Konkluderer at DPIA er obligatorisk under Art. 35.3.a (systematisk
+        og omfattende vurdering med vesentlig påvirkning) og/eller
+        Datatilsynets liste.
+    - criterion: dpia-innhold-konkret
+      weight: 0.15
+      description: |
+        Lister konkrete elementer i DPIA-en utover bare overskrifter:
+        beskrivelse, nødvendighets-vurdering, risiko-analyse, tiltak.
+    - criterion: bias-fokus
+      weight: 0.15
+      description: |
+        Identifiserer diskriminerings-bias som kjerne-risiko og foreslår
+        konkret bias-testing.
+    - criterion: art-22-vurdering
+      weight: 0.2
+      description: |
+        Vurderer Art. 22 om automatiserte avgjørelser og påpeker at
+        "HR tar endelig beslutning" ikke automatisk fjerner kravet —
+        det avhenger av om overprøvingen er REELL.
+    - criterion: ai-act-overlapp
+      weight: 0.15
+      description: |
+        Identifiserer at rekrutterings-AI er høy-risiko under Annex III
+        i AI Act og lister konkrete provider/deployer-plikter.
+    - criterion: datatilsynet-konsultasjon
+      weight: 0.1
+      description: |
+        Forklarer når Art. 36-konsultasjon kreves (når DPIA viser
+        ikke-håndterbar høy restrisiko).
+    - criterion: lagringstid-vurdering
+      weight: 0.05
+      description: |
+        Stiller spørsmål ved 24 måneders lagringstid og foreslår
+        kortere periode eller aktivt samtykke.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, dpia, art-35, art-22, ai-act-overlapp, expert, llm-judge]

@@ -1,0 +1,118 @@
+id: reason-lang-003
+bench: norwegian-language
+category: lang-reasoning
+version: 1
+title: Identifiser tvetydighet i kontraktsformulering og foreslå presisering
+difficulty: hard
+
+rationale: |
+  Tester nyansert språkforståelse: norsk juridisk språk har ofte tvetydige
+  formuleringer som gir uklare rettsvirkninger. Modellen må identifisere
+  hvilke ord/setninger som er tvetydige, hva som kan tolkes på ulike måter,
+  og foreslå presisering — krever språk-, juss- og forretningssans samtidig.
+
+source: synthetic
+
+user_prompt: |
+  Identifiser tvetydigheter i denne klausulen og foreslå presis
+  omformulering. Begrunn for hver endring.
+
+  ---
+  § 4 Konfidensialitet
+  Begge parter forplikter seg til å behandle all informasjon som mottas
+  fra den annen part eller dens forretningsforbindelser som
+  konfidensiell. Plikten omfatter ikke informasjon som er allment kjent
+  eller som mottakerparten har rett til å bruke. Plikten gjelder under
+  avtalens varighet og en rimelig periode etter dens utløp.
+
+gold_answer: |
+  Tvetydigheter identifisert:
+
+  1) "all informasjon som mottas":
+     - Hva regnes som "informasjon"? Muntlig samtale? Tilfeldig observasjon?
+       Skjermbilder?
+     - Krever den noen markering eller form ("merket konfidensiell"), eller
+       gjelder den absolutt all kommunikasjon?
+     - Forslag: "all informasjon som er merket 'Konfidensiell' eller
+       som med rimelighet bør forstås som forretningskonfidensiell etter
+       sin natur og kontekst, uavhengig av om den formidles muntlig,
+       skriftlig, elektronisk eller på annen måte."
+
+  2) "fra den annen part eller dens forretningsforbindelser":
+     - "Forretningsforbindelser" er svært vidt — kan tolkes som leverandører,
+       kunder, samarbeidspartnere, til og med konkurrenter ved felles
+       arrangement.
+     - Forslag: "fra den annen part, dens datterselskaper, eller
+       leverandører som handler på vegne av den annen part."
+
+  3) "allment kjent":
+     - Vagt: kjent for hvem? Bransjen? Allmennheten? Kun en konkurrent?
+     - Forslag: "informasjon som var eller blir offentlig kjent uten
+       brudd på denne avtale."
+
+  4) "rett til å bruke":
+     - Tvetydig — rett under denne avtalen, eller etter generell rett?
+     - Forslag: "informasjon mottakerparten kan dokumentere at den hadde
+       lovlig kunnskap om før mottak under denne avtale, eller som er
+       utviklet uavhengig uten bruk av konfidensiell informasjon fra
+       den annen part."
+
+  5) "avtalens varighet":
+     - Hva hvis avtalen termineres for tidlig?
+     - Forslag: "fra signering og til avtalen opphører eller termineres."
+
+  6) "en rimelig periode":
+     - Det STORE tvetydige punktet. "Rimelig" er en juridisk standard,
+       ikke en tidsfrist. I tvist vil dette ofte ende i tvil til
+       fordel for mottakerparten.
+     - Standard NDA-praksis i Norge: 3-5 år for vanlige
+       forretningshemmeligheter, ubegrenset for ekte
+       forretningshemmeligheter (avtaleloven § 36 kan likevel sette
+       grenser).
+     - Forslag: "i fem (5) år etter avtalens opphør, med unntak av
+       informasjon som utgjør forretningshemmelighet i lovens forstand
+       (forretningshemmelighetsloven § 2), hvor plikten gjelder så
+       lenge informasjonen er hemmelig."
+
+  Generell merknad:
+  Klausulen mangler også:
+  - Sanksjoner ved brudd (erstatningsklausul, konvensjonalbot)
+  - Tilbakelevering / sletting ved opphør
+  - Rett til ufrivillig deling (myndighetspålegg, rettssak)
+  - Behandling av personopplysninger (GDPR-overlapp hvis relevant)
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-rimelig-periode
+      weight: 0.25
+      description: |
+        Identifiserer "rimelig periode" som hovedtvetydigheten og
+        foreslår konkret tidsfrist (typisk 3-5 år).
+    - criterion: identifiserer-allment-kjent
+      weight: 0.15
+      description: |
+        Påpeker at "allment kjent" er vagt og foreslår konkretisering.
+    - criterion: identifiserer-forretningsforbindelser
+      weight: 0.15
+      description: |
+        Påpeker at "forretningsforbindelser" er for vidt definert.
+    - criterion: foreslar-konkret-omformulering
+      weight: 0.2
+      description: |
+        Gir konkrete omformuleringer, ikke bare påpeker problemer.
+    - criterion: nevner-manglende-elementer
+      weight: 0.15
+      description: |
+        Nevner manglende elementer (sanksjoner, tilbakelevering,
+        myndighets-pålegg, GDPR-overlapp).
+    - criterion: nyansert-juridisk-resonering
+      weight: 0.1
+      description: |
+        Vurderer rettslige standarder (avtaleloven § 36, forretnings-
+        hemmelighetsloven) der relevant.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, kontrakt, tvetydighet, nda, hard, llm-judge]

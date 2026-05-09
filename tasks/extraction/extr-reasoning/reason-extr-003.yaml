@@ -1,0 +1,100 @@
+id: reason-extr-003
+bench: extraction
+category: extr-reasoning
+version: 1
+title: Avled organisasjonsnummer-sjekksum og finn feil
+difficulty: hard
+
+rationale: |
+  Tester reasoning utover ren ekstraksjon: modellen må anvende MOD11-
+  sjekkalgoritmen for norske organisasjonsnummer (Brreg-standard) og
+  identifisere hvilket av flere oppgitte nummer som er ugyldig — krever
+  beregning, ikke bare gjenkjenning.
+
+source: synthetic
+
+system_prompt: |
+  Du svarer kun med organisasjonsnummeret som er ugyldig (9 siffer, uten
+  mellomrom).
+
+user_prompt: |
+  Et organisasjonsnummer i Norge er 9 siffer, hvor det 9. sifferet er en
+  MOD11-sjekksum av de 8 første. Vekter for de 8 første sifrene (fra
+  venstre til høyre) er: 3, 2, 7, 6, 5, 4, 3, 2.
+
+  Sjekksum-formel:
+    sum = Σ(siffer_i × vekt_i)
+    rest = sum mod 11
+    sjekksiffer = 11 − rest, men:
+      - hvis rest == 0 → sjekksiffer = 0
+      - hvis rest == 1 → ugyldig (orgnr forkastes)
+
+  Av disse fire numrene, hvilket ett er UGYLDIG?
+
+  A: 919 845 317
+  B: 974 760 673
+  C: 988 213 586
+  D: 923 456 781
+
+  Svar med kun det ugyldige nummeret.
+
+# Beregning:
+# A: 919845311
+#   sum = 9*3 + 1*2 + 9*7 + 8*6 + 4*5 + 5*4 + 3*3 + 1*2
+#       = 27 + 2 + 63 + 48 + 20 + 20 + 9 + 2 = 191
+#   rest = 191 mod 11 = 191 − 17*11 = 191 − 187 = 4
+#   sjekksiffer skal være 11 − 4 = 7. Faktisk: 1 → UGYLDIG (eller... vent)
+#   Faktisk er Tenki Labs AS = 932 562 167. La oss sjekke A på nytt.
+#   Faktisk: A er Bouvet ASA orgnr og bør være gyldig.
+#   La meg gjøre om beregningen mer omhyggelig:
+#   siffer_pos:  9 1 9 8 4 5 3 1 [1 sjekksiffer]
+#   vekt:        3 2 7 6 5 4 3 2
+#   ledd:        27 2 63 48 20 20 9 2 = 191
+#   191 mod 11: 11*17=187, rest 4. 11-4=7. Forventet sjekksiffer 7, faktisk 1 → UGYLDIG.
+#
+# Hmm, men 919 845 311 er Bouvet ASA og er gyldig i virkeligheten. La meg verifisere
+# vekt-rekkefølgen. Standard MOD11 for orgnr har vekter fra VENSTRE: 3,2,7,6,5,4,3,2.
+# La meg sjekke 919845311:
+# 9*3=27, 1*2=2, 9*7=63, 8*6=48, 4*5=20, 5*4=20, 3*3=9, 1*2=2 = 191
+# 191 % 11 = 4, kontroll = 11-4 = 7. Men faktisk siste = 1.
+# Hmm. La meg sjekke faktisk Bouvet — de er 935 396 011. Så 919 845 311 er ikke Bouvet.
+# La meg derfor BARE BEREGNE: med oppgitte numre, hvilket er ugyldig?
+#
+# A: 919845311 → forventet 7, faktisk 1 → UGYLDIG
+# La meg sjekke B: 974760673
+#   9*3=27, 7*2=14, 4*7=28, 7*6=42, 6*5=30, 0*4=0, 6*3=18, 7*2=14 = 173
+#   173 % 11 = 173-165 = 8, kontroll = 11-8 = 3. Faktisk 3 → GYLDIG.
+# C: 988213587
+#   9*3=27, 8*2=16, 8*7=56, 2*6=12, 1*5=5, 3*4=12, 5*3=15, 8*2=16 = 159
+#   159 % 11 = 159-154 = 5, kontroll = 11-5 = 6. Faktisk 7 → UGYLDIG.
+# D: 912345679
+#   9*3=27, 1*2=2, 2*7=14, 3*6=18, 4*5=20, 5*4=20, 6*3=18, 7*2=14 = 133
+#   133 % 11 = 133-132 = 1, kontroll = ugyldig (rest=1). Så D er også UGYLDIG.
+#
+# Vi har flere ugyldige. Jeg må fikse opp testdata så det er nøyaktig 1 ugyldig.
+# La meg lage 4 nye konsistente verdier:
+#
+# Lag gyldige numre ved å beregne sjekksiffer:
+# 974760673 → 3 (gyldig, behold som B)
+# Velg base "919845311" og fiks sjekksiffer til 7:
+#   A: 919845317 (gyldig)
+# Velg base "988213588" → la oss sjekke:
+#   9*3=27, 8*2=16, 8*7=56, 2*6=12, 1*5=5, 3*4=12, 5*3=15, 8*2=16 = 159
+#   rest 5, kontroll 6 → C: 988213586 (gyldig)
+# Lag D ugyldig: 912345670 (forventet... 1*1=ugyldig så forkast)
+#   La meg velge en annen base for D:
+#   923456781:
+#   9*3=27, 2*2=4, 3*7=21, 4*6=24, 5*5=25, 6*4=24, 7*3=21, 8*2=16 = 162
+#   162 % 11 = 162-154 = 8, kontroll = 3. Faktisk 1 → UGYLDIG. Bra, D ugyldig.
+#
+# Endelig: A=919845317 (gyldig), B=974760673 (gyldig), C=988213586 (gyldig), D=923456781 (ugyldig)
+gold_answer: "923456781"
+
+eval:
+  method: regex
+  pattern: "^\\s*923\\s?456\\s?781\\s*$"
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, mod11, orgnr, brreg, hard]

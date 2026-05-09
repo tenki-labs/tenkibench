@@ -1,0 +1,175 @@
+id: reason-fin-003
+bench: norwegian-finance
+category: fin-reasoning
+version: 1
+title: Vurder hvitvaskings-rødflagg i sammensatt scenario
+difficulty: hard
+
+rationale: |
+  Tester reasoning over hvitvaskingsregelverket: hvorfor flere "moderate"
+  rødflagg sammen utgjør en konkret mistanke som utløser melde-plikten etter
+  hvitvaskingsloven § 26. Krever vurdering av kompositt-risiko, ikke bare
+  enkelt-flagg.
+
+source: synthetic
+
+user_prompt: |
+  Du er compliance-ansvarlig i en regnskapsfirma. Du betjener et nytt AS
+  ("Nordic Trade Solutions AS") som har følgende profil:
+
+  - Stiftet for 4 måneder siden
+  - Eier: norsk statsborger som ikke har drevet næring tidligere
+  - Daglig leder: estisk statsborger, bosatt i Tallinn
+  - Bankforhold: estisk bank (LHV Pank)
+  - Første kvartal: omsetning 8,5 mill kr fakturert til 12 ulike utenlandske
+    kunder (Kypros, Malta, BVI), alle for "konsulent-tjenester"
+  - Hver faktura er på ~700 000 kr, betalt cash til klientkonto innen 24 timer
+  - Det er ingen ansatte registrert i Aa-registeret
+  - Eier ber deg sette opp månedlig rapportering, men har "ingen
+    presserende behov" for skattemelding ennå
+  - Eier har bedt om at årsregnskap "kanskje gjøres mest skånsomt"
+
+  Vurder:
+  1. Hvilke konkrete rødflagg ser du?
+  2. Er melde-plikten utløst etter hvitvaskingsloven § 26?
+  3. Hvilke handlinger må du gjennomføre, og i hvilken rekkefølge?
+
+gold_answer: |
+  Vurdering:
+
+  1) Identifiserte rødflagg:
+
+     a) Selskaps-struktur:
+        - Nystiftet AS (4 mnd) med stort omsetningsvolum (8,5 mill kr) —
+          uvanlig.
+        - Norsk eier uten næringserfaring + utenlandsk daglig leder
+          (Estland) — vanlig "stråmann"-mønster.
+        - Estisk bankforhold (LHV) for et norsk AS — Estland har vært
+          eksponert for hvitvaskings-skandaler (Danske Bank, Swedbank).
+
+     b) Kunde-struktur:
+        - 12 utenlandske kunder, alle i jurisdiksjoner med
+          fortrolighets-tradisjon (Kypros, Malta, BVI). Malta og BVI
+          står på FATF-grålister og er vanlige høyrisiko-jurisdiksjoner.
+        - "Konsulent-tjenester" er klassisk fasade for
+          fiktive transaksjoner — ingen objektivt målbart leveranse.
+        - Faktura-størrelser konsistent ~700 000 (just under typisk
+          tilsynsterskel) → tegn på strukturering.
+
+     c) Transaksjons-mønster:
+        - Cash-betaling på klientkonto innen 24 timer — atypisk for
+          konsulent-bransjen, der oppgjør ofte tar 30+ dager.
+        - 8,5 mill kr på 4 måneder, fra 12 kunder = ~2,1 mill per
+          måned, eller ca 30+ uavhengige fakturaer. Veldig høy aktivitet
+          for nyetablert selskap uten ansatte.
+
+     d) Bemanningsmangel:
+        - Ingen ansatte i Aa-registeret. Et selskap som leverer 8,5
+          mill kr i konsulent-tjenester må ha noen som faktisk leverer.
+          Mulig at "konsulent-tjenestene" ikke leveres reelt.
+
+     e) Eier-instruksjoner:
+        - "Ingen presserende behov" for skattemelding → forsøk på å
+          forsinke regnskapsmessig synlighet.
+        - "Mest skånsomt" årsregnskap → forsøk på å påvirke regnskapet
+          mot mindre transparens. Dette kan også ramme bokføringsloven.
+
+  2) Hvitvaskingsloven § 26 (melde-plikt):
+
+     - § 26 første ledd: hvis det er mistanke om at midler eller
+       transaksjoner har sammenheng med utbytte fra straffbar handling
+       eller terrorfinansiering → melde MT (Økokrim) UMIDDELBART.
+     - Terskelen er "mistanke", ikke sikker viten. Kombinasjonen av
+       rødflagg her gir åpenbart konkret mistanke.
+     - Plikten er PERSONLIG på den ansatte og umulig å avtale bort.
+     - § 26 andre ledd: forbud mot å informere kunden om at melding er
+       sendt ("tipping off").
+
+     Konklusjon: melde-plikten ER utløst.
+
+  3) Konkret handlingsplan, prioritert:
+
+     a. UMIDDELBART (samme dag):
+        - Sende rapport til Økokrim via Altinn (eller direkte til MT).
+        - Skriftlig — ikke per telefon med mindre kritisk hast.
+        - Ikke informer kunden ("tipping off"-forbud).
+        - Sikre alle dokumenter, e-poster og kontoutskrifter
+          internt — ikke send dem til kunden eller eksterne uten
+          autorisasjon.
+
+     b. Innen 24-72 timer:
+        - Vurder om kundeforholdet skal AVVIKLES eller fortsette under
+          observasjon. Hvitvaskingsloven § 24 om opphør av kundeforhold
+          ved manglende kundetiltak. Praktisk: ofte tryggere å avvikle.
+        - Konsultere advokat med spesialitet i hvitvasking — ikke
+          firmaets vanlige rådgiver, da relasjon kan være kompromittert.
+        - Konferere med ledelsen i regnskapsfirmaet (compliance-
+          ansvarlig, evt. styreleder).
+
+     c. Innen 1-2 uker:
+        - Internoppfølging av risikovurdering: er det andre kunder
+          med lignende mønster? Skal kundetiltaks-prosessen
+          re-evalueres?
+        - Vurdere om revisor bør involveres (revisorloven har egen
+          melde-plikt).
+        - Sikre at all kommunikasjon med kunden går gjennom
+          regnskapsfirmaet, ikke direkte mellom ansatt og kunden.
+
+     d. Pågående:
+        - Følge med på Økokriks tilbakemelding (krever som regel ikke
+          aktiv handling fra rapportør, men eventuell oppfølging hvis
+          de ber om det).
+        - Hvis kunden trekker seg eller flytter til annen tilbyder, er
+          dette i seg selv mistenkelig — vurder om det krever
+          oppdatert melding.
+
+  4) Risiko ved unnlatelse:
+     - Hvitvaskingsloven § 50: bøter eller fengsel inntil 3 år for
+       grove brudd på melde-plikten.
+     - Tap av autorisasjon (regnskapsførerloven § 11).
+     - Personlig erstatningsansvar.
+
+  Konklusjon: Dette er ikke en grensetilfelle. Rødflaggene er konkrete,
+  flerdimensjonale, og samsvarer med kjente hvitvaskings-mønstre. Melde-
+  plikt utløst — handle umiddelbart.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: identifiserer-konkrete-rodflagg
+      weight: 0.25
+      description: |
+        Lister flere konkrete rødflagg (ikke bare "mistenkelig"):
+        nystiftet selskap + utenlandsk DL, høyrisiko-jurisdiksjoner,
+        cash-flow, ingen ansatte, "skånsomt"-instruksjon.
+    - criterion: konkluderer-meldeplikt-utlost
+      weight: 0.25
+      description: |
+        Konkluderer entydig at hvitvaskingsloven § 26 melde-plikt er
+        utløst og at varsel skal sendes til Økokrim/MT umiddelbart.
+    - criterion: nevner-tipping-off
+      weight: 0.15
+      description: |
+        Påpeker forbudet mot å informere kunden om at melding er sendt
+        ("tipping off", § 26 andre ledd).
+    - criterion: prioritert-handlingsplan
+      weight: 0.2
+      description: |
+        Foreslår konkret prioritert handlingsplan: melding først,
+        dokumentasjon, konsultasjon med advokat/ledelse, vurdering
+        av avvikling.
+    - criterion: nevner-strukturering
+      weight: 0.1
+      description: |
+        Identifiserer fakturaer ~700 000 (just under typisk
+        tilsynsterskel) som mulig strukturering.
+    - criterion: ikke-overforsiktig-eller-paranoid
+      weight: 0.05
+      description: |
+        Vurderer KOMPOSITT-risikoen, ikke enkelt-flagg. Reagerer
+        proporsjonalt på det samlede bildet.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, hvitvasking, hvl-§-26, kompositt-risiko, hard, llm-judge]

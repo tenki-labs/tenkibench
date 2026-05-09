@@ -1,0 +1,45 @@
+{
+  "version": "0.1",
+  "generated_at": "2026-05-09T11:56:13.168Z",
+  "total_count": 10,
+  "by_bench": {
+    "eu-ai-act": 1,
+    "extraction": 1,
+    "gdpr-advanced": 1,
+    "hallucination": 1,
+    "norwegian-construction": 1,
+    "norwegian-finance": 1,
+    "norwegian-healthcare": 1,
+    "norwegian-language": 1,
+    "norwegian-smb": 1,
+    "tool-use": 1
+  },
+  "by_category": {
+    "brreg-api": 1,
+    "dpia": 1,
+    "faktura": 1,
+    "hvitvasking": 1,
+    "lov-sitering": 1,
+    "ns-8405": 1,
+    "pdf-til-json": 1,
+    "risk-klassifisering": 1,
+    "taushetsplikt": 1,
+    "trondersk": 1
+  },
+  "by_difficulty": {
+    "hard": 1,
+    "medium": 9
+  },
+  "task_hashes": [
+    "sha256:132232ec4a58868a5ddc3074bfe04afa6ee5a9fad2baf3c1217f4b5d6d9d7455",
+    "sha256:624f2589bdd6bc376cacf17b1e83c9c8b2f12474dc520a6bd344dbb8945d1ade",
+    "sha256:74c2fb2c20d874e42b40dc54cfca9b0e43d3215c27b2a769d49b0b076963f47d",
+    "sha256:7fbae437600a71a3d3ca5f51d597405f8d976182253cc7bfbd2850f52433f268",
+    "sha256:8b80bc01613975fa3006a9bdf82c38bc6ff98f05850b139b808eeca68cd5a905",
+    "sha256:8d1f3a17dfc80af2718b995ed295323fae001ee9d64d3003fc5aaaaa3ada45d3",
+    "sha256:8eebe53d94c34cdb71402713563c65d9b30a1a71286c531f14fdc4661068170e",
+    "sha256:af34527a1a0d039b16482be83f8329b8792898135e5850aeaca6513d158c0775",
+    "sha256:bd7e8afecdf265001dab483276ef13e92872a6c9e24759387d7ec08e796c7b40",
+    "sha256:e76985cf962b0637d412b8a8e04c25690f8e1a993493a7bacc6d025b59ae7517"
+  ]
+}

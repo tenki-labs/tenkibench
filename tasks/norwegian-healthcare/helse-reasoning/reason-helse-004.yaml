@@ -1,0 +1,163 @@
+id: reason-helse-004
+bench: norwegian-healthcare
+category: helse-reasoning
+version: 1
+title: Avveie taushetsplikt mot opplysningsrett ved bekymringsmelding
+difficulty: hard
+
+rationale: |
+  Tester reasoning over kollisjon mellom helsepersonells taushetsplikt
+  (helsepersonelloven § 21) og opplysningsplikt til barneverntjeneste (§ 33).
+  Krever konkret vurdering av terskel, dokumentasjon og prosess — ikke bare
+  regelanvendelse.
+
+source: synthetic
+
+user_prompt: |
+  En fastlege har en pasient (mor, 35 år) som under en konsultasjon for
+  ryggsmerter fortalte at hun "noen ganger river ungene veldig hardt i
+  armen når de ikke vil komme hjem fra parken". Mor viser tegn til
+  utmattelse, beskriver søvnløshet, og sier at hun har vurdert antidepressiva
+  men ikke ønsker det.
+
+  Mor sier: "Du har taushetsplikt, ikke sant? Jeg sier ikke dette til en
+  barnevernsperson."
+
+  Vurder fastlegens plikter og handlingsrom. Hva må/kan/bør hun gjøre, og
+  i hvilken rekkefølge?
+
+gold_answer: |
+  Vurdering:
+
+  1) Hovedregel — taushetsplikt:
+     - Helsepersonelloven § 21: helsepersonell skal hindre at andre får
+       adgang eller kjennskap til opplysninger om folks legems- eller
+       sykdomsforhold eller andre personlige forhold.
+     - Pasientens forventning om taushet er normalt korrekt.
+
+  2) Unntak — opplysningsplikt til barneverntjenesten (§ 33):
+     - Helsepersonelloven § 33 første ledd: helsepersonell skal i sitt
+       arbeid være oppmerksom på forhold som kan føre til tiltak fra
+       barneverntjenesten.
+     - § 33 andre ledd: helsepersonell skal uten hinder av
+       taushetsplikt MELDE FRA til barneverntjenesten ved alvorlig
+       omsorgssvikt, eller når et barn viser vedvarende alvorlige
+       atferdsvansker.
+     - Terskelen er "grunn til å tro at et barn blir mishandlet i
+       hjemmet eller utsatt for andre former for alvorlig
+       omsorgssvikt" (§ 33 andre ledd jf. barnevernloven § 6-4).
+
+  3) Vurdering av om terskelen er nådd:
+     - "River ungene veldig hardt i armen" — fysisk handling som kan
+       påføre smerte, og potensielt skade. Ikke nødvendigvis
+       mishandling per se, men i grenseland.
+     - Frekvens "noen ganger" og kontekst (frustrasjon ved henting fra
+       park) tilsier IKKE nødvendigvis vedvarende mishandling, men:
+     - Mor viser samtidig psykiske belastningstegn (utmattelse,
+       søvnløshet, vurdert antidepressiva uten å ta dem) → økt risiko
+       for at mestrings-strategier faller sammen og at fysiske episoder
+       eskalerer.
+     - "Veldig hardt" er pasientens egen vurdering — kan tyde på at
+       hun selv erkjenner at det går over en akseptabel grense.
+
+     Konklusjon: terskelen for OPPLYSNINGSPLIKT etter § 33 andre ledd
+     er borderline, men med kombinasjonen av (a) fysisk handling som
+     kan utgjøre mishandling og (b) mors egen psykiske utmattelse,
+     anbefales melding til barneverntjenesten — eller minst en grundig
+     vurdering med kollega.
+
+  4) Forhold til pasientens forventning om taushet:
+     - Pasienten har ikke korrekt forventning. § 33 går FORAN § 21 ved
+       barneverns-bekymringer.
+     - Fastlegen bør være ÅRLIG med mor: forklare at det er forhold
+       som kan utløse plikt, og at hun har plikt til å vurdere dette.
+     - Det å holde tilbake informasjon for å beholde tillit er IKKE
+       en lovlig avveining når lovens vilkår er oppfylt.
+
+  5) Konkret handlingsplan:
+
+     a. Umiddelbart i konsultasjonen:
+        - Anerkjenne mors situasjon (utmattelse, søvnproblemer).
+        - Be mor utdype hyppighet, intensitet, om barna har fått
+          merker, og hvordan barna reagerer.
+        - Vurdere mors psykiske helse mer formelt (depresjons-screening,
+          PHQ-9).
+
+     b. Informere mor om mulig melde-plikt:
+        - Forklare at hvis det vurderes som omsorgssvikt, har lege
+          plikt til å melde uavhengig av samtykke.
+        - Foreslå at mor selv kontakter familievernkontor eller
+          barnevernet for HJELP (ikke melding) — Familievernet er
+          frivillig og ofte mer tilgjengelig enn barneverntjenesten.
+
+     c. Egen vurdering og dokumentasjon:
+        - Konferere med kollega/leder (anonymt) eller spesialhelsetjeneste
+          for veiledning.
+        - Dokumentere vurderingen grundig i journal (helsepersonell-
+          loven § 39).
+        - Hvis terskelen for § 33 vurderes nådd: skriftlig melding til
+          barneverntjenesten.
+
+     d. Behandling av mor:
+        - Tilby behandling for utmattelse/depresjon.
+        - Henvise til psykolog eller DPS hvis indikert.
+        - Hjelpe mor å koble seg på familievern/foreldreveiledning.
+
+     e. Oppfølging:
+        - Sett ny time innen 1-2 uker.
+        - Følg opp om mor faktisk har tatt kontakt med
+          familievernkontor / barnevern eller får hjelp.
+        - Hvis ikke fremgang: lavere terskel for melding.
+
+  6) Vurdering av "selv-melding" vs profesjonell melding:
+     - Hvis mor selv tar kontakt med barnevernet for hjelp, kan dette
+       redusere behovet for legens melding under § 33 — men det
+       fritar ikke automatisk legen fra plikten hvis terskelen er nådd.
+
+  Konklusjon:
+  - Taushetsplikten settes til side når § 33-vilkår er oppfylt.
+  - Borderline-tilfelle her — krever konkret vurdering, gjerne med
+    kollega.
+  - Riktig praksis: åpenhet med mor, dokumentere, vurdere melding,
+    samtidig fokus på behandling av mors psykiske tilstand.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-§-33-hjemmel
+      weight: 0.25
+      description: |
+        Refererer helsepersonelloven § 33 og forklarer at den går foran
+        taushetsplikten i § 21 ved alvorlig omsorgssvikt.
+    - criterion: konkret-terskelvurdering
+      weight: 0.25
+      description: |
+        Vurderer eksplisitt om terskelen for § 33 er nådd basert på
+        konkrete fakta — ikke bare meldeplikt automatisk eller
+        taushetsplikt automatisk.
+    - criterion: ikke-bare-meldeplikt
+      weight: 0.15
+      description: |
+        Foreslår handlingsalternativer utover melding: behandling av
+        mor, henvisning til familievern, foreldreveiledning,
+        oppfølging.
+    - criterion: aapenhet-med-pasient
+      weight: 0.15
+      description: |
+        Anbefaler å være åpen med mor om plikten — ikke skjule
+        meldingen for å beholde tillit.
+    - criterion: dokumentasjon-og-konsultasjon
+      weight: 0.1
+      description: |
+        Foreslår konkret dokumentasjon i journal og evt. anonym
+        konsultasjon med kollega.
+    - criterion: avviser-feil-taushets-svar
+      weight: 0.1
+      description: |
+        Avviser entydig at "jeg har taushetsplikt så jeg kan ikke
+        gjøre noe" er korrekt svar.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, taushetsplikt, opplysningsplikt, barnevern, helsepersonelloven, hard, llm-judge]

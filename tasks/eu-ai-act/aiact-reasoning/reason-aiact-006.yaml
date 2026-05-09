@@ -1,0 +1,131 @@
+id: reason-aiact-006
+bench: eu-ai-act
+category: aiact-reasoning
+version: 1
+title: Klassifiser AI-system mellom høy-risiko og GPAI med systemic risk
+difficulty: hard
+
+rationale: |
+  Tester evnen til å skille mellom Annex III høy-risiko og GPAI med systemic
+  risk (Art. 51) — to overlappende men distinkte kategorier. Krever forståelse
+  av compute-treskelen (10^25 FLOPs), når begge regimer gjelder samtidig, og
+  konsekvenser for compliance-burden.
+
+source: synthetic
+
+user_prompt: |
+  Et norsk forskningssenter trener en stor språkmodell (~5 × 10^24 FLOPs
+  total compute) som de planlegger å:
+  - Lansere som åpen modell på Hugging Face (vekter publisert)
+  - I tillegg tilby som API tilgjengelig for europeiske helse-startups
+    som kan finetune til journal-sammendrag
+
+  Vurder:
+  1. Faller modellen under GPAI-reglene (Art. 51-55)?
+  2. Faller den under "GPAI with systemic risk"?
+  3. Hva er konsekvensen av at modellen er åpen?
+  4. Når en helse-startup finetuner og deployer for journal-sammendrag,
+     hvem er provider og hvilke regimer gjelder?
+
+gold_answer: |
+  Vurdering:
+
+  1) GPAI-status (Art. 3 nr 63 + Art. 51):
+     - Modellen er trent for å generere tekst og brukes i mange ulike
+       downstream-anvendelser → oppfyller "general purpose"-kriteriet.
+     - 5 × 10^24 FLOPs er over 10^22-treskelen for "GPAI" generelt
+       (svært lav, så praktisk talt alle store modeller treffer).
+     - JA, modellen er GPAI. Pliktene i Art. 53 gjelder:
+       (a) Teknisk dokumentasjon (Annex XI)
+       (b) Informasjon til downstream providers (Annex XII)
+       (c) Copyright-policy
+       (d) Public summary av treningsdata (Art. 53.1.d)
+
+  2) GPAI med systemic risk (Art. 51):
+     - Treskelen i Art. 51 § 2: total compute ≥ 10^25 FLOPs (cumulative
+       training compute).
+     - 5 × 10^24 er UNDER 10^25 → ikke automatisk klassifisert som
+       systemic risk.
+     - Men § 1 åpner for at Kommisjonen kan klassifisere ad-hoc basert
+       på andre kriterier (capabilities, antall parameters, datasett-
+       størrelse, modaliteter, brukerantall, marked).
+     - Konklusjon: NEI, ikke per default. Men kan bli omklassifisert av
+       Kommisjonen.
+
+  3) Konsekvens av åpen modell (Art. 53 § 2):
+     - Hvis modellen er fritt tilgjengelig under en åpen lisens og
+       parametere, vekter, modell-arkitektur og bruksinformasjon
+       gjøres tilgjengelig publikt → unntak fra noen plikter:
+       - Unntatt fra (a) teknisk dokumentasjon-plikten overfor
+         AI Office
+       - Unntatt fra (b) informasjon til downstream providers
+       - MEN: ikke unntatt fra copyright-policy-plikten (c)
+       - MEN: ikke unntatt fra public summary av treningsdata (d)
+       - MEN: hvis modellen blir klassifisert som GPAI med systemic
+         risk → ingen åpen-kilde-unntak, alle plikter gjelder.
+
+     - Konkret: forskningssenteret kan bruke åpen-kilde-unntaket, men må
+       fortsatt publisere copyright-policy og treningsdata-sammendrag.
+
+  4) Helse-startup som finetuner for journal-sammendrag:
+     - Journal-sammendrag for helsetjenester er sannsynligvis høy-risiko
+       under Annex III pkt 5(c) (helsetjenester med vesentlig påvirkning
+       på liv eller helse), særlig hvis sammendraget brukes i
+       beslutnings-støtte.
+     - Helse-startup finetuner og deployer → de blir provider av
+       høy-risiko AI-system (Art. 25 kombinert med definisjonen av
+       provider i Art. 3 nr 3).
+     - Plikter: full Annex IV-dokumentasjon, konformitetsvurdering
+       (Art. 43), risk management (Art. 9), data governance (Art. 10),
+       transparency (Art. 13), human oversight (Art. 14), robustness
+       (Art. 15), CE-merking, registrering i EU-databasen.
+     - Forskningssenteret som GPAI-provider plikter å gi nødvendig
+       informasjon til startup-en (Annex XII). For ÅPEN modell er denne
+       plikten redusert, så startup-en må selv dokumentere mer.
+
+     Begge regimer gjelder samtidig:
+     - GPAI-laget: Art. 53 (forskningssenteret).
+     - Høy-risiko-laget: Art. 8-15, 43 (helse-startup-en).
+
+  Sammendrag:
+  - Modellen er GPAI, men ikke automatisk systemic risk (under 10^25).
+  - Åpen modell gir delvis unntak under Art. 53.2.
+  - Når helse-startup finetuner for høy-risiko-anvendelse, blir de full
+    provider av høy-risiko-system med alle pliktene som følger.
+  - To ulike compliance-stacks løper parallelt — GPAI-plikter for
+    grunnmodell, høy-risiko-plikter for anvendelsen.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: korrekt-gpai-klassifisering
+      weight: 0.2
+      description: |
+        Identifiserer at modellen er GPAI under Art. 53.
+    - criterion: korrekt-systemic-risk-vurdering
+      weight: 0.25
+      description: |
+        Bruker 10^25-treskelen i Art. 51.2 og konkluderer at 5 × 10^24
+        ikke automatisk klassifiseres som systemic risk, samtidig som
+        det nevnes at Kommisjonen kan ad-hoc klassifisere.
+    - criterion: korrekt-aapen-kilde-konsekvens
+      weight: 0.2
+      description: |
+        Bruker Art. 53.2 og lister hvilke plikter som er unntatt
+        (teknisk dokumentasjon, downstream-info) vs hvilke som
+        fortsatt gjelder (copyright, treningsdata-sammendrag).
+    - criterion: helse-startup-er-provider
+      weight: 0.2
+      description: |
+        Konkluderer at helse-startup-en blir provider av høy-risiko-system
+        og lister kjerne-pliktene (konformitetsvurdering, dokumentasjon).
+    - criterion: dual-regime-resonering
+      weight: 0.15
+      description: |
+        Påpeker at GPAI- og høy-risiko-regimene løper parallelt, ikke
+        det ene erstatter det andre.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, gpai, systemic-risk, art-51, art-53, hard, llm-judge]

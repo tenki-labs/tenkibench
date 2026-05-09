@@ -6,11 +6,13 @@ const nav = [
   { href: "/benches",     label: "Benches" },
   { href: "/oppgaver",    label: "Oppgaver" },
   { href: "/metodikk",    label: "Metodikk" },
+  { href: "/holdout",     label: "Hold-out" },
   { href: "/om",          label: "Om" },
 ] as const;
 
 const apiLinks = [
   { href: "/api/public/leaderboard", label: "Leaderboard JSON" },
+  { href: "/sitere", label: "Sitere TenkiBench" },
   { href: "https://github.com/tenki-labs/tenkibench", label: "GitHub" },
   { href: "https://github.com/tenki-labs/tenkibench/blob/main/docs/TESTING_METHODOLOGY.md", label: "Metodikk-doc" },
   { href: "https://github.com/tenki-labs/tenkibench/blob/main/docs/PARTNERS.md", label: "Partner-program" },

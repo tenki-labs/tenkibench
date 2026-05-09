@@ -1,0 +1,152 @@
+id: reason-bygg-004
+bench: norwegian-construction
+category: bygg-reasoning
+version: 1
+title: Vurder ansvarsfordeling ved underentreprenør-mangel
+difficulty: hard
+
+rationale: |
+  Reasoning over flerlags ansvar i byggeprosjekt: hovedentreprenør har ansvar
+  for sine underentreprenører overfor byggherren (NS 8405 punkt 16),
+  men kan kreve regress mot underentreprenør. Tester forståelse av kjede-
+  ansvaret og hvordan reklamasjons-frister beveger seg gjennom kjeden.
+
+source: synthetic
+source_notes: NS 8405:2008 punkt 16 (underentreprise) og punkt 36 (mangler etter overtakelse).
+
+user_prompt: |
+  En byggherre overtok et boligbygg etter NS 8405 i juni 2024. I januar
+  2026 oppdages omfattende fuktskader på grunn av dårlig membran-arbeid på
+  bad. Hovedentreprenøren brukte underentreprenør for våtrom-arbeidet.
+
+  Utbedring koster 1,8 mill kr. Hovedentreprenøren har gått konkurs i
+  oktober 2025. Underentreprenøren er fortsatt operativ.
+
+  Vurder:
+  1. Kan byggherren kreve direkte mot underentreprenøren?
+  2. Hva skjer med reklamasjonsfristen?
+  3. Hva er de praktiske handlings-alternativene?
+
+gold_answer: |
+  Vurdering:
+
+  1) Direktekrav mot underentreprenør:
+
+     Hovedregel: NS 8405 etablerer kontraktsforhold mellom byggherre og
+     hovedentreprenør, og separat mellom hovedentreprenør og
+     underentreprenør. Byggherren har IKKE direkte kontraktsforhold med
+     underentreprenør. Etter alminnelig kontraktsrett er det "krav om
+     kontraktsforhold" for å reise mangelskrav.
+
+     Unntak: bustadoppføringslova § 37 gir forbruker direkte krav mot
+     underentreprenør for KONTRAKTSMESSIGE krav, hvis hovedentreprenør
+     ikke kan oppfylle (f.eks. konkurs). Dette gjelder bolig oppført til
+     forbruker.
+
+     Hvis byggherren her er forbruker (bolig til privat bruk):
+     - Bustadoppføringslova § 37: ja, direkte krav er mulig.
+     - Frist: § 37 gir forbruker rett til å fremme krav direkte til
+       underentreprenør på samme grunnlag som mot hovedentreprenør.
+     - Beløpsgrense: kravet er begrenset til underentreprenørs eget
+       arbeid og ansvarsområde.
+
+     Hvis byggherren er næringsdrivende (NS 8405 brukes i hovedsak til
+     næringsbygg/utbygging):
+     - Direktekrav er IKKE hjemlet i NS 8405.
+     - Mulig grunnlag: alminnelig erstatningsrett (uaktsomhet etter
+       skadeerstatningsloven § 2-1), men da må man bevise konkret
+       skyld og direkte tap.
+     - Eller: kreve i konkursboet til hovedentreprenør, som så har
+       regresskrav mot underentreprenør.
+
+  2) Reklamasjonsfrister:
+
+     - NS 8405 punkt 36.4: relativ frist — reklamasjon "uten ugrunnet
+       opphold" etter at mangelen ble eller burde blitt oppdaget.
+       Januar 2026 oppdaget, så varsling raskt nå.
+     - NS 8405 punkt 36.5: absolutt frist — 5 år fra overtakelse for
+       skjulte mangler. Overtakelse juni 2024, så absolutt frist går
+       ut juni 2029. Innenfor.
+     - Bustadoppføringslova § 30: 5 år for forbruker, eller "rimelig
+       tid" etter oppdagelse → konsistent med NS 8405.
+
+     Mot underentreprenør er fristen knyttet til hovedentreprenørens
+     overtakelse fra underentreprenøren — ikke byggherrens overtakelse.
+     Dette er ofte tidligere. Direkte krav under bustadoppføringslova
+     § 37 viderefører imidlertid byggherrens frist mot
+     underentreprenøren.
+
+  3) Praktiske alternativer:
+
+     A. Hvis byggherre er forbruker:
+        - Reklamere skriftlig direkte til underentreprenør under
+          bustadoppføringslova § 37 — uten ugrunnet opphold.
+        - Beskrive mangelen, krav om utbedring eller prisavslag, frist.
+        - Kreve i konkursboet til hovedentreprenør parallelt.
+
+     B. Hvis byggherre er næringsdrivende:
+        - Sjekke om hovedentreprenørens kontrakt med underentreprenør
+          har en "step-in"-klausul som overfører rettigheter ved
+          konkurs.
+        - Kreve i konkursboet (sikre seg som kreditor for
+          mangelskravet).
+        - Vurdere uaktsomhetskrav direkte mot underentreprenør —
+          krever bevis for skyld utover kontraktsmangel (vanligvis
+          høyere bevisterskel).
+        - Sjekke prosjektets ansvarsforsikringer (CAR-policy, all-risk),
+          som ofte dekker også skjulte mangler en periode etter
+          overtakelse.
+
+     C. Bevis-sikring:
+        - Faglig befaring og rapport (Sintef, Mycoteam).
+        - Foto, fukt-målinger, dokumentasjon av skadeomfang.
+        - Identifisere konkret hvilken underentreprenør gjorde
+          membran-arbeidet (hovedentreprenørens prosjektdokumentasjon
+          eller kontrakter).
+
+  Konklusjon:
+  - Forbruker: gå direkte mot underentreprenør under
+    bustadoppføringslova § 37.
+  - Næringsdrivende: ikke automatisk direktekrav under NS 8405. Krev i
+    boet, vurder uaktsomhets-spor, sjekk forsikring.
+  - Reklamere uansett uten ugrunnet opphold for å bevare alle alternativer.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: skiller-forbruker-fra-naering
+      weight: 0.25
+      description: |
+        Skiller eksplisitt mellom forbruker (bustadoppføringslova § 37)
+        og næringsdrivende (NS 8405, ikke automatisk direktekrav).
+    - criterion: identifiserer-bustadoppforingsloven
+      weight: 0.2
+      description: |
+        Refererer bustadoppføringslova § 37 som hjemmel for forbrukers
+        direktekrav mot underentreprenør.
+    - criterion: korrekt-reklamasjonsfrist
+      weight: 0.2
+      description: |
+        Identifiserer 5-års absolutt frist + relativ "uten ugrunnet
+        opphold"-frist (NS 8405 punkt 36.4-5) og at fristen ikke er
+        utløpt.
+    - criterion: regresskrav-i-bo
+      weight: 0.15
+      description: |
+        Påpeker muligheten for å fremme krav i hovedentreprenørens
+        konkursbo, og evt. step-in-klausul.
+    - criterion: praktisk-alternativ-uaktsomhet
+      weight: 0.1
+      description: |
+        Nevner uaktsomhetsspor (skadeerstatningsloven) som
+        backup for næringsdrivende.
+    - criterion: bevis-sikring
+      weight: 0.1
+      description: |
+        Anbefaler dokumentasjon (befaring, foto, rapport) før krav
+        fremsettes.
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, ns-8405, underentreprenor, bustadoppforingslova, hard, llm-judge]

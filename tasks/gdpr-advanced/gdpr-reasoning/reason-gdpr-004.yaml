@@ -1,0 +1,178 @@
+id: reason-gdpr-004
+bench: gdpr-advanced
+category: gdpr-reasoning
+version: 1
+title: Balansetest med tre konkurrerende interesser
+difficulty: expert
+
+rationale: |
+  Tester sammensatt balansetest etter GDPR Art. 6.1.f (legitim interesse)
+  med flere konkurrerende interesser samtidig: behandlingsansvarliges,
+  registrertes, og tredjeparts. Reell norsk SMB-avveining hvor
+  forretningsbehov, ansattes personvern, og kunders rettigheter kolliderer.
+
+source: synthetic
+
+user_prompt: |
+  En SMB innen kundeservice (40 ansatte) ønsker å:
+  - Ta opp alle telefonsamtaler med kunder (lyd)
+  - Bruke AI til å transkribere, analysere tonefall (sentiment), og
+    automatisk flagge "vanskelige samtaler" for kvalitetssikring
+  - Lagre opptak i 6 måneder, transkripsjoner i 24 måneder
+  - Anonymiserte aggregater brukes til å identifisere "topp-10" og
+    "bunn-10" kundeservice-medarbeidere månedlig
+
+  Behandlingsgrunnlag de vurderer: Art. 6.1.f legitim interesse.
+
+  Gjennomfør en formell balansetest. Vurder konkurrerende interesser:
+  bedriften, ansatte (kundeservice), og kunder. Konkluderer du at legitim
+  interesse er gyldig grunnlag, eller bør de søke et annet grunnlag?
+
+gold_answer: |
+  Balansetest etter Art. 6.1.f:
+
+  Trinn 1 — Identifiser legitim interesse:
+
+  Bedriften:
+  - Kvalitetssikring av kundeservice (legitim, klar forretningsinteresse).
+  - Opplæringsmateriale for nye ansatte (legitim).
+  - Bevissikring ved tvist (legitim).
+  - Identifisere "topp/bunn"-ansatte for premiering/oppfølging (legitim,
+    men kontroversiell).
+
+  Trinn 2 — Nødvendighetstest:
+
+  - Er målet oppnåelig på en MINDRE inngripende måte?
+    - Kvalitetssikring: kan oppnås ved stikkprøveopptak (10%) i stedet
+      for full opptak. AI-analyse kan kjøres på et utvalg, ikke alt.
+    - Topp/bunn-rangering: kan baseres på objektive metrikker
+      (case-løsningstid, kunde-NPS) uten lyd-analyse av tonefall.
+    - Sentiment-analyse er PARTICULARLY inngripende — det avdekker
+      emosjonelle tilstander.
+
+  Konklusjon nødvendighet: full opptak + sentiment-analyse + ansatte-
+  rangering er IKKE nødvendig — målene kan oppnås mindre inngripende.
+
+  Trinn 3 — Balanse mellom interesser:
+
+  A) Bedriftens interesse: middels-stor.
+     - Kvalitetssikring er legitim, men ikke kritisk for forretningen.
+     - Effektivitetsgevinst er målbar men begrenset.
+
+  B) Ansattes (kundeservice-medarbeideres) interesse:
+     - Personvern på arbeidsplassen er beskyttet av:
+       - Arbeidsmiljøloven § 9-1 om kontrolltiltak (saklig grunn,
+         nødvendighet, proporsjonalitet).
+       - Arbeidsmiljøloven § 9-2 om informasjon og drøfting med
+         tillitsvalgte FØR iverksetting.
+       - Personopplysningsloven og GDPR.
+     - "Topp/bunn"-rangering basert på AI-tonefall-analyse er
+       potensielt arbeidsrettslig PROBLEMATISK:
+       - Kan utløse psykisk arbeidsmiljø-belastning (aml § 4-3).
+       - Kan diskriminere på basis av aksent, talehastighet,
+         emosjonelt uttrykk → potensielt brudd på likestillings- og
+         diskrimineringsloven.
+     - Maktasymmetri: ansatte har ikke fritt valg (Art. 7-samtykke
+       i ansettelsesforhold er ikke "freely given") — bedriften MÅ
+       basere seg på 6.1.f hvis ikke avtale eller lov, men da gjelder
+       balansetesten strengt.
+
+  C) Kunders interesse:
+     - Kunder ringer for å løse et problem, ikke for å bli analysert.
+     - Forventet personvern: når kunder ringer kundeservice, forventer
+       de at samtalen er "fortrolig" eller minst ikke aktivt utnyttet.
+     - Sentiment-analyse av kunder kan utløse emosjons-databehandling
+       som under AI Act Art. 5.1.f er forbudt på arbeidsplassen, og
+       restriksjonsbelagt mot kunder.
+     - Kunde-samtykke er enkelt å innhente ("denne samtalen tas opp")
+       — så samtykke er et reelt alternativt grunnlag.
+
+  Trinn 4 — Forventningstest (Recital 47):
+
+  - Er behandlingen "rimelig forventet" av de registrerte?
+  - Kunder: opptak for kvalitetssikring er rimelig forventet HVIS det
+    informeres om i begynnelsen av samtalen.
+  - Kunder: sentiment-analyse for å rangere ansatte er IKKE rimelig
+    forventet — utenfor kundens forutsetning.
+  - Ansatte: opptak for kvalitetssikring er innenfor forventning hvis
+    kommunisert. AI-tonefall-rangering for premiering/sanksjon er
+    utenfor.
+
+  Trinn 5 — Balansering:
+
+  - Kvalitetssikring (stikkprøvebasert): legitim interesse trolig OK,
+    forutsatt informasjons-plikt og tillitsvalgt-drøfting.
+  - Sentiment-analyse + topp/bunn-rangering: legitim interesse er IKKE
+    tilstrekkelig grunnlag. Inngrepet er for stort.
+  - Total ordning: balanse-test FALLER UT for de mest inngripende
+    delene.
+
+  Trinn 6 — Anbefaling:
+
+  Ikke gjør:
+  - Full opptak av alle samtaler (revurder til stikkprøve eller
+    samtykke-basert).
+  - Sentiment-analyse for ansatte-rangering (forbudt eller minst
+    svært høyterskel).
+  - Lagring av lydopptak i 6 mnd (vurder kortere, f.eks. 30 dager
+    for dispute-bevis).
+
+  Gjør i stedet:
+  - Stikkprøveopptak for kvalitetssikring, eksplisitt informert.
+  - Ansatte-rangering basert på objektive case-metrikker.
+  - Tillitsvalgte-drøfting før iverksetting (aml § 9-2).
+  - DPIA før behandling (sannsynligvis pliktig under Art. 35.3).
+  - Sjekk om noen elementer kan bygge på samtykke i stedet (Art. 6.1.a),
+    men oppmerksom på at samtykke i ansettelsesforhold sjelden er
+    gyldig.
+
+  Konklusjon: Legitim interesse holder IKKE som grunnlag for hele den
+  foreslåtte ordningen. SMB må enten redusere ambisjonen eller bygge
+  på samtykke (vanskelig for ansatte) / kollektiv-avtale via
+  tillitsvalgte.
+
+eval:
+  method: llm_judge
+  rubric:
+    - criterion: gjennomforer-formell-balansetest
+      weight: 0.2
+      description: |
+        Strukturer svaret som balansetest med trinn (legitim interesse,
+        nødvendighet, balanse, forventning).
+    - criterion: identifiserer-tre-interesser
+      weight: 0.2
+      description: |
+        Identifiserer eksplisitt tre konkurrerende interesser:
+        bedriftens, ansattes, og kundenes — og veier dem hver for seg.
+    - criterion: nodvendighet-mindre-inngripende
+      weight: 0.15
+      description: |
+        Vurderer mindre inngripende alternativer (stikkprøve, objektive
+        metrikker) og identifiserer at full opptak + sentiment-analyse
+        ikke er nødvendig.
+    - criterion: ansatte-arbeidsmiljolov
+      weight: 0.15
+      description: |
+        Påpeker arbeidsmiljølovens kontrolltiltak-regler (§ 9-1, § 9-2)
+        og at samtykke fra ansatt sjelden er gyldig grunnlag.
+    - criterion: ai-act-overlapp
+      weight: 0.1
+      description: |
+        Identifiserer EU AI Act Art. 5.1.f om emosjonsanalyse av
+        ansatte (forbudt) som relevant.
+    - criterion: korrekt-konklusjon
+      weight: 0.15
+      description: |
+        Konkluderer at legitim interesse IKKE er tilstrekkelig
+        grunnlag for hele den foreslåtte ordningen, men kan være
+        OK for redusert versjon.
+    - criterion: konkret-anbefaling
+      weight: 0.05
+      description: |
+        Foreslår konkret redesign (stikkprøve, objektive metrikker,
+        tillitsvalgt-drøfting, DPIA).
+
+authored_by: einar@tenki.no
+authored_at: "2026-05-08"
+
+tags: [reasoning, balansetest, art-6-1-f, kontrolltiltak, expert, llm-judge]
