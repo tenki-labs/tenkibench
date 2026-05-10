@@ -130,8 +130,9 @@ export async function middleware(req: NextRequest) {
   return response;
 }
 
+// Force Node runtime — lib/tenki-sso.ts uses node:crypto for HS256 HMAC
+// verification, which isn't available on the default Edge runtime.
 export const config = {
-  // Bare /admin/* trenger auth. Public pages og /api/public, /api/cron osv.
-  // håndterer egen auth (eller er rene public).
+  runtime: "nodejs",
   matcher: ["/admin/:path*"],
 };
