@@ -97,9 +97,24 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Ingen gyldig sesjon → redirect til central auth.
+  // Ingen gyldig sesjon → finn rett login-rute.
+  //
+  // To moduser:
+  //   a) OIDC-modus: TENKI_OIDC_CLIENT_ID er satt → send til vår egen
+  //      /api/auth/login som starter Authorization Code + PKCE-flyten mot
+  //      auth.tenki.no/oauth/authorize.
+  //   b) Cookie-shared (legacy): hverken klient-ID eller andre OIDC-vars
+  //      satt → send rett til auth.tenki.no/admin/login som før.
+  //
+  // Begge gir samme cookies på Domain=.tenki.no til slutt.
   if (!claims) {
     const next = encodeURIComponent(req.nextUrl.toString());
+    if (process.env.TENKI_OIDC_CLIENT_ID) {
+      const url = req.nextUrl.clone();
+      url.pathname = "/api/auth/login";
+      url.search = `?next=${next}`;
+      return NextResponse.redirect(url, 302);
+    }
     return NextResponse.redirect(`${ADMIN_LOGIN_URL}?next=${next}`, 302);
   }
 

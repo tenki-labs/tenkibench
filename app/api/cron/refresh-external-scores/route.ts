@@ -4,6 +4,7 @@ import {
   refreshArtificialAnalysis,
   refreshLmArena,
   refreshOpenLlmLeaderboard,
+  refreshOpenLlmResults,
 } from "@/lib/external-scores/refresh";
 import { isAutoRefreshEnabled } from "@/lib/system-settings";
 import { query } from "@/lib/db";
@@ -15,7 +16,7 @@ export const maxDuration = 180;
  * Cron-rute: oppdater eksterne benchmark-scores.
  * Bearer-auth via CRON_TOKEN.
  *
- * Query: ?source=artificial_analysis | lmarena | open_llm | all (default)
+ * Query: ?source=artificial_analysis | lmarena | open_llm | open_llm_results | all (default)
  *
  * Without ?source the call is treated as the daily auto-refresh and respects
  * the `external_scores_auto_refresh_enabled` kill-switch in `system_settings`.
@@ -73,6 +74,9 @@ export async function GET(req: NextRequest) {
     }
     if (source === "open_llm") {
       return NextResponse.json({ ok: true, ...(await refreshOpenLlmLeaderboard()) });
+    }
+    if (source === "open_llm_results") {
+      return NextResponse.json({ ok: true, ...(await refreshOpenLlmResults()) });
     }
     return NextResponse.json({ ok: true, ...(await refreshAll()) });
   } catch (err) {

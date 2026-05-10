@@ -47,6 +47,31 @@ generere HF-eksporten med `pnpm export:hf` (skriver til
 `dist/tenkibench-hf/`). Republisering skjer via GitHub Actions-jobben
 `publish-hf.yml` (manuell trigger).
 
+## Run TenkiBench via lm-eval-harness
+
+For LLM-research-vennlig kjøring via EleutherAI sin standard `lm-eval` har vi
+en ferdig adapter under [`lm-eval-tenkibench/`](lm-eval-tenkibench/):
+
+```bash
+pip install lm-eval
+cd lm-eval-tenkibench
+lm_eval \
+  --model hf \
+  --model_args pretrained=mistralai/Mistral-Nemo-Instruct-2407 \
+  --tasks tenkibench \
+  --include_path .
+```
+
+Dette kjører alle 11 benches mot HF-datasettet og gir én samlet score. Se
+[`lm-eval-tenkibench/README.md`](lm-eval-tenkibench/README.md) for hvilke
+eval-metoder som er fullt støttet vs. tilnærmet.
+
+Adapter-filene genereres fra `tasks/<bench>/`-strukturen via:
+
+```bash
+pnpm generate:lm-eval
+```
+
 ## Lokalt oppsett
 
 ```bash
@@ -72,6 +97,39 @@ pnpm bench:run-all
 # Bare én kategori
 pnpm bench:run --model=claude-opus-4-7 --category=faktura
 ```
+
+## Eksterne benchmark-kilder
+
+For at modell-sidene skal kunne vise TenkiBench-score side om side med
+generelle benchmark-tall, henter vi automatisk fra følgende kilder. Alt
+lagres som JSONB i `models.external_scores`. Refresh skjer hver natt via
+`/api/cron/refresh-external-scores` (kill-switch på `/admin/eksterne-scores`)
+og kan også trigges manuelt fra admin.
+
+| Kilde | Datasett / API | Krever nøkkel | Nøkkel i `external_scores` |
+|---|---|---|---|
+| Artificial Analysis | `artificialanalysis.ai/api/v2/data/llms/models` | Ja (gratis tier) | `artificial_analysis` |
+| LMArena (Chatbot Arena) | HF `lmarena-ai/chatbot-arena-leaderboard` | Nei | `lmarena` |
+| Open LLM Leaderboard (aggregert) | HF `open-llm-leaderboard/contents` | Nei | `open_llm` |
+| Open LLM Leaderboard (per-task) | HF `open-llm-leaderboard/results` | Nei | `open_llm_results` |
+
+Vi kjører ikke MMLU, GSM8K eller HumanEval selv, men trekker et lite
+eksempel-utvalg som referanse-data for `/sammenlign-benchmarks`:
+
+| Datasett | HF-navn | Antall vi henter | Skrives til |
+|---|---|---|---|
+| MMLU | `cais/mmlu` (config `all`, split `test`) | 50 | `data/mmlu-sample.json` |
+| HumanEval | `openai/openai_humaneval` (split `test`) | 20 | `data/humaneval-sample.json` |
+| GSM8K | `openai/gsm8k` (config `main`, split `test`) | 50 | `data/gsm8k-sample.json` |
+
+Generer / oppdater referanse-utvalget med:
+
+```bash
+npm run export:reference
+```
+
+Filene committes til git og leses av `/sammenlign-benchmarks` ved
+request-tid.
 
 ## Bidra
 

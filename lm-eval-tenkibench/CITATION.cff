@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use TenkiBench, please cite as below."
+authors:
+  - family-names: Holt
+    given-names: Einar
+    email: einar@tenki.no
+    affiliation: Tenki Labs AS
+title: "TenkiBench: A Norwegian SMB Benchmark for Language Models"
+version: "0.7"
+date-released: "2026-05-10"
+url: "https://bench.tenki.no"
+repository-code: "https://github.com/tenki-labs/tenkibench"
+license: CC-BY-4.0
+keywords:
+  - llm
+  - benchmark
+  - norwegian
+  - smb
+  - business
+  - eu-ai-act
+  - gdpr
+  - bokmal
+  - nynorsk
+preferred-citation:
+  type: generic
+  authors:
+    - family-names: Holt
+      given-names: Einar
+      email: einar@tenki.no
+      affiliation: Tenki Labs AS
+  title: "TenkiBench: A Norwegian SMB Benchmark for Language Models"
+  year: 2026
+  url: "https://bench.tenki.no"
+  notes: "CC-BY 4.0"

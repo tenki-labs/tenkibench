@@ -43,9 +43,17 @@ export interface ManualScore {
   fields: Record<string, number | string>;
 }
 
+export interface OpenLlmDetailedScore {
+  fetched_at: string;
+  hf_id: string;
+  results: Record<string, number>;
+  eval_metadata?: Record<string, unknown>;
+}
+
 export interface ExternalScores {
   artificial_analysis?: ArtificialAnalysisScore;
   lmarena?: LmArenaScore;
   manual?: ManualScore;
+  open_llm_results?: OpenLlmDetailedScore;
   [other: string]: unknown;
 }

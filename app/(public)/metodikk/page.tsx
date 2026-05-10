@@ -76,7 +76,12 @@ export default function MetodikkPage() {
           Hver kategori valideres av minst én ekstern fagperson:
           advokat (kontrakt, lov-referanse), regnskapsfører (faktura, MVA, skatt),
           HR-rådgiver (HR/lønn), språkviter (Bokmål↔Nynorsk).
-          Validatorene navngis på hver oppgave-side.
+          Validatorene navngis på hver oppgave-side, og en oversikt finnes på{" "}
+          <Link href="/validatorer" className="underline">/validatorer</Link>.
+        </p>
+        <p>
+          Er du fagperson selv? <Link href="/validator/registrer" className="underline">Bli validator</Link>{" "}
+          — 1–4 timer per kategori, full kreditt på hver oppgave du signerer.
         </p>
 
         <h2 className="h2 mt-10 mb-4">Hva vi ikke gjør</h2>

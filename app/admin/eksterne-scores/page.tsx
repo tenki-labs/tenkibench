@@ -6,6 +6,7 @@ import {
   refreshArtificialAnalysis,
   refreshLmArena,
   refreshOpenLlmLeaderboard,
+  refreshOpenLlmResults,
   refreshAll,
 } from "@/lib/external-scores/refresh";
 import {
@@ -29,6 +30,11 @@ async function runLmArena() {
 async function runOpenLlm() {
   "use server";
   try { await refreshOpenLlmLeaderboard(); redirect("/admin/eksterne-scores?ok=open_llm"); }
+  catch (e) { redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
+}
+async function runOpenLlmResults() {
+  "use server";
+  try { await refreshOpenLlmResults(); redirect("/admin/eksterne-scores?ok=open_llm_results"); }
   catch (e) { redirect(`/admin/eksterne-scores?err=${encodeURIComponent((e as Error).message.slice(0, 200))}`); }
 }
 async function runAllSources() {
@@ -208,7 +214,7 @@ export default async function ExternalScoresAdmin({
         </div>
       )}
 
-      <div className="mb-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="mb-12 grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
         <form action={runAA}>
           <button
             type="submit"
@@ -255,6 +261,22 @@ export default async function ExternalScoresAdmin({
             </div>
             <div className="text-xs text-tenki-muted mt-2">
               Via HuggingFace · Ingen nøkkel · Kun åpne vekter
+            </div>
+          </button>
+        </form>
+        <form action={runOpenLlmResults}>
+          <button
+            type="submit"
+            className="w-full rounded-xl border border-tenki-subtle bg-white p-4 text-left card-lift"
+          >
+            <div className="font-mono text-[11px] uppercase tracking-eyebrow text-tenki-accent mb-1">
+              Open LLM Results (detailed)
+            </div>
+            <div className="font-sans text-sm font-medium">
+              Per-task scores (IFEval, BBH, MATH, GPQA, MUSR, MMLU-Pro)
+            </div>
+            <div className="text-xs text-tenki-muted mt-2">
+              Via HuggingFace · Ingen nøkkel · Granulær per-oppgave
             </div>
           </button>
         </form>

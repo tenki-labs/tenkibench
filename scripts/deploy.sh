@@ -52,7 +52,7 @@ docker exec -e PGPASSWORD="$POSTGRES_PASSWORD" supabase-db psql -U postgres -d p
 echo "▸ Applying migrations"
 # Idempotent migrasjoner — alle re-kjøres på hver deploy.
 # Legg nye migrasjoner her for at de skal auto-anvendes.
-for migration in 0001_init.sql 0002_benches.sql 0003_all_benches.sql 0004_external_scores.sql 0005_category_kind.sql 0006_score_split.sql 0007_system_settings.sql; do
+for migration in 0001_init.sql 0002_benches.sql 0003_all_benches.sql 0004_external_scores.sql 0005_category_kind.sql 0006_score_split.sql 0007_system_settings.sql 0008_oidc_state.sql 0009_validators.sql; do
   if [ -f "migrations/$migration" ]; then
     docker exec -i -e PGPASSWORD="$POSTGRES_PASSWORD" supabase-db \
       psql -U postgres -d tenkibench -v ON_ERROR_STOP=1 < "migrations/$migration"

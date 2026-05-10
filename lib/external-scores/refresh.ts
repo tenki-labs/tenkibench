@@ -2,8 +2,13 @@ import { query } from "@/lib/db";
 import { fetchArtificialAnalysis } from "./artificial-analysis";
 import { fetchLmArena } from "./lmarena";
 import { fetchOpenLlmLeaderboard } from "./open-llm-leaderboard";
+import { fetchOpenLlmResults } from "./open-llm-results";
 
-export type SourceSlug = "artificial_analysis" | "lmarena" | "open_llm";
+export type SourceSlug =
+  | "artificial_analysis"
+  | "lmarena"
+  | "open_llm"
+  | "open_llm_results";
 
 interface RefreshResult {
   refreshId: number;
@@ -122,6 +127,33 @@ export async function refreshOpenLlmLeaderboard(): Promise<RefreshResult> {
   });
 }
 
+export async function refreshOpenLlmResults(): Promise<RefreshResult> {
+  return runRefresh("open_llm_results", async () => {
+    const detailed = await fetchOpenLlmResults();
+    const { rows: models } = await query<{
+      id: number; slug: string; display_name: string;
+      external_ids: Record<string, string>; is_open_weights: boolean;
+    }>(`select id, slug, display_name, external_ids, is_open_weights from models`);
+    let updated = 0, skipped = 0;
+    for (const m of models) {
+      if (!m.is_open_weights && !m.external_ids?.open_llm) { skipped += 1; continue; }
+      const candidates = [m.external_ids?.open_llm, m.display_name, m.slug]
+        .filter((c): c is string => Boolean(c));
+      const score = candidates.map(c => detailed.get(normalize(c))).find(Boolean);
+      if (!score) { skipped += 1; continue; }
+      await query(
+        `update models set
+           external_scores = jsonb_set(external_scores, '{open_llm_results}', $1::jsonb, true),
+           external_scores_updated_at = now()
+         where id = $2`,
+        [JSON.stringify(score), m.id],
+      );
+      updated += 1;
+    }
+    return { modelsUpdated: updated, modelsSkipped: skipped };
+  });
+}
+
 export async function manuallySetScore(
   modelId: number,
   source: string,
@@ -149,6 +181,7 @@ export async function refreshAll(): Promise<{
     { slug: "artificial_analysis", fn: refreshArtificialAnalysis },
     { slug: "lmarena",             fn: refreshLmArena },
     { slug: "open_llm",            fn: refreshOpenLlmLeaderboard },
+    { slug: "open_llm_results",    fn: refreshOpenLlmResults },
   ];
   const results: Array<RefreshResult | { source: SourceSlug; error: string }> = [];
   for (const s of sources) {

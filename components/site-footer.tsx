@@ -7,6 +7,7 @@ const nav = [
   { href: "/oppgaver",    label: "Oppgaver" },
   { href: "/metodikk",    label: "Metodikk" },
   { href: "/holdout",     label: "Hold-out" },
+  { href: "/validatorer", label: "Validatorer" },
   { href: "/om",          label: "Om" },
 ] as const;
 
