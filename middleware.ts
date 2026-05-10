@@ -108,7 +108,18 @@ export async function middleware(req: NextRequest) {
   //
   // Begge gir samme cookies på Domain=.tenki.no til slutt.
   if (!claims) {
-    const next = encodeURIComponent(req.nextUrl.toString());
+    // Next.js standalone bak Cloudflare Tunnel rapporterer canonical URL
+    // som "0.0.0.0:3000". Bygg ekte URL fra forwarded-headers så at
+    // ?next=… peker tilbake til bench.tenki.no etter login.
+    const host =
+      req.headers.get("x-forwarded-host") ??
+      req.headers.get("host") ??
+      req.nextUrl.host;
+    const proto =
+      req.headers.get("x-forwarded-proto") ??
+      req.nextUrl.protocol.replace(":", "");
+    const fullUrl = `${proto}://${host}${req.nextUrl.pathname}${req.nextUrl.search}`;
+    const next = encodeURIComponent(fullUrl);
     if (process.env.TENKI_OIDC_CLIENT_ID) {
       const url = req.nextUrl.clone();
       url.pathname = "/api/auth/login";
