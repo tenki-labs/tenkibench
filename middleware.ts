@@ -24,7 +24,10 @@ import {
  * utløp. Ingen separate brukere på bench-databasen.
  */
 
-const ADMIN_LOGIN_URL = "https://auth.tenki.no/admin/login";
+// Login-UI ligger på tenki.no/admin/login. auth.tenki.no er GoTrue
+// API-host — ingen UI der.
+const ADMIN_LOGIN_URL =
+  process.env.TENKI_LOGIN_URL ?? "https://tenki.no/admin/login";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
