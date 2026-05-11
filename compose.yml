@@ -10,6 +10,14 @@ services:
         NEXT_PUBLIC_SITE_URL: https://bench.tenki.no
     restart: unless-stopped
     env_file: .env
+    # Apollo Docker's embedded DNS (127.0.0.11) forwards til host-resolveren,
+    # som er Tailscale MagicDNS. MagicDNS svarer ikke på public hostnames →
+    # outbound fetch til auth.tenki.no feiler, og OIDC token-utveksling i
+    # /api/auth/callback returnerer 502. Pin host→IP for det vi *vet* vi
+    # snakker med — påvirker ikke docker-service-discovery på interne nett.
+    extra_hosts:
+      - "auth.tenki.no:193.200.238.120"
+      - "tenki.no:193.200.238.120"
     networks:
       - tenki-net
       - supabase_default
